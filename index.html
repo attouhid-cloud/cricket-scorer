@@ -119,6 +119,21 @@ body.ovm #setup,body.ovm #app{display:none!important}
 #lsc h3{margin:4px 0;font-size:1.1em}
 #lsc .rsl{font-size:1.2em;padding:6px;margin:0 0 6px}
 #lsc .tp{display:none}
+.cols{display:grid;gap:18px}
+@media(max-width:700px){#scb .cols{grid-template-columns:1fr!important}}
+#ov:not(.inline) #lsc.on{width:min(1500px,96vw)}
+#lsc .cols{gap:26px}#lsc th,#lsc td{padding:2px 3px}
+/* clearer, brighter overlay text */
+#top{height:22px;font-size:12px}
+.tn{font-size:20px}
+.big{font-size:32px}
+.g2 small{font-size:16px;color:#fff;font-weight:700}
+.g3,.g4{font-size:13.5px;line-height:1.25}
+.g3 .d,.g4 .d{color:#e8ecfa;font-weight:600}
+#oBo{color:#fff;font-weight:800;font-size:14px}
+.g5{color:#e8ecfa;font-size:13px}.g5 .d{font-size:12px;color:#e8ecfa;font-weight:600}
+.c{font-size:13px}
+.inn{color:#ffe14d;font-size:11px}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -446,14 +461,14 @@ function hw(x){if(x.how=='bowled')return L('বোল্ড','b')+' '+(x.bw||'')
 function inns(M){return (M.card1?[M.card1]:[]).concat([{team:M.t[M.inn],runs:M.runs,w:M.w,balls:M.balls,outs:M.outs||[],bat:M.bat.filter(x=>!x.out),bw:M.bw||{}}])}
 function cardHTML(M,list){
   let top=null,bb=null;
-  const html=(list||inns(M)).map(c=>{
+  const L2=list||inns(M);const html='<div class="cols" style="grid-template-columns:repeat('+L2.length+',1fr)">'+L2.map(c=>{
     const bats=c.outs.concat(c.bat.map(x=>Object.assign({},x,{how:'no'})));
     bats.forEach(x=>{if(!top||x.r>top.r)top=x});
     const br=bats.map(x=>'<tr><td>'+esc(x.n)+'<small>'+(x.how=='no'?L('আউট নয়','not out'):hw(x))+'</small></td><td>'+x.r+'</td><td>'+x.b+'</td><td>'+(x.f||0)+'</td><td>'+(x.s||0)+'</td><td>'+(x.b?Math.round(x.r*100/x.b):'-')+'</td></tr>').join('');
     const ex=c.runs-bats.reduce((a,x)=>a+x.r,0);
     const bw=Object.keys(c.bw).map(n=>{const b=c.bw[n];if(!bb||b.w>bb.w||(b.w==bb.w&&b.r<bb.r))bb={n:n,w:b.w,r:b.r};return '<tr><td>'+esc(n)+'</td><td>'+ovs(b.b)+'</td><td>'+b.m+'</td><td>'+b.r+'</td><td>'+b.w+'</td><td>'+(b.b?(b.r*6/b.b).toFixed(1):'-')+'</td></tr>'}).join('');
     return '<h3>'+esc(c.team)+' '+c.runs+'/'+c.w+' ('+ovs(c.balls)+' '+L('ওভার','ov')+')</h3><table><tr><th>'+L('ব্যাটসম্যান','Batter')+'</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr>'+br+'<tr><td>'+L('এক্সট্রা','Extras')+'</td><td>'+ex+'</td><td colspan="4"></td></tr></table><table><tr><th>'+L('বোলার','Bowler')+'</th><th>O</th><th>M</th><th>R</th><th>W</th><th>Eco</th></tr>'+bw+'</table>';
-  }).join('');
+  }).map(h=>'<div>'+h+'</div>').join('')+'</div>';
   return (top?'<p class="tp">⭐ '+esc(top.n)+' '+top.r+'('+top.b+')'+(bb?' &nbsp; 🎯 '+esc(bb.n)+' '+bb.w+'-'+bb.r:'')+'</p>':'')+html;
 }
 function showCard(M,res){
