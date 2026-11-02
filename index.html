@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cricket Scorer + Overlay</title>
+<style>:root{--bg:#0f1220;--card:#1a1e33;--ac:#ffd400;--mut:#8f97b8;--red:#e53935;--grn:#0ea56a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:system-ui,"Noto Sans Bengali",sans-serif;background:var(--bg);color:#fff;padding:10px;padding-top:max(10px,env(safe-area-inset-top))}
+.card{background:var(--card);border-radius:14px;padding:12px;margin-bottom:10px}
+h3{margin:0 0 8px;font-size:16px}
+label{font-size:12px;color:var(--mut);display:block;margin-bottom:3px}
+input{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;background:#0f1220;color:#fff;font-size:15px}
+.row{display:flex;gap:8px;margin-bottom:8px}
+.row>div{flex:1}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+button{font:inherit;border:0;border-radius:12px;padding:14px 0;font-size:19px;font-weight:700;background:#2a3157;color:#fff}
+button:active{transform:scale(.95)}
+.g{background:var(--grn)}
+.w{background:var(--red)}
+.ex{background:#8a5a00;font-size:15px}
+.sm{font-size:14px}
+.hide{display:none!important}
+.mini{text-align:center;font-size:30px;font-weight:800;color:var(--ac)}
+.mini small{display:block;font-size:13px;color:var(--mut);font-weight:400}
+.nr{display:flex;gap:8px;margin-bottom:8px}
+.nr input{flex:1}
+.sv{padding:0 14px;font-size:14px;border-radius:10px;white-space:nowrap}
+summary{cursor:pointer}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0ea56a;color:#fff;padding:10px 18px;border-radius:24px;font-size:14px;font-weight:700;z-index:99;opacity:0;pointer-events:none;transition:opacity .25s}
+#toast.on{opacity:1}
+button.on{background:var(--grn)}
+body.ovm{background:transparent;padding:0}
+body.ovm #setup,body.ovm #app{display:none!important}
+#dlg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.dbox{background:#1a1e33;border-radius:16px;padding:18px;width:100%;max-width:380px}
+#dmsg{font-size:16px;margin-bottom:12px;line-height:1.4}
+.dbox input{margin-bottom:12px}
+.drow{display:flex;gap:8px}
+.drow button{flex:1;padding:12px 0;font-size:16px}
+#dch button{width:100%;margin-bottom:8px;font-size:17px;padding:13px 0}
+#anim{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;z-index:5;font-size:clamp(24px,7vw,46px);font-weight:900;letter-spacing:2px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+#anim.show{animation:evp 2s ease forwards}
+#anim.ev-w{background:rgba(229,57,53,.94)}
+#anim.ev-n{background:rgba(37,99,235,.94)}
+#anim.ev-d{background:rgba(75,85,99,.94)}
+#anim.ev-r{background:rgba(14,165,106,.94)}
+#anim.ev-f{background:rgba(22,163,74,.96)}
+#anim.ev-s{background:rgba(147,51,234,.96)}
+@keyframes evp{0%{opacity:0;transform:scale(.4)}12%{opacity:1;transform:scale(1.15)}22%{transform:scale(1)}80%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.05)}}
+#bc.shake{animation:shk .6s}
+@keyframes shk{0%,100%{transform:none}20%{transform:translateX(-12px)}40%{transform:translateX(12px)}60%{transform:translateX(-7px)}80%{transform:translateX(7px)}}
+#ov.inline{position:static;inset:auto;z-index:auto;background:transparent;padding:0;margin-bottom:10px;justify-content:flex-start;align-items:stretch}
+#ov.inline #exit{display:none}
+#ov.inline #spon{margin-bottom:8px}
+#ov{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:12px 12px max(14px,env(safe-area-inset-bottom));background:#fff}
+#ov.green{background:#00b140}
+#ov.black{background:#000}
+#ov.clear{background:transparent}
+#exit{position:fixed;top:8px;right:8px;z-index:30;font-size:12px;padding:8px 12px;opacity:.55;background:#333}
+/* ===== OVERLAY (thin, wide) ===== */
+#bcw{width:100%;position:relative}#stg{position:relative}
+#spon{display:flex;align-items:center;gap:10px;background:#1a1e33;border:1px solid #2d3355;border-radius:30px;padding:5px 14px;font-size:12px;font-weight:600;color:#fff;margin:0 0 6px auto;width:fit-content}
+#spon i{font-style:normal;color:#0ea56a;letter-spacing:2px;font-size:10px}
+#bc{position:relative;width:100%;background:linear-gradient(90deg,#10152b,#1a1e33);border-top:2px solid #0ea56a;overflow:hidden;color:#fff;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+#top{display:flex;align-items:center;gap:10px;padding:0 14px;height:20px;font-size:11px;background:#0ea56a;white-space:nowrap}
+#top .v{background:#0a6b47;padding:1px 8px;border-radius:4px}
+#top .t{min-width:0;overflow:hidden;text-overflow:ellipsis}
+#top .rs{flex:1;text-align:center;color:#fff176;min-width:0;overflow:hidden;text-overflow:ellipsis}
+#top .lv{background:var(--red);padding:1px 10px;border-radius:4px;letter-spacing:1px}
+#top .fh{background:#f59e0b;color:#111;padding:1px 10px;border-radius:4px;font-weight:800;display:none}
+#main{display:flex;align-items:center;height:42px;padding:0 6px}
+#main>div{padding:0 14px;border-right:1px solid #30365a;min-width:0;white-space:nowrap}
+#main>div:last-child{border:0;margin-left:auto}
+.g1{display:flex;align-items:center;gap:8px}.tn{font-size:18px;font-weight:800}
+.inn{font-size:10px;background:#2a3157;color:var(--ac);padding:2px 7px;border-radius:5px}
+.g2{display:flex;align-items:baseline;gap:6px}.big{font-size:30px;font-weight:800;color:var(--ac);line-height:1}
+.g2 small{font-size:12px;color:var(--mut);font-weight:400}
+.g3,.g4{display:flex;flex-direction:column;justify-content:center;font-size:12.5px;line-height:1.3;overflow:hidden}
+.g3 b{color:var(--ac)}.g4 b,.g4 .bo{color:#22d3ee}.g3 .d,.g4 .d{color:var(--mut);font-weight:400}
+.g5{font-size:12px;color:var(--mut)}.g5 b{color:var(--grn);font-size:18px;margin-left:4px}
+.ch{display:flex;gap:5px;align-items:center}
+.c{min-width:26px;height:24px;padding:0 5px;border-radius:6px;background:#2a3157;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.c.f{background:#0ea56a}.c.s{background:#9333ea}.c.n{background:#2563eb}.c.x{background:var(--red)}.c.h{background:#f59e0b;color:#111}
+#anim.ev-wd{background:rgba(245,158,11,.94)}
+#dmsg{white-space:pre-line}
+/* full-screen: thin bar, full width, scaled by JS */
+#ov:not(.inline){padding:0 0 env(safe-area-inset-bottom,0px);align-items:stretch}
+#ov:not(.inline) #stg{position:absolute;left:0;top:0;transform-origin:0 0}
+#ov:not(.inline) #bc{height:64px;display:flex;flex-direction:column}
+#ov:not(.inline) #main{flex:1;height:auto}
+#ov:not(.inline) #spon{position:absolute;right:16px;bottom:calc(100% + 6px);margin:0}
+#ov:not(.inline) #anim{font-size:34px}
+#stg.cmp .ch,#stg.cmp .g5{display:none}
+/* admin preview: wraps so it stays readable on a phone */
+#ov.inline #main{flex-wrap:wrap;height:auto;padding:6px 4px}
+#ov.inline #main>div{border:0;padding:4px 10px}
+#ov.inline #main>div:last-child{margin-left:0}
+#ov.inline #top{height:auto;flex-wrap:wrap;padding:3px 10px;row-gap:3px}
+#ov.inline #top .rs{flex:1 1 220px}
+#top .rs:empty{display:none}
+</style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0f1220">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="setup" class="card">
+  <h3>ম্যাচ সেটআপ / Match Setup</h3>
+  <div class="row"><div><label>টিম ১ / Team 1</label><input id="t1" value="টাইগার্স একাদশ"></div>
+  <div><label>টিম ২ / Team 2</label><input id="t2" value="ঈগলস একাদশ"></div></div>
+  <div class="row"><div><label>ভেন্যু / Venue</label><input id="ve" value="জেলা স্টেডিয়াম"></div>
+  <div><label>ওভার / Overs</label><input id="ovn" type="number" value="20" min="1"></div></div>
+  <label>টুর্নামেন্ট / Tournament</label><input id="tt" value="স্থানীয় ক্রিকেট চ্যাম্পিয়নশিপ ২০২৬" style="margin-bottom:8px">
+  <label>স্পনসর / Sponsor</label><input id="sp" value="স্পন্সর ১ - প্রিমিয়াম ব্র্যান্ড" style="margin-bottom:8px">
+  <div class="row"><div><label>ব্যাটসম্যান ১ / Batter 1</label><input id="b1" value="তামিম"></div>
+  <div><label>ব্যাটসম্যান ২ / Batter 2</label><input id="b2" value="সাকিব"></div>
+  <div><label>বোলার / Bowler</label><input id="bn" value="মাশরাফী"></div></div>
+  <button class="g" style="width:100%" onclick="start()">ম্যাচ শুরু / Start Match</button>
+</div>
+
+<!-- SCORER -->
+<div id="app" class="hide">
+  <!-- OVERLAY -->
+<div id="ov" class="inline" onclick="bgNext(event)">
+  <button id="exit" onclick="hideOv(event)">✕</button>
+  <div id="bcw"><div id="stg"><div id="spon"><i>SPONSOR</i><span id="oSp"></span></div>
+  <div id="bc"><div id="anim"><span></span></div>
+      <div id="top"><span class="v" id="oVe"></span><span class="t" id="oTt"></span><span class="rs" id="res"></span><span class="fh" id="oFH"></span><span class="lv">● LIVE</span></div>
+      <div id="main">
+        <div class="g1"><span class="tn" id="oTn"></span><span class="inn" id="oIn"></span></div>
+        <div class="g2"><span class="big" id="oSc"></span><small id="oOv"></small></div>
+        <div class="g3"><span>🏏 <b id="oB0"></b> <b id="oR0"></b></span><span class="d"><span id="oB1"></span> <span id="oR1"></span></span></div>
+        <div class="g4"><span class="bo">🎯 <span id="oBw"></span> <b id="oBf"></b></span><span class="d"><span id="oBo"></span> • <span id="oBm"></span></span></div>
+        <div class="g5">CRR<b id="oCr"></b></div>
+        <div class="ch" id="oCh"></div>
+      </div></div>
+</div></div></div>
+  <button class="sm" style="width:100%;padding:10px;margin-bottom:10px" onclick="copyLink()">📋 ওভারলে লিংক কপি / Copy Overlay Link</button>
+  <div class="card mini"><span id="mS"></span><small id="mO"></small></div>
+  <div class="card">
+    <label>ব্যাটসম্যান ১ / Batter 1</label><div class="nr"><input id="i0" list="ros"><button class="sv g" onclick="saveName('i0')">💾 সেভ / Save</button></div>
+    <label>ব্যাটসম্যান ২ / Batter 2</label><div class="nr"><input id="i1" list="ros"><button class="sv g" onclick="saveName('i1')">💾 সেভ / Save</button></div>
+    <label>বোলার / Bowler</label><div class="nr"><input id="ib" list="ros"><button class="sv g" onclick="saveName('ib')">💾 সেভ / Save</button></div>
+    <datalist id="ros"></datalist>
+    <button id="sw" class="sm" style="width:100%;padding:10px" onclick="swap()">⇄</button>
+  </div>
+  <div class="card"><div class="grid">
+    <button onclick="ball(0)">0</button><button onclick="ball(1)">1</button>
+    <button onclick="ball(2)">2</button><button onclick="ball(3)">3</button>
+    <button class="g" onclick="ball(4)">4</button><button class="g" onclick="ball(6)">6</button>
+    <button class="w sm" onclick="wicket()">আউট / Wicket</button><button class="sm" onclick="undo()">↶ আনডু / Undo</button>
+    <button class="ex" onclick="extra('Wd')">ওয়াইড / Wide</button><button class="ex" onclick="extra('NB')">নো বল / No Ball</button>
+    <button class="ex" onclick="extra('B')">বাই / Bye</button><button class="ex" onclick="extra('LB')">লেগ বাই / Leg Bye</button>
+    <button id="fhb" class="ex" style="grid-column:span 4;font-size:15px;padding:12px" onclick="toggleFH()"></button>
+    <div style="grid-column:span 4;display:flex;gap:8px"><button class="sm" style="flex:1;padding:9px 0;font-size:13px" onclick="minus('r')">−1 রান / −1 Run</button><button class="sm" style="flex:1;padding:9px 0;font-size:13px" onclick="minus('w')">−1 উইকেট / −1 Wkt</button><button class="sm" style="flex:1;padding:9px 0;font-size:13px" onclick="minus('b')">−1 বল / −1 Ball</button></div>
+    <div style="grid-column:span 4;display:flex;gap:8px"><button class="g sm" style="flex:1;padding:9px 0;font-size:13px" onclick="plus()">+1 রান / +1 Run</button><button class="g sm" style="flex:1;padding:9px 0;font-size:13px" onclick="plusx('w')">+1 উইকেট / +1 Wkt</button><button class="g sm" style="flex:1;padding:9px 0;font-size:13px" onclick="plusx('b')">+1 বল / +1 Ball</button></div>
+  </div></div>
+  <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+    <button class="sm" onclick="endInn()">ইনিংস শেষ / End Inn.</button>
+    <button class="g sm" onclick="showOv()">📺 ওভারলে / Overlay</button>
+    <button class="w sm" onclick="newMatch()">নতুন ম্যাচ / New Match</button>
+  </div>
+<div class="card" style="margin-top:10px"><label>🌐 ভাষা / Language</label>
+   <div class="row" style="margin:0"><button id="lbn" style="flex:1;font-size:16px;padding:12px" onclick="setLang('bn')">বাংলা (BN)</button><button id="len" style="flex:1;font-size:16px;padding:12px" onclick="setLang('en')">English (EN)</button></div></div>
+  <details class="card" style="margin-top:10px"><summary style="font-size:15px;font-weight:700">✏️ ম্যাচ এডিট / Edit Match</summary>
+   <div style="margin-top:10px">
+    <div class="row"><div><label>টিম ১ / Team 1</label><input id="e_t0"></div><div><label>টিম ২ / Team 2</label><input id="e_t1"></div></div>
+    <div class="row"><div><label>ভেন্যু / Venue</label><input id="e_ve"></div><div><label>মোট ওভার / Overs</label><input id="e_ov" type="number"></div></div>
+    <label>টুর্নামেন্ট / Tournament</label><input id="e_tt" style="margin-bottom:8px">
+    <label>স্পনসর / Sponsor</label><input id="e_sp" style="margin-bottom:8px">
+    <div class="row"><div><label>রান / Runs</label><input id="e_ru" type="number"></div><div><label>উইকেট / Wkts</label><input id="e_wk" type="number"></div><div><label>ওভার (1.2) / Overs (1.2)</label><input id="e_ba"></div></div>
+    <div class="row"><div><label>১ম ইনিংস রান / 1st inn.</label><input id="e_fr" type="number"></div></div>
+    <div class="row"><div><label>ব্যাট ১ রান / Bat 1 runs</label><input id="e_r0" type="number"></div><div><label>ব্যাট ১ বল / Bat 1 balls</label><input id="e_b0" type="number"></div><div><label>ব্যাট ২ রান / Bat 2 runs</label><input id="e_r1" type="number"></div><div><label>ব্যাট ২ বল / Bat 2 balls</label><input id="e_b1" type="number"></div></div>
+    <div class="row"><div><label>বোলার উইকেট / Bowler wkts</label><input id="e_bw" type="number"></div><div><label>বোলার রান / Bowler runs</label><input id="e_br" type="number"></div><div><label>বোলার ওভার / Bowler overs</label><input id="e_bo"></div><div><label>মেডেন / Maidens</label><input id="e_bm" type="number"></div></div>
+    <button class="g" style="width:100%" onclick="saveEdit()">💾 সব সেভ / Save All</button>
+   </div></details>
+  <div class="card" style="margin-top:10px"><h3>🔗 ওভারলে লিংক / Overlay Link (Prism Live)</h3>
+   <label>Firebase Database URL</label><input id="fdb" placeholder="https://your-project-default-rtdb.firebaseio.com" style="margin-bottom:8px">
+   <label>ম্যাচ কোড / Match code</label><input id="fm" value="match1" style="margin-bottom:8px">
+   <div class="row" style="margin:0"><button class="g" style="flex:1;font-size:15px;padding:12px" onclick="saveCfg()">💾 সেভ / Save</button><button style="flex:1;font-size:15px;padding:12px" onclick="copyLink()">📋 লিংক কপি / Copy Link</button></div>
+   <div id="syn" style="font-size:12px;color:var(--mut);margin-top:8px"></div></div>
+  <div id="toast"></div>
+</div>
+
+<div id="dlg"><div class="dbox"><div id="dmsg"></div><input id="din"><div id="dch"></div><div class="drow"><button id="dno"></button><button id="dok" class="g"></button></div></div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+let S=null,H=[];
+const bgs=['','green','black','clear'];let bgi=0;
+function save(){try{localStorage.setItem('cs2',JSON.stringify({S,H}))}catch(e){}push()}
+function load(){try{const d=JSON.parse(localStorage.getItem('cs2'));if(d&&d.S){S=d.S;H=d.H||[];return true}}catch(e){}return false}
+function start(){
+  S={t:[$('t1').value,$('t2').value],ve:$('ve').value,tt:$('tt').value,sp:$('sp').value,ov:+$('ovn').value||20,
+   inn:0,runs:0,w:0,balls:0,tb:[],first:null,
+   bat:[{n:$('b1').value||'ব্যাটসম্যান ১',r:0,b:0},{n:$('b2').value||'ব্যাটসম্যান ২',r:0,b:0}],
+   st:0,bn:$('bn').value||'বোলার',bw:{},orun:0};
+  H=[];save();render();
+}
+const B=()=>S.bw[S.bn]||(S.bw[S.bn]={r:0,w:0,b:0,m:0});
+function snap(){H.push(JSON.stringify(S));if(H.length>300)H.shift()}
+function undo(){if(!H.length)return;S=JSON.parse(H.pop());save();render()}
+function add(l,c){S.tb.push({l:l,c:c||''});if(S.tb.length>6)S.tb.shift()}
+function swap(){snap();S.st^=1;save();render()}
+function legal(){
+  S.balls++;
+  if(S.balls%6==0){if(S.orun==0)B().m++;S.orun=0;S.st^=1;S.needBowl=true}
+  if(S.balls>=S.ov*6||S.w>=10||(S.inn==1&&S.runs>S.first.runs))S.done=true;
+}
+function emit(k,v){S.ev={k:k,v:v||0,id:Date.now()};playEv(S.ev)}
+function ball(r){
+  snap();const s=S.bat[S.st],b=B();
+  s.r+=r;S.runs+=r;b.r+=r;S.orun+=r;
+  if(S.fh){
+    S.fh=false;add('FH'+r,'h');if(r%2)S.st^=1;
+    if(S.inn==1&&S.runs>S.first.runs)S.done=true;
+  }else{
+    s.b++;b.b++;add(r,r==4?'f':r==6?'s':'');if(r%2)S.st^=1;legal();
+  }
+  emit(r?'R':'D',r);fin();
+}
+function extra(t){
+  snap();const b=B();
+  if(t=='Wd'||t=='NB'){S.runs++;b.r++;S.orun++;add(t,t=='NB'?'n':'');if(S.inn==1&&S.runs>S.first.runs)S.done=true;emit(t=='NB'?'NB':'WD')}
+  else{S.runs++;S.bat[S.st].b++;b.b++;add(t,'');legal()}
+  fin();
+}
+function pick(msg,ch){return new Promise(res=>{
+  const d=$('dlg'),box=$('dch');
+  $('dmsg').textContent=msg;$('din').style.display='none';box.innerHTML='';
+  const done=v=>{d.style.display='none';box.innerHTML='';$('dok').style.display='';$('dno').onclick=null;res(v)};
+  ch.forEach(c=>{const b=document.createElement('button');b.textContent=c[1];b.className=c[2]||'';b.onclick=()=>done(c[0]);box.appendChild(b)});
+  $('dok').style.display='none';$('dno').style.display='';$('dno').textContent=L('বাতিল','Cancel');
+  $('dno').onclick=()=>done(null);d.style.display='flex';
+})}
+async function wicket(){
+  const fh=!!S.fh;
+  const types=fh?[['run',L('রান আউট','Run Out'),'w']]:[['bowled',L('বোল্ড','Bowled'),'w'],['run',L('রান আউট','Run Out'),'w'],['catch',L('ক্যাচ আউট','Catch Out'),'w'],['out',L('আউট','Out'),'w']];
+  const t=await pick(L('আউটের ধরন','Dismissal type')+(fh?' ('+L('ফ্রি হিট','Free Hit')+')':''),types);
+  if(!t)return;
+  let idx=S.st;
+  if(t=='run'){
+    const r=await pick(L('কে রান আউট?','Who is run out?'),[[S.st,S.bat[S.st].n+' *'],[S.st^1,S.bat[S.st^1].n]]);
+    if(r===null)return;idx=r;
+  }
+  snap();const s=S.bat[S.st],b=B();
+  S.w++;if(t!='run')b.w++;
+  add('W','x');
+  S.outIdx=idx;S.needBat=true;
+  if(fh){S.fh=false;if(S.w>=10)S.done=true}
+  else{s.b++;b.b++;legal()}
+  emit('W');fin();
+}
+async function fin(){
+  save();render();
+  if(S.done){S.done=false;S.needBat=false;S.needBowl=false;
+    if(S.inn==0)setTimeout(()=>endInn(true),150);else dlg(result(),{alert:1});return}
+  if(S.needBat){S.needBat=false;
+    const n=await dlg(L('নতুন ব্যাটসম্যানের নাম','New batsman name'),{input:1});
+    S.bat[S.outIdx]={n:n||L('নতুন ব্যাটসম্যান','New batsman'),r:0,b:0}}
+  if(S.needBowl){S.needBowl=false;
+    const n=await dlg(L('নতুন বোলারের নাম','New bowler name'),{input:1,def:S.bn});
+    if(n)S.bn=n}
+  save();render();
+}
+async function endInn(auto){
+  if(S.inn==1){dlg(result(),{alert:1});return}
+  if(!auto&&!(await dlg(L('প্রথম ইনিংস শেষ?','End 1st innings?'))))return;
+  snap();S.first={runs:S.runs,w:S.w,balls:S.balls};
+  S.inn=1;S.fh=false;S.runs=0;S.w=0;S.balls=0;S.tb=[];S.bw={};S.orun=0;S.st=0;
+  S.bat=[{n:L('ব্যাটসম্যান ১','Batsman 1'),r:0,b:0},{n:L('ব্যাটসম্যান ২','Batsman 2'),r:0,b:0}];S.bn=L('বোলার','Bowler');
+  save();render();
+}
+const ovs=b=>Math.floor(b/6)+'.'+(b%6);
+function setv(id,v){const e=$(id);if(document.activeElement!==e)e.value=v}
+document.addEventListener('change',e=>{
+  if(!S||e.target.id.startsWith('e_'))return;
+  if(e.target.id=='i0')S.bat[0].n=e.target.value;
+  if(e.target.id=='i1')S.bat[1].n=e.target.value;
+  if(e.target.id=='ib'){const o=S.bn,n=e.target.value||o;if(n!=o){S.bw[n]=S.bw[o]||{r:0,w:0,b:0,m:0};delete S.bw[o];S.bn=n}}
+  save();render();
+});
+function showOv(){bgi=0;$('ov').className='';$('ov').classList.remove('hide');fit();}
+function hideOv(e){e.stopPropagation();$('ov').className='inline';fit()}
+function bgNext(e){if(OVM||e.target.id=='exit'||$('ov').classList.contains('inline'))return;bgi=(bgi+1)%bgs.length;$('ov').className=bgs[bgi]}
+
+let LANG='bn';try{LANG=localStorage.getItem('lg')=='en'?'en':'bn'}catch(e){}
+const L=(b,e)=>LANG=='en'?e:b;
+function setLang(l){LANG=l;try{localStorage.setItem('lg',l)}catch(e){}render();push()}
+let ROS=[];try{ROS=JSON.parse(localStorage.getItem('ros'))||[]}catch(e){}
+function rosUI(){$('ros').innerHTML=ROS.map(n=>'<option value="'+n.replace(/"/g,'&quot;')+'">').join('')}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800)}
+const po=v=>{const a=String(v).split('.');return (+a[0]||0)*6+(+a[1]||0)};
+function plus(){snap();S.runs++;add('+1','');if(S.inn==1&&S.runs>S.first.runs)S.done=true;emit('R',1);fin()}
+function saveName(id){
+  const v=$(id).value.trim();if(!v||!S)return;
+  if(id=='i0')S.bat[0].n=v;
+  if(id=='i1')S.bat[1].n=v;
+  if(id=='ib'&&v!=S.bn){S.bw[v]=S.bw[S.bn]||{r:0,w:0,b:0,m:0};delete S.bw[S.bn];S.bn=v}
+  if(!ROS.includes(v)){ROS.push(v);try{localStorage.setItem('ros',JSON.stringify(ROS))}catch(e){}}
+  rosUI();save();render();toast('💾 '+v+' – '+L('সেভ হয়েছে','saved'));
+}
+function saveEdit(){
+  snap();const g=id=>$(id).value,n=id=>+$(id).value||0;
+  S.t=[g('e_t0')||S.t[0],g('e_t1')||S.t[1]];S.ve=g('e_ve');S.tt=g('e_tt');S.sp=g('e_sp');S.ov=n('e_ov')||S.ov;
+  S.runs=n('e_ru');S.w=Math.min(10,n('e_wk'));S.balls=po(g('e_ba'));
+  if(S.first)S.first.runs=n('e_fr');
+  S.bat[0].r=n('e_r0');S.bat[0].b=n('e_b0');S.bat[1].r=n('e_r1');S.bat[1].b=n('e_b1');
+  const b=B();b.w=n('e_bw');b.r=n('e_br');b.b=po(g('e_bo'));b.m=n('e_bm');
+  save();render();toast('💾 '+L('সেভ হয়েছে','Saved'));
+}
+async function newMatch(){
+  if(!(await dlg(L('নতুন ম্যাচ শুরু করবেন? বর্তমান স্কোর মুছে যাবে।','Start a new match? Current score will be cleared.'))))return;
+  S=null;H=[];try{localStorage.removeItem('cs2')}catch(e){}
+  if(CFG.db)fetch(furl(),{method:'DELETE'}).catch(()=>{});
+  render();window.scrollTo(0,0);toast(L('নতুন ম্যাচের সেটআপ দিন','Set up the new match'));
+}
+function result(){
+  if(S.inn==0)return'';
+  const w=10-S.w;
+  if(S.runs>S.first.runs)return L(S.t[1]+' '+w+' উইকেটে জিতেছে',S.t[1]+' won by '+w+' wkts');
+  if(S.runs==S.first.runs)return L('ম্যাচ টাই','Match Tied');
+  const d=S.first.runs-S.runs;return L(S.t[0]+' '+d+' রানে জিতেছে',S.t[0]+' won by '+d+' runs');
+}
+function render(){
+  $('lbn').classList.toggle('on',LANG=='bn');$('len').classList.toggle('on',LANG=='en');
+  if(!OVM)applyUI();
+  if(!S){$('setup').classList.remove('hide');$('app').classList.add('hide');return}
+  $('setup').classList.add('hide');$('app').classList.remove('hide');
+  const tn=S.t[S.inn],rr=S.balls?(S.runs*6/S.balls).toFixed(2):'0.00',b=B(),st=S.st,ns=st^1;
+  $('mS').textContent=tn+' '+S.runs+'/'+S.w;
+  $('mO').textContent=L('ওভার','Overs')+' '+ovs(S.balls)+'/'+S.ov+' • '+L('সিআরআর','CRR')+' '+rr+(S.inn==1?' • '+L('টার্গেট','Target')+' '+(S.first.runs+1):'');
+  $('sw').textContent='⇄ '+L('স্ট্রাইকে','On strike')+': '+S.bat[st].n+' ('+L('বদল','Swap')+')';
+  $('fhb').textContent='🎯 '+L('ফ্রি হিট','Free Hit')+': '+(S.fh?'ON':'OFF');$('fhb').classList.toggle('on',!!S.fh);
+  $('oFH').style.display=S.fh?'inline-block':'none';$('oFH').textContent=L('ফ্রি হিট','FREE HIT');
+  setv('i0',S.bat[0].n);setv('i1',S.bat[1].n);setv('ib',S.bn);
+  setv('e_t0',S.t[0]);setv('e_t1',S.t[1]);setv('e_ve',S.ve);setv('e_ov',S.ov);setv('e_tt',S.tt);setv('e_sp',S.sp);
+  setv('e_ru',S.runs);setv('e_wk',S.w);setv('e_ba',ovs(S.balls));setv('e_fr',S.first?S.first.runs:'');
+  setv('e_r0',S.bat[0].r);setv('e_b0',S.bat[0].b);setv('e_r1',S.bat[1].r);setv('e_b1',S.bat[1].b);
+  setv('e_bw',b.w);setv('e_br',b.r);setv('e_bo',ovs(b.b));setv('e_bm',b.m);
+  $('oSp').textContent=S.sp;document.querySelector('#spon i').textContent=L('স্পনসর','SPONSOR');document.querySelector('#top .lv').textContent='● '+L('লাইভ','LIVE');$('oVe').textContent=S.ve;$('oTt').textContent=S.tt;
+  $('oTn').textContent=tn;$('oIn').textContent=L('ইনিংস','INNINGS')+' '+(S.inn+1);
+  $('oSc').textContent=S.runs+'/'+S.w;$('oOv').textContent='('+ovs(S.balls)+'/'+S.ov+' '+L('ওভার','ov')+')';
+  $('oB0').textContent=S.bat[st].n+'*';$('oR0').innerHTML=S.bat[st].r+' <small style="color:#8f97b8;font-weight:400">('+S.bat[st].b+')</small>';
+  $('oB1').textContent=S.bat[ns].n;$('oR1').textContent=S.bat[ns].r+' ('+S.bat[ns].b+')';
+  $('oBw').textContent=S.bn;$('oBf').textContent=b.w+'-'+b.r;
+  $('oBo').textContent=L('ওভার','Over')+': '+ovs(b.b);$('oBm').textContent=L('মেডেন','Maiden')+': '+b.m;
+  $('oCr').textContent=rr;
+  $('oCh').innerHTML=S.tb.map(x=>'<div class="c '+x.c+'">'+x.l+'</div>').join('');
+  let r='';
+  if(S.inn==1){
+    const T=S.first.runs+1,need=T-S.runs,left=S.ov*6-S.balls;
+    r=(S.runs>S.first.runs||S.balls>=S.ov*6||S.w>=10)?result():L('টার্গেট '+T+' • দরকার '+need+' রান ('+left+' বল)','Target '+T+' • Need '+need+' runs ('+left+' balls)');
+  }else r='';
+  $('res').textContent=r;
+  fit();
+}
+
+
+function applyUI(){
+  ['setup','app'].forEach(id=>{
+    const w=document.createTreeWalker($(id),NodeFilter.SHOW_TEXT);let n;
+    while(n=w.nextNode()){
+      if(n._b===undefined){
+        const v=n.nodeValue,k=v.indexOf(' / ');n._b=null;
+        if(k>0&&/[ঀ-৿]/.test(v.slice(0,k))&&!/[ঀ-৿]/.test(v.slice(k+3))){
+          const bn=v.slice(0,k).trim();let en=v.slice(k+3).trim();
+          const pre=bn.match(/^[^ঀ-৿A-Za-z0-9]*/)[0];
+          if(pre.trim()&&!en.startsWith(pre.trim()))en=pre+en;
+          n._b=bn;n._e=en;
+        }
+      }
+      if(n._b!==null){const t=LANG=='en'?n._e:n._b;if(n.nodeValue!==t)n.nodeValue=t}
+    }
+  });
+}
+
+function toggleFH(){if(!S)return;snap();S.fh=!S.fh;save();render()}
+function dlg(msg,o){return new Promise(res=>{
+  o=o||{};const d=$('dlg'),inp=$('din');$('dch').innerHTML='';$('dok').style.display='';
+  $('dmsg').textContent=msg;inp.style.display=o.input?'block':'none';inp.value=o.def||'';
+  $('dno').style.display=o.alert?'none':'';
+  $('dno').textContent=L('বাতিল','Cancel');$('dok').textContent=L('ঠিক আছে','OK');
+  d.style.display='flex';if(o.input)setTimeout(()=>inp.focus(),60);
+  const done=v=>{d.style.display='none';$('dok').onclick=$('dno').onclick=null;res(v)};
+  $('dok').onclick=()=>done(o.input?inp.value:true);
+  $('dno').onclick=()=>done(o.input?null:false);
+})}
+function playEv(e){
+  const a=$('anim');let t,c;
+  if(e.k=='W'){t=L('উইকেট!','WICKET!');c='ev-w'}
+  else if(e.k=='NB'){t=L('নো বল','NO BALL');c='ev-n'}
+  else if(e.k=='WD'){t=L('ওয়াইড','WIDE');c='ev-wd'}
+  else if(e.k=='D'){t=L('ডট বল','DOT BALL');c='ev-d'}
+  else{const v=e.v;c=v==6?'ev-s':v==4?'ev-f':'ev-r';
+    t=v==6?L('ছক্কা!','SIX!'):v==4?L('চার!','FOUR!'):L(v+' রান',v+(v==1?' RUN':' RUNS'))}
+  a.className='';void a.offsetWidth;a.firstChild.textContent=t;a.className='show '+c;
+  if(e.k=='W'){const b=$('bc');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
+}
+
+function fit(){
+  const ov=$('ov'),w=$('bcw'),g=$('stg');if(!ov||!w||!g)return;
+  if(ov.classList.contains('inline')){g.style.cssText='';g.classList.remove('cmp');w.style.height='';return}
+  const vw=innerWidth,DW=vw>=900?1280:800,k=vw/DW;
+  g.classList.toggle('cmp',vw<900);
+  g.style.width=DW+'px';g.style.transform='scale('+k+')';
+  w.style.height=(64*k)+'px';
+}
+const Q=new URLSearchParams(location.search),OVM=Q.get('view')==='overlay';
+let CFG={db:'',m:'match1'};try{CFG=Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')))}catch(e){}
+let pt=null;
+function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,ev:S.ev||null,lang:LANG,ts:Date.now()}}
+function unpack(o){return{t:o.t,ve:o.ve||'',tt:o.tt||'',sp:o.sp||'',ov:o.ov,inn:o.inn,runs:o.runs,w:o.w,balls:o.balls,tb:o.tb||[],first:o.fr>=0?{runs:o.fr}:null,bat:o.bat,st:o.st,bn:o.bn,fh:!!o.fh,ev:o.ev||null,bw:{[o.bn]:o.bs||{r:0,w:0,b:0,m:0}}}}
+const furl=()=>CFG.db+'/matches/'+CFG.m+'.json';
+function syn(ok){const e=$('syn');if(e)e.textContent=ok?L('✅ সিঙ্ক হয়েছে','✅ Synced'):L('⚠️ সিঙ্ক হয়নি (URL ও রুলস দেখুন)','⚠️ Sync failed (check URL & rules)')}
+function push(){
+  if(OVM||!CFG.db||!S)return;clearTimeout(pt);
+  pt=setTimeout(()=>{fetch(furl(),{method:'PUT',body:JSON.stringify(pack())}).then(r=>{if(!r.ok)throw 0;syn(true)}).catch(()=>syn(false))},300);
+}
+let lastEv=null;
+function poll(){
+  fetch(Q.get('db')+'/matches/'+Q.get('m')+'.json?t='+Date.now()).then(r=>r.json()).then(o=>{
+    if(o&&o.t){LANG=o.lang=='en'?'en':'bn';S=unpack(o);render();
+      if(o.ev){if(lastEv===null)lastEv=o.ev.id;else if(o.ev.id>lastEv){lastEv=o.ev.id;playEv(o.ev)}}else if(lastEv===null)lastEv=0}}).catch(()=>{});
+}
+function saveCfg(){
+  CFG={db:$('fdb').value.trim().replace(/\/+$/,''),m:($('fm').value.trim().replace(/[^A-Za-z0-9_-]/g,''))||'match1'};
+  try{localStorage.setItem('cfg',JSON.stringify(CFG))}catch(e){}
+  $('fdb').value=CFG.db;$('fm').value=CFG.m;push();toast('💾 '+L('সেভ হয়েছে','Saved'));
+}
+function fbCopy(t){try{const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();const ok=document.execCommand('copy');a.remove();return ok}catch(e){return false}}
+function copyText(t){
+  try{if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(t).then(()=>true).catch(()=>fbCopy(t))}catch(e){}
+  return Promise.resolve(fbCopy(t));
+}
+async function copyLink(){
+  if(!CFG.db){
+    await dlg(L('লাইভ লিংকের জন্য Firebase লাগবে।\n১) firebase.google.com এ Realtime Database বানান (Rules: read ও write true)\n২) Database URL নিচের লিংক কার্ডে বসিয়ে Save চাপুন\n৩) ফাইলটা ইন্টারনেটে হোস্ট করে ওই পেজ থেকে লিংক কপি করুন','Live link needs Firebase.\n1) Create a Realtime Database at firebase.google.com (Rules: read and write true)\n2) Paste its URL in the Overlay Link card below and tap Save\n3) Host this file online and copy the link from that page'),{alert:1});
+    const c=$('fdb');if(c){c.scrollIntoView({behavior:'smooth',block:'center'});c.focus()}
+    return}
+  if(location.protocol=='file:')await dlg(L('ফাইলটা আগে ইন্টারনেটে হোস্ট করুন, তারপর ওই পেজ থেকে লিংক কপি করুন।','Host this file online first, then copy the link from the hosted page.'),{alert:1});
+  const u=location.href.split('#')[0].split('?')[0]+'?view=overlay&db='+encodeURIComponent(CFG.db)+'&m='+encodeURIComponent(CFG.m);
+  if(await copyText(u))toast('📋 '+L('লিংক কপি হয়েছে','Link copied'));
+  else dlg(L('কপি করুন','Copy:'),{input:1,def:u});
+}
+function plusx(k){
+  if(!S)return;snap();
+  if(k=='w')S.w=Math.min(10,S.w+1);
+  if(k=='b')S.balls++;
+  save();render();
+}
+function minus(k){
+  if(!S)return;snap();
+  if(k=='r')S.runs=Math.max(0,S.runs-1);
+  if(k=='w')S.w=Math.max(0,S.w-1);
+  if(k=='b')S.balls=Math.max(0,S.balls-1);
+  save();render();
+}
+addEventListener('resize',fit);
+if(OVM){document.body.classList.add('ovm');document.body.appendChild($('ov'));$('ov').className='clear';poll();setInterval(poll,1500)}
+else{load();rosUI();$('fdb').value=CFG.db;$('fm').value=CFG.m;render();push()}
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')==0)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
