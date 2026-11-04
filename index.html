@@ -157,6 +157,19 @@ textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;bac
 #top .rs{font-size:15px;font-weight:800;color:#fff}
 #top .rs:not(:empty){background:rgba(0,0,0,.4);border-radius:5px;padding:1px 12px;flex:0 1 auto;margin:0 auto}
 #ov:not(.inline) #bc{height:68px}
+/* animations: panels slide/zoom in and out, bar slides up, score pops on change */
+#ov:not(.inline) #lsc.on{animation:lscIn .45s cubic-bezier(.2,.9,.3,1) both}
+#ov:not(.inline) #lsc.on.out{animation:lscOut .4s ease-in both}
+#ov:not(.inline) #cbd.on{animation:cbIn .5s cubic-bezier(.2,.9,.3,1) both}
+#ov:not(.inline) #cbd.on.out{animation:cbOut .4s ease-in both}
+#ov:not(.inline) #stg{animation:barIn .7s cubic-bezier(.2,.9,.3,1) both}
+#oSc.pop{animation:popn .55s ease}
+@keyframes lscIn{from{opacity:0;transform:translate(-50%,60px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes lscOut{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,60px)}}
+@keyframes cbIn{from{opacity:0;transform:translate(-50%,-50%) scale(.8)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes cbOut{from{opacity:1;transform:translate(-50%,-50%) scale(1)}to{opacity:0;transform:translate(-50%,-50%) scale(.8)}}
+@keyframes barIn{from{opacity:0;transform-origin:0 0;margin-top:40px}to{opacity:1;margin-top:0}}
+@keyframes popn{0%{transform:scale(1);color:#fff}40%{transform:scale(1.3);color:#fff}100%{transform:scale(1)}}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -253,8 +266,8 @@ textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;bac
 </div>
 
 <div id="cbcard" class="card" style="margin-top:10px"><h3>🧾 কাস্টম বোর্ড / Custom Board</h3>
-  <label>শিরোনাম / Title</label><input id="cb_t" placeholder="Upcoming Matches" style="margin-bottom:8px">
-  <label>লেখা (প্রতি লাইনে একটা) / Text (one per line)</label><textarea id="cb_x" rows="6" placeholder="Tigers vs Eagles - 3:00 PM"></textarea>
+  <label>শিরোনাম / Title</label><input id="cb_t" oninput="liveCB()" placeholder="Upcoming Matches" style="margin-bottom:8px">
+  <label>লেখা (প্রতি লাইনে একটা) / Text (one per line)</label><textarea id="cb_x" oninput="liveCB()" rows="6" placeholder="Tigers vs Eagles - 3:00 PM"></textarea>
   <div class="row" style="margin:8px 0 0"><button class="g" style="flex:1;font-size:15px;padding:12px" onclick="saveCB()">💾 সেভ / Save</button><button id="cbb" style="flex:1;font-size:15px;padding:12px" onclick="toggleCB()"></button></div></div>
 <div id="dlg"><div class="dbox"><div id="dmsg"></div><input id="din"><div id="dch"></div><div class="drow"><button id="dno"></button><button id="dok" class="g"></button></div></div></div>
 
@@ -356,7 +369,7 @@ async function endInn(auto){
 const ovs=b=>Math.floor(b/6)+'.'+(b%6);
 function setv(id,v){const e=$(id);if(document.activeElement!==e)e.value=v}
 document.addEventListener('change',e=>{
-  if(!S||e.target.id.startsWith('e_'))return;
+  if(!S||e.target.id.startsWith('e_')||e.target.id.startsWith('cb_'))return;
   if(e.target.id=='i0')S.bat[0].n=e.target.value;
   if(e.target.id=='i1')S.bat[1].n=e.target.value;
   if(e.target.id=='ib'){const o=S.bn,n=e.target.value||o;if(n!=o){S.bw[n]=S.bw[o]||{r:0,w:0,b:0,m:0};delete S.bw[o];S.bn=n}}
@@ -424,13 +437,14 @@ function render(){
   setv('e_bw',b.w);setv('e_br',b.r);setv('e_bo',ovs(b.b));setv('e_bm',b.m);
   $('oSp').textContent=S.sp;document.querySelector('#spon i').textContent=S.spl||L('স্পনসর','SPONSOR');document.querySelector('#top .lv').textContent='● '+L('লাইভ','LIVE');$('oVe').textContent=S.ve;$('oTt').textContent=S.tt;
   $('oTn').textContent=tn;$('oIn').textContent=L('ইনিংস','INNINGS')+' '+(S.inn+1);
+  {const sc=S.runs+'/'+S.w,el=$('oSc');if(lastSc&&sc!==lastSc){el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop')}lastSc=sc}
   $('oSc').textContent=S.runs+'/'+S.w;$('oOv').textContent='('+ovs(S.balls)+'/'+S.ov+' '+L('ওভার','ov')+')';
   $('oB0').textContent=S.bat[st].n+'*';$('oR0').innerHTML=S.bat[st].r+' <small style="color:#8f97b8;font-weight:400">('+S.bat[st].b+')</small>';
   $('oB1').textContent=S.bat[ns].n;$('oR1').textContent=S.bat[ns].r+' ('+S.bat[ns].b+')';
   $('oBw').textContent=S.bn;$('oBf').textContent=b.w+'-'+b.r;
   $('oBo').textContent=L('ওভার','Over')+': '+ovs(b.b);$('oBm').textContent=L('মেডেন','Maiden')+': '+b.m;
   $('oCr').textContent=rr;
-  {const ls=$('lsc');ls.classList.toggle('on',!!S.showSC&&!(OVM?CBd:CB.on));
+  {const ls=$('lsc');setPanel(ls,!!S.showSC&&!(OVM?CBd:CB.on));
    if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');ls.innerHTML=(r?'<div class="rsl">'+esc(r)+'</div>':'')+cardHTML(S,OVM?SCL:null)}}
   $('lsb').textContent='📺 '+L('লাইভে স্কোরকার্ড','Scorecard on live')+': '+(S.showSC?'ON':'OFF');$('lsb').classList.toggle('on',!!S.showSC);$('oPs').textContent=(S.pr||S.pb)?L('পার্টনারশিপ ','Partnership ')+(S.pr||0)+' ('+(S.pb||0)+')':'';
   $('oCh').innerHTML=S.tb.map(x=>'<div class="c '+x.c+'">'+esc(x.l)+'</div>').join('');
@@ -596,12 +610,20 @@ async function tryLogin(){
 let CB={on:false,t:'',x:''},CBd=null;try{CB=Object.assign(CB,JSON.parse(localStorage.getItem('cb')))}catch(e){}
 const cbp=()=>CB.on?{t:CB.t,x:CB.x}:null;
 function storeCB(){try{localStorage.setItem('cb',JSON.stringify(CB))}catch(e){}}
+function liveCB(){CB.t=$('cb_t').value.slice(0,80);CB.x=$('cb_x').value.slice(0,1500);storeCB()}
 function readCB(){CB.t=$('cb_t').value.trim().slice(0,80);CB.x=$('cb_x').value.slice(0,1500)}
 function saveCB(){readCB();storeCB();push();render();toast('💾 '+L('সেভ হয়েছে','Saved'))}
 function toggleCB(){readCB();CB.on=!CB.on;if(CB.on&&S)S.showSC=false;storeCB();if(S)save();else push();render()}
+let lastSc='';
+function setPanel(el,on){
+  const was=el.classList.contains('on');
+  if(on&&!was){clearTimeout(el._t);el.classList.remove('out');el.classList.add('on')}
+  else if(on&&el.classList.contains('out')){clearTimeout(el._t);el.classList.remove('out')}
+  else if(!on&&was&&!el.classList.contains('out')){el.classList.add('out');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on','out'),450)}
+}
 function renderCB(){
   const d=$('cbd'),c=OVM?CBd:(CB.on?CB:null);
-  d.classList.toggle('on',!!c);
+  setPanel(d,!!c);
   if(c){$('cbt').textContent=c.t||'';$('cbt').style.display=c.t?'':'none';$('cbx').textContent=c.x||''}
   if(!OVM){setv('cb_t',CB.t);setv('cb_x',CB.x);$('cbb').textContent='📺 '+L('লাইভে দেখান','Show on live')+': '+(CB.on?'ON':'OFF');$('cbb').classList.toggle('on',CB.on)}
 }
@@ -632,7 +654,7 @@ function poll(){
   fetch(Q.get('db')+'/matches/'+Q.get('m')+'.json?t='+Date.now()).then(r=>r.json()).then(o=>{
     CBd=o&&o.cb?{t:Sx(o.cb.t).slice(0,80),x:Sx(o.cb.x).slice(0,1500)}:null;
     $('bcw').style.visibility=(o&&o.t)?'visible':'hidden';
-    if(!(o&&o.t)){$('lsc').classList.remove('on');if(o&&o.lang)LANG=o.lang=='en'?'en':'bn';renderCB()}
+    if(!(o&&o.t)){setPanel($('lsc'),false);if(o&&o.lang)LANG=o.lang=='en'?'en':'bn';renderCB()}
     if(o&&o.t){LANG=o.lang=='en'?'en':'bn';S=unpack(o);SCL=o.sc?(o.sc.inns||[]).slice(0,2).map(c=>({team:Sx(c.team),runs:N(c.runs),w:N(c.w),balls:N(c.balls),outs:(c.outs||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),how:Sx(x.how),bw:Sx(x.bw)})),bat:(c.bat||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s)})),bw:(c.bws||[]).reduce((a,b)=>{a[Sx(b.n)]={r:N(b.r),w:N(b.w),b:N(b.b),m:N(b.m)};return a},{})})):[];SCRES=Sx(o.sc&&o.sc.res);render();
       if(o.ev){if(lastEv===null)lastEv=o.ev.id;else if(o.ev.id>lastEv){lastEv=o.ev.id;playEv(o.ev)}}else if(lastEv===null)lastEv=0}}).catch(()=>{});
 }
