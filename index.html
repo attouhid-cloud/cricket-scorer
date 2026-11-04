@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.firebaseio.com https://*.firebasedatabase.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://drive.google.com https://*.googleusercontent.com; connect-src 'self' https://*.firebaseio.com https://*.firebasedatabase.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cricket Scorer + Overlay</title>
@@ -33,7 +33,7 @@ summary{cursor:pointer}
 #toast.on{opacity:1}
 button.on{background:var(--grn)}
 body.ovm{background:transparent;padding:0}
-body.ovm #setup,body.ovm #app,body.ovm #cbcard{display:none!important}
+body.ovm #setup,body.ovm #app,body.ovm #cbcard,body.ovm #pccard{display:none!important}
 #dlg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .dbox{background:#1a1e33;border-radius:16px;padding:18px;width:100%;max-width:380px}
 #dmsg{font-size:16px;margin-bottom:12px;line-height:1.4}
@@ -157,19 +157,32 @@ textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;bac
 #top .rs{font-size:15px;font-weight:800;color:#fff}
 #top .rs:not(:empty){background:rgba(0,0,0,.4);border-radius:5px;padding:1px 12px;flex:0 1 auto;margin:0 auto}
 #ov:not(.inline) #bc{height:68px}
+#top{height:22px;font-size:12px}
+#top .rs,#top .rs:not(:empty){background:none;padding:0;border-radius:0;font-size:14px;font-weight:800;color:#fff;flex:1;margin:0;text-shadow:none}
+#ov:not(.inline) #bc{height:64px}
+#cbi{display:none;max-width:100%;max-height:42vh;margin:.4em auto;border-radius:10px;object-fit:contain}#cbi.has{display:block}
+#pcd{display:none}
+#ov:not(.inline) #pcd.on{display:flex;gap:1.2em;position:absolute;left:50%;top:calc((100% - var(--bh,64px))/2);transform:translate(-50%,-50%);width:min(1000px,94vw);max-height:calc(100% - var(--bh,64px) - 40px);overflow:hidden;background:rgba(15,18,32,.95);border:1px solid #2d3355;border-radius:16px;padding:.9em;font-size:clamp(11px,1.9vw,26px);color:#fff}
+.pcl{flex:0 0 30%;text-align:center}
+#pci{display:none;width:100%;aspect-ratio:1;object-fit:cover;border-radius:50%;border:3px solid #0ea56a}#pci.has{display:block}
+#pcn{margin-top:.5em;font-size:1.3em;font-weight:800;background:linear-gradient(90deg,#0ea56a,#0a6b47);border-radius:8px;padding:.25em .4em}
+.pcr{flex:1;min-width:0}.pcr h4{margin:.3em 0;color:#ffe14d;font-size:1em}
+.pcs{font-weight:700;margin-bottom:.6em}
+.pr1{display:flex;justify-content:space-between;gap:.8em;padding:.25em 0;border-bottom:1px solid #2d3355;font-weight:600}
+.prow{display:flex;gap:6px;margin-bottom:8px}.prow input{flex:1}.prow button{padding:0 14px}
 /* animations: panels slide/zoom in and out, bar slides up, score pops on change */
 #ov:not(.inline) #lsc.on{animation:lscIn .45s cubic-bezier(.2,.9,.3,1) both}
 #ov:not(.inline) #lsc.on.out{animation:lscOut .4s ease-in both}
-#ov:not(.inline) #cbd.on{animation:cbIn .5s cubic-bezier(.2,.9,.3,1) both}
-#ov:not(.inline) #cbd.on.out{animation:cbOut .4s ease-in both}
+#ov:not(.inline) #cbd.on,#ov:not(.inline) #pcd.on{animation:cbIn .5s cubic-bezier(.2,.9,.3,1) both}
+#ov:not(.inline) #cbd.on.out,#ov:not(.inline) #pcd.on.out{animation:cbOut .4s ease-in both}
 #ov:not(.inline) #stg{animation:barIn .7s cubic-bezier(.2,.9,.3,1) both}
 #oSc.pop{animation:popn .55s ease}
 @keyframes lscIn{from{opacity:0;transform:translate(-50%,60px)}to{opacity:1;transform:translate(-50%,0)}}
 @keyframes lscOut{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,60px)}}
 @keyframes cbIn{from{opacity:0;transform:translate(-50%,-50%) scale(.8)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
 @keyframes cbOut{from{opacity:1;transform:translate(-50%,-50%) scale(1)}to{opacity:0;transform:translate(-50%,-50%) scale(.8)}}
-@keyframes barIn{from{opacity:0;transform-origin:0 0;margin-top:40px}to{opacity:1;margin-top:0}}
-@keyframes popn{0%{transform:scale(1);color:#fff}40%{transform:scale(1.3);color:#fff}100%{transform:scale(1)}}
+@keyframes barIn{from{opacity:0;margin-top:40px}to{opacity:1;margin-top:0}}
+@keyframes popn{0%{transform:scale(1)}40%{transform:scale(1.3)}100%{transform:scale(1)}}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -181,8 +194,8 @@ textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;bac
 <!-- SETUP -->
 <div id="setup" class="card">
   <h3>ম্যাচ সেটআপ / Match Setup</h3>
-  <div class="row"><div><label>টিম ১ / Team 1</label><input id="t1" value="টাইগার্স একাদশ"></div>
-  <div><label>টিম ২ / Team 2</label><input id="t2" value="ঈগলস একাদশ"></div></div>
+  <div class="row"><div><label>টিম ১ / Team 1</label><input id="t1" list="tms" value="টাইগার্স একাদশ"></div>
+  <div><label>টিম ২ / Team 2</label><input id="t2" list="tms" value="ঈগলস একাদশ"></div></div>
   <div class="row"><div><label>ভেন্যু / Venue</label><input id="ve" value="জেলা স্টেডিয়াম"></div>
   <div><label>ওভার / Overs</label><input id="ovn" type="number" value="20" min="1"></div></div>
   <label>টুর্নামেন্ট / Tournament</label><input id="tt" value="স্থানীয় ক্রিকেট চ্যাম্পিয়নশিপ ২০২৬" style="margin-bottom:8px">
@@ -191,6 +204,8 @@ textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;bac
   <div class="row"><div><label>ব্যাটসম্যান ১ / Batter 1</label><input id="b1" list="ros" value="তামিম"></div>
   <div><label>ব্যাটসম্যান ২ / Batter 2</label><input id="b2" list="ros" value="সাকিব"></div>
   <div><label>বোলার / Bowler</label><input id="bn" list="ros" value="মাশরাফী"></div></div>
+  <label>টুর্নামেন্ট (ঐচ্ছিক) / Tournament (optional)</label><select id="tnsel" onchange="tnPick()" style="width:100%;padding:10px;border-radius:10px;background:#0f1220;color:#fff;border:1px solid #333a5e;margin-bottom:8px"></select><datalist id="tms"></datalist>
+  <div class="row"><button class="sm" style="flex:1" onclick="showTn()">🏆 টুর্নামেন্ট / Tournaments</button><button class="sm" style="flex:1" onclick="showPlayers()">👥 প্লেয়ার / Players</button></div>
   <button class="g" style="width:100%" onclick="start()">ম্যাচ শুরু / Start Match</button>
 </div>
 
@@ -199,7 +214,7 @@ textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;bac
   <!-- OVERLAY -->
 <div id="ov" class="inline" onclick="bgNext(event)">
   <button id="exit" onclick="hideOv(event)">✕</button>
-  <div id="lsc"></div><div id="cbd"><div id="cbt"></div><div id="cbx"></div></div><div id="bcw"><div id="stg"><div id="spon"><i>SPONSOR</i><span id="oSp"></span></div>
+  <div id="lsc"></div><div id="cbd"><div id="cbt"></div><img id="cbi" alt=""><div id="cbx"></div></div><div id="pcd"><div class="pcl"><img id="pci" alt=""><div id="pcn"></div></div><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="bcw"><div id="stg"><div id="spon"><i>SPONSOR</i><span id="oSp"></span></div>
   <div id="bc"><div id="anim"><span></span></div>
       <div id="top"><span class="v" id="oVe"></span><span class="t" id="oTt"></span><span class="rs" id="res"></span><span class="fh" id="oFH"></span><span class="lv">● LIVE</span></div>
       <div id="main">
@@ -236,7 +251,7 @@ textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;bac
     <button class="g sm" onclick="showOv()">📺 ওভারলে / Overlay</button>
     <button class="w sm" onclick="newMatch()">নতুন ম্যাচ / New Match</button>
   </div>
-<div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:10px"><button class="sm" onclick="showCard()">📊 স্কোরকার্ড / Scorecard</button><button class="sm" onclick="showHist()">🗂️ হিস্টোরি / History</button><button class="sm" onclick="editPlayers()">👥 প্লেয়ার / Players</button></div>
+<div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:10px"><button class="sm" onclick="showCard()">📊 স্কোরকার্ড / Scorecard</button><button class="sm" onclick="showHist()">🗂️ হিস্টোরি / History</button><button class="sm" onclick="showPlayers()">👥 প্লেয়ার / Players</button></div>
   <button id="lsb" class="sm" style="width:100%;padding:12px;margin-top:8px" onclick="toggleSC()"></button>
   <div class="card" style="margin-top:10px"><label>🌐 ভাষা / Language</label>
    <div class="row" style="margin:0"><button id="lbn" style="flex:1;font-size:16px;padding:12px" onclick="setLang('bn')">বাংলা (BN)</button><button id="len" style="flex:1;font-size:16px;padding:12px" onclick="setLang('en')">English (EN)</button></div></div>
@@ -267,8 +282,13 @@ textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;bac
 
 <div id="cbcard" class="card" style="margin-top:10px"><h3>🧾 কাস্টম বোর্ড / Custom Board</h3>
   <label>শিরোনাম / Title</label><input id="cb_t" oninput="liveCB()" placeholder="Upcoming Matches" style="margin-bottom:8px">
-  <label>লেখা (প্রতি লাইনে একটা) / Text (one per line)</label><textarea id="cb_x" oninput="liveCB()" rows="6" placeholder="Tigers vs Eagles - 3:00 PM"></textarea>
+  <label>ছবির লিংক (Google Drive) / Image link (Google Drive)</label><input id="cb_i" oninput="liveCB()" placeholder="https://drive.google.com/file/d/..." style="margin-bottom:8px">
+  <label>লেখা (ছবির নিচে) / Text (below the image)</label><textarea id="cb_x" oninput="liveCB()" rows="6" placeholder="Tigers vs Eagles - 3:00 PM"></textarea>
   <div class="row" style="margin:8px 0 0"><button class="g" style="flex:1;font-size:15px;padding:12px" onclick="saveCB()">💾 সেভ / Save</button><button id="cbb" style="flex:1;font-size:15px;padding:12px" onclick="toggleCB()"></button></div></div>
+<div id="pccard" class="card" style="margin-top:10px"><h3>⭐ প্লেয়ার কার্ড / Player Card</h3>
+  <label>প্লেয়ারের নাম / Player name</label><input id="pc_n" list="ros" oninput="livePC()" style="margin-bottom:8px">
+  <div class="row" style="margin:0 0 8px"><button class="sm" style="flex:1" onclick="pcFill('st')">🏏 স্ট্রাইকার / Striker</button><button class="sm" style="flex:1" onclick="pcFill('bw')">🎯 বোলার / Bowler</button></div>
+  <button id="pcb" style="width:100%;font-size:15px;padding:12px" onclick="togglePC()"></button></div>
 <div id="dlg"><div class="dbox"><div id="dmsg"></div><input id="din"><div id="dch"></div><div class="drow"><button id="dno"></button><button id="dok" class="g"></button></div></div></div>
 
 <div id="scv" style="display:none"><div class="scw"><button id="scx" class="w" onclick="hideCard()">✕</button><div id="scb"></div></div></div>
@@ -286,7 +306,7 @@ const bgs=['','green','black','clear'];let bgi=0;
 function save(){try{localStorage.setItem('cs2',JSON.stringify({S,H}))}catch(e){}push()}
 function load(){try{const d=JSON.parse(localStorage.getItem('cs2'));if(d&&d.S){S=d.S;H=d.H||[];return true}}catch(e){}return false}
 function start(){
-  S={spl:($('spl').value||'').trim().slice(0,30),id:Date.now(),t:[$('t1').value,$('t2').value],ve:$('ve').value,tt:$('tt').value,sp:$('sp').value,ov:+$('ovn').value||20,
+  S={tn:$('tnsel').value||'',spl:($('spl').value||'').trim().slice(0,30),id:Date.now(),t:[$('t1').value,$('t2').value],ve:$('ve').value,tt:$('tt').value,sp:$('sp').value,ov:+$('ovn').value||20,
    inn:0,runs:0,w:0,balls:0,tb:[],first:null,
    bat:[{n:$('b1').value||'ব্যাটসম্যান ১',r:0,b:0},{n:$('b2').value||'ব্যাটসম্যান ২',r:0,b:0}],
    st:0,bn:$('bn').value||'বোলার',bw:{},orun:0};
@@ -369,7 +389,7 @@ async function endInn(auto){
 const ovs=b=>Math.floor(b/6)+'.'+(b%6);
 function setv(id,v){const e=$(id);if(document.activeElement!==e)e.value=v}
 document.addEventListener('change',e=>{
-  if(!S||e.target.id.startsWith('e_')||e.target.id.startsWith('cb_'))return;
+  if(!S||e.target.id.startsWith('e_')||e.target.id.startsWith('cb_')||e.target.id.startsWith('pc_'))return;
   if(e.target.id=='i0')S.bat[0].n=e.target.value;
   if(e.target.id=='i1')S.bat[1].n=e.target.value;
   if(e.target.id=='ib'){const o=S.bn,n=e.target.value||o;if(n!=o){S.bw[n]=S.bw[o]||{r:0,w:0,b:0,m:0};delete S.bw[o];S.bn=n}}
@@ -382,7 +402,10 @@ function bgNext(e){if(OVM||e.target.id=='exit'||$('ov').classList.contains('inli
 let LANG='bn';try{LANG=localStorage.getItem('lg')=='en'?'en':'bn'}catch(e){}
 const L=(b,e)=>LANG=='en'?e:b;
 function setLang(l){LANG=l;try{localStorage.setItem('lg',l)}catch(e){}render();push()}
-let ROS=[];try{ROS=JSON.parse(localStorage.getItem('ros'))||[]}catch(e){}
+let PL=[];try{PL=JSON.parse(localStorage.getItem('pl'))||[]}catch(e){}
+if(!PL.length){try{PL=(JSON.parse(localStorage.getItem('ros'))||[]).map(n=>({n:n,img:''}))}catch(e){}}
+let ROS=PL.map(p=>p.n).filter(Boolean);
+function storePL(){ROS=PL.map(p=>p.n).filter(Boolean);try{localStorage.setItem('pl',JSON.stringify(PL))}catch(e){}rosUI()}
 function rosUI(){$('ros').innerHTML=ROS.map(n=>'<option value="'+n.replace(/"/g,'&quot;')+'">').join('')}
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800)}
 const po=v=>{const a=String(v).split('.');return (+a[0]||0)*6+(+a[1]||0)};
@@ -392,7 +415,7 @@ function saveName(id){
   if(id=='i0')S.bat[0].n=v;
   if(id=='i1')S.bat[1].n=v;
   if(id=='ib'&&v!=S.bn){S.bw[v]=S.bw[S.bn]||{r:0,w:0,b:0,m:0};delete S.bw[S.bn];S.bn=v}
-  if(!ROS.includes(v)){ROS.push(v);try{localStorage.setItem('ros',JSON.stringify(ROS))}catch(e){}}
+  if(!PL.some(p=>p.n==v)){PL.push({n:v,img:''});storePL()}
   rosUI();save();render();toast('💾 '+v+' – '+L('সেভ হয়েছে','saved'));
 }
 function saveEdit(){
@@ -419,7 +442,7 @@ function result(M){
   const d=M.first.runs-M.runs;return L(M.t[0]+' '+d+' রানে জিতেছে',M.t[0]+' won by '+d+' runs');
 }
 function render(){
-  renderCB();
+  renderCB();renderPC();
   $('lbn').classList.toggle('on',LANG=='bn');$('len').classList.toggle('on',LANG=='en');
   if(!OVM)applyUI();
   if(!S){$('setup').classList.remove('hide');$('app').classList.add('hide');return}
@@ -444,7 +467,7 @@ function render(){
   $('oBw').textContent=S.bn;$('oBf').textContent=b.w+'-'+b.r;
   $('oBo').textContent=L('ওভার','Over')+': '+ovs(b.b);$('oBm').textContent=L('মেডেন','Maiden')+': '+b.m;
   $('oCr').textContent=rr;
-  {const ls=$('lsc');setPanel(ls,!!S.showSC&&!(OVM?CBd:CB.on));
+  {const ls=$('lsc');setPanel(ls,!!S.showSC&&!(OVM?(CBd||PCd):(CB.on||PC.on)));
    if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');ls.innerHTML=(r?'<div class="rsl">'+esc(r)+'</div>':'')+cardHTML(S,OVM?SCL:null)}}
   $('lsb').textContent='📺 '+L('লাইভে স্কোরকার্ড','Scorecard on live')+': '+(S.showSC?'ON':'OFF');$('lsb').classList.toggle('on',!!S.showSC);$('oPs').textContent=(S.pr||S.pb)?L('পার্টনারশিপ ','Partnership ')+(S.pr||0)+' ('+(S.pb||0)+')':'';
   $('oCh').innerHTML=S.tb.map(x=>'<div class="c '+x.c+'">'+esc(x.l)+'</div>').join('');
@@ -459,7 +482,7 @@ function render(){
 
 
 function applyUI(){
-  ['setup','app','cbcard'].forEach(id=>{
+  ['setup','app','cbcard','pccard'].forEach(id=>{
     const w=document.createTreeWalker($(id),NodeFilter.SHOW_TEXT);let n;
     while(n=w.nextNode()){
       if(n._b===undefined){
@@ -507,7 +530,7 @@ function fit(){
   const vw=innerWidth,DW=vw>=900?1280:800,k=vw/DW;
   g.classList.toggle('cmp',vw<900);
   g.style.width=DW+'px';g.style.transform='scale('+k+')';
-  w.style.height=(68*k)+'px';ov.style.setProperty('--bh',(68*k)+'px');
+  w.style.height=(64*k)+'px';ov.style.setProperty('--bh',(64*k)+'px');
 }
 
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -548,15 +571,8 @@ function saveHist(fin){
     localStorage.setItem('hist',JSON.stringify(h.slice(0,30)));
   }catch(x){}
 }
-async function editPlayers(){
-  const v=await dlg(L('প্লেয়ারদের নাম কমা (,) দিয়ে লিখুন','Type player names separated by commas'),{input:1,def:ROS.join(', ')});
-  if(v===null)return;
-  ROS=v.split(',').map(x=>x.trim()).filter(Boolean);
-  try{localStorage.setItem('ros',JSON.stringify(ROS))}catch(e){}
-  rosUI();toast('💾 '+ROS.length+' '+L('জন প্লেয়ার','players'));
-}
 let scT=null,SCL=[],SCRES='';
-function toggleSC(){if(!S)return;clearTimeout(scT);S.showSC=!S.showSC;if(S.showSC){CB.on=false;storeCB()}save();render()}
+function toggleSC(){if(!S)return;clearTimeout(scT);S.showSC=!S.showSC;if(S.showSC){CB.on=false;storeCB();PC.on=false;storePC()}save();render()}
 function scPack(){
   const f=bw=>Object.keys(bw||{}).map(n=>Object.assign({n:n},bw[n]));
   const one=(c,bw)=>({team:c.team,runs:c.runs,w:c.w,balls:c.balls,outs:c.outs||[],bat:c.bat||[],bws:f(bw)});
@@ -608,12 +624,12 @@ async function tryLogin(){
 }
 
 let CB={on:false,t:'',x:''},CBd=null;try{CB=Object.assign(CB,JSON.parse(localStorage.getItem('cb')))}catch(e){}
-const cbp=()=>CB.on?{t:CB.t,x:CB.x}:null;
+const cbp=()=>CB.on?{t:CB.t,x:CB.x,i:CB.i||''}:null;
 function storeCB(){try{localStorage.setItem('cb',JSON.stringify(CB))}catch(e){}}
-function liveCB(){CB.t=$('cb_t').value.slice(0,80);CB.x=$('cb_x').value.slice(0,1500);storeCB()}
-function readCB(){CB.t=$('cb_t').value.trim().slice(0,80);CB.x=$('cb_x').value.slice(0,1500)}
+function liveCB(){CB.i=$('cb_i').value.trim().slice(0,300);CB.t=$('cb_t').value.slice(0,80);CB.x=$('cb_x').value.slice(0,1500);storeCB()}
+function readCB(){CB.i=$('cb_i').value.trim().slice(0,300);CB.t=$('cb_t').value.trim().slice(0,80);CB.x=$('cb_x').value.slice(0,1500)}
 function saveCB(){readCB();storeCB();push();render();toast('💾 '+L('সেভ হয়েছে','Saved'))}
-function toggleCB(){readCB();CB.on=!CB.on;if(CB.on&&S)S.showSC=false;storeCB();if(S)save();else push();render()}
+function toggleCB(){readCB();CB.on=!CB.on;if(CB.on){PC.on=false;storePC()}if(CB.on&&S)S.showSC=false;storeCB();if(S)save();else push();render()}
 let lastSc='';
 function setPanel(el,on){
   const was=el.classList.contains('on');
@@ -623,14 +639,125 @@ function setPanel(el,on){
 }
 function renderCB(){
   const d=$('cbd'),c=OVM?CBd:(CB.on?CB:null);
+  setPanel(d,!!c&&!(OVM?PCd:PC.on));
+  if(c){$('cbt').textContent=c.t||'';$('cbt').style.display=c.t?'':'none';$('cbx').textContent=c.x||'';
+    const ci=$('cbi'),cu=imgUrl(c.i);
+    if(cu){if(ci.getAttribute('data-s')!==cu){ci.setAttribute('data-s',cu);ci.src=cu}ci.classList.add('has');ci.onerror=()=>ci.classList.remove('has')}else ci.classList.remove('has')}
+  if(!OVM){setv('cb_t',CB.t);setv('cb_x',CB.x);setv('cb_i',CB.i||'');$('cbb').textContent='📺 '+L('লাইভে দেখান','Show on live')+': '+(CB.on?'ON':'OFF');$('cbb').classList.toggle('on',CB.on)}
+}
+
+function imgUrl(l){
+  l=String(l||'').trim();let m,id=null;
+  if((m=l.match(/drive\.google\.com\/file\/d\/([-\w]{10,})/))||(m=l.match(/drive\.google\.com\/(?:open|uc|thumbnail)\?[^#]*?\bid=([-\w]{10,})/))||(m=l.match(/lh3\.googleusercontent\.com\/d\/([-\w]{10,})/))||(m=l.match(/^([-\w]{25,})$/)))id=m[1];
+  return id?'https://drive.google.com/thumbnail?id='+id+'&sz=w800':'';
+}
+function plSet(i,k,v){if(!PL[i])return;PL[i][k]=v.trim().slice(0,k=='n'?40:300);storePL()}
+function plAdd(){PL.push({n:'',img:''});storePL();showPlayers()}
+function plDel(i){PL.splice(i,1);storePL();showPlayers()}
+function showPlayers(){
+  $('scb').innerHTML='<h3>👥 '+L('প্লেয়ার লিস্ট','Players')+'</h3><p class="tp">'+L('নাম ও ছবির লিংক (Google Drive: ছবিতে Share → Anyone with the link)','Name and photo link (Google Drive: Share → Anyone with the link)')+'</p>'+PL.map((p,i)=>`<div class="prow"><input value="${esc(p.n)}" placeholder="${L('নাম','Name')}" onchange="plSet(${i},'n',this.value)"><input value="${esc(p.img||'')}" placeholder="Drive link" onchange="plSet(${i},'img',this.value)"><button class="w" onclick="plDel(${i})">✕</button></div>`).join('')+'<button class="g" style="width:100%" onclick="plAdd()">＋ '+L('প্লেয়ার যোগ','Add player')+'</button>';
+  $('scv').style.display='block';
+}
+function statsIn(list,nm){
+  let bt=null,bw=null;
+  list.forEach(c=>{
+    const x=(c.outs||[]).concat((c.bat||[]).map(y=>Object.assign({},y,{no:1}))).find(y=>String(y.n).trim().toLowerCase()==nm);
+    if(x)bt={r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),no:!!x.no};
+    const k=Object.keys(c.bw||{}).find(n=>n.trim().toLowerCase()==nm);
+    if(k){const b=c.bw[k];bw={o:ovs(N(b.b)),m:N(b.m),r:N(b.r),w:N(b.w)}}
+  });
+  return{bt:bt,bw:bw};
+}
+function pcData(name){
+  const nm=name.trim().toLowerCase(),pl=PL.find(p=>p.n.trim().toLowerCase()==nm);
+  const cur=S?statsIn(inns(S),nm):{bt:null,bw:null};
+  let hist=[];try{hist=JSON.parse(localStorage.getItem('hist')||'[]')}catch(e){}
+  const prev=[];
+  hist.forEach(e=>{if(S&&e.id==S.id)return;const x=statsIn(inns(e.m),nm);if(x.bt||x.bw)prev.push({v:e.m.t[0]+' vs '+e.m.t[1],bt:x.bt,bw:x.bw})});
+  const all=prev.concat(cur.bt||cur.bw?[cur]:[]);
+  return{n:name.trim(),img:pl?pl.img||'':'',cur:cur,prev:prev.slice(0,5),
+    tot:{m:all.length,r:all.reduce((a,x)=>a+(x.bt?x.bt.r:0),0),w:all.reduce((a,x)=>a+(x.bw?x.bw.w:0),0),hs:all.reduce((a,x)=>Math.max(a,x.bt?x.bt.r:0),0)}};
+}
+function cleanPC(o){
+  const bt=x=>x?{r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),no:!!x.no}:null,bw=x=>x?{o:Sx(x.o).slice(0,6),m:N(x.m),r:N(x.r),w:N(x.w)}:null,t=o.tot||{},c=o.cur||{};
+  return{n:Sx(o.n).slice(0,40),img:Sx(o.img).slice(0,300),cur:{bt:bt(c.bt),bw:bw(c.bw)},prev:(o.prev||[]).slice(0,5).map(p=>({v:Sx(p.v).slice(0,60),bt:bt(p.bt),bw:bw(p.bw)})),tot:{m:N(t.m),r:N(t.r),w:N(t.w),hs:N(t.hs)}};
+}
+let PC={on:false,n:''},PCd=null;try{PC=Object.assign(PC,JSON.parse(localStorage.getItem('pc')))}catch(e){}
+const pcp=()=>(PC.on&&PC.n.trim())?pcData(PC.n):null;
+function storePC(){try{localStorage.setItem('pc',JSON.stringify(PC))}catch(e){}}
+function livePC(){PC.n=$('pc_n').value.slice(0,40);storePC()}
+function pcFill(k){if(!S)return;$('pc_n').value=k=='st'?S.bat[S.st].n:S.bn;livePC()}
+function togglePC(){
+  PC.n=$('pc_n').value.slice(0,40);const on=!PC.on&&!!PC.n.trim();PC.on=on;
+  if(on){CB.on=false;storeCB();if(S)S.showSC=false}
+  storePC();if(S)save();else push();render();
+}
+function renderPC(){
+  const d=$('pcd'),c=OVM?PCd:pcp();
   setPanel(d,!!c);
-  if(c){$('cbt').textContent=c.t||'';$('cbt').style.display=c.t?'':'none';$('cbx').textContent=c.x||''}
-  if(!OVM){setv('cb_t',CB.t);setv('cb_x',CB.x);$('cbb').textContent='📺 '+L('লাইভে দেখান','Show on live')+': '+(CB.on?'ON':'OFF');$('cbb').classList.toggle('on',CB.on)}
+  if(!OVM){setv('pc_n',PC.n);$('pcb').textContent='📺 '+L('প্লেয়ার কার্ড','Player card')+': '+(PC.on?'ON':'OFF');$('pcb').classList.toggle('on',PC.on)}
+  if(!c)return;
+  const pi=$('pci'),u=imgUrl(c.img);
+  if(u){if(pi.getAttribute('data-s')!==u){pi.setAttribute('data-s',u);pi.src=u}pi.classList.add('has');pi.onerror=()=>pi.classList.remove('has')}else pi.classList.remove('has');
+  $('pcn').textContent=c.n;
+  const fm=(bt,bw)=>{const a=[];if(bt)a.push('🏏 '+bt.r+(bt.no?'*':'')+' ('+bt.b+') · 4s '+bt.f+' · 6s '+bt.s+' · SR '+(bt.b?Math.round(bt.r*100/bt.b):0));if(bw)a.push('🎯 '+bw.o+'-'+bw.m+'-'+bw.r+'-'+bw.w);return a.join('  ')};
+  const cur=fm(c.cur.bt,c.cur.bw);
+  $('pcc').innerHTML='<h4>'+L('এই ম্যাচে','This match')+'</h4><div class="pcs">'+(cur||L('এখনো খেলেনি','Not played yet'))+'</div>';
+  $('pcp').innerHTML='<h4>'+L('আগের ম্যাচ','Previous matches')+' · '+L('ম্যাচ','Mat')+' '+c.tot.m+' · '+L('রান','Runs')+' '+c.tot.r+' · '+L('উইকেট','Wkts')+' '+c.tot.w+' · HS '+c.tot.hs+'</h4>'+(c.prev.length?c.prev.map(p=>'<div class="pr1"><span>'+esc(p.v)+'</span><span>'+fm(p.bt,p.bw)+'</span></div>').join(''):'<div class="pr1">'+L('কোনো আগের ম্যাচ নেই','No previous matches')+'</div>');
+}
+let TN=[];try{TN=JSON.parse(localStorage.getItem('tn'))||[]}catch(e){}
+function storeTN(){try{localStorage.setItem('tn',JSON.stringify(TN))}catch(e){}tnUI()}
+function tnUI(){
+  const sel=$('tnsel'),cur=sel.value;
+  sel.innerHTML='<option value="">— '+L('কোনো টুর্নামেন্ট নয়','No tournament')+' —</option>'+TN.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.name)+'</option>').join('');
+  sel.value=cur;
+}
+function tnPick(){
+  const t=TN.find(x=>x.id==$('tnsel').value);
+  $('tms').innerHTML=t?t.teams.map(n=>'<option value="'+esc(n)+'">').join(''):'';
+  if(t)$('tt').value=t.name;
+}
+async function tnNew(){
+  const n=await dlg(L('টুর্নামেন্টের নাম','Tournament name'),{input:1});if(!n||!n.trim())return;
+  const tm=await dlg(L('দলগুলোর নাম কমা (,) দিয়ে লিখুন','Team names separated by commas'),{input:1});if(tm===null)return;
+  TN.push({id:'t'+Date.now(),name:n.trim().slice(0,60),teams:tm.split(',').map(x=>x.trim()).filter(Boolean).slice(0,24)});
+  storeTN();showTn();
+}
+function tnTable(id){
+  const t=TN.find(x=>x.id==id);if(!t)return null;
+  let hist=[];try{hist=JSON.parse(localStorage.getItem('hist')||'[]')}catch(e){}
+  const R={},get=n=>R[n]||(R[n]={n:n,p:0,w:0,l:0,t:0,pt:0});
+  t.teams.forEach(get);
+  const ms=hist.filter(e=>e.m&&e.m.tn==id&&e.m.fin&&e.m.first);
+  ms.forEach(e=>{const m=e.m,a=get(m.t[0]),b=get(m.t[1]);a.p++;b.p++;
+    if(m.runs>m.first.runs){b.w++;b.pt+=2;a.l++}else if(m.runs<m.first.runs){a.w++;a.pt+=2;b.l++}else{a.t++;b.t++;a.pt++;b.pt++}});
+  return{t:t,rows:Object.values(R).sort((x,y)=>y.pt-x.pt||y.w-x.w),ms:ms};
+}
+function showTn(id){
+  if(typeof id!=='string'){
+    $('scb').innerHTML='<h3>🏆 '+L('টুর্নামেন্ট','Tournaments')+'</h3>'+TN.map(t=>'<button class="hi" onclick="showTn(\''+t.id+'\')"><b>'+esc(t.name)+'</b><small>'+t.teams.length+' '+L('টি দল','teams')+'</small></button>').join('')+'<button class="g" style="width:100%;margin-top:8px" onclick="tnNew()">＋ '+L('নতুন টুর্নামেন্ট','New tournament')+'</button>';
+    $('scv').style.display='block';return}
+  const d=tnTable(id);if(!d)return;
+  $('scb').innerHTML='<div class="rsl">🏆 '+esc(d.t.name)+'</div><table><tr><th>'+L('দল','Team')+'</th><th>P</th><th>W</th><th>L</th><th>T</th><th>Pts</th></tr>'+d.rows.map(r=>'<tr><td>'+esc(r.n)+'</td><td>'+r.p+'</td><td>'+r.w+'</td><td>'+r.l+'</td><td>'+r.t+'</td><td><b>'+r.pt+'</b></td></tr>').join('')+'</table>'
+   +d.ms.map(e=>'<p class="tp">'+esc(e.m.t[0])+' vs '+esc(e.m.t[1])+' — '+esc(e.res)+'</p>').join('')
+   +'<div class="row" style="margin-top:10px"><button class="g" style="flex:1" onclick="tnToBoard(\''+id+'\')">📺 '+L('পয়েন্ট টেবিল লাইভে','Points table on live')+'</button><button class="w" style="flex:0 0 auto;padding:0 16px" onclick="tnDel(\''+id+'\')">🗑</button></div><button class="sm" style="width:100%;margin-top:8px" onclick="showTn()">← '+L('ফিরে যান','Back')+'</button>';
+  $('scv').style.display='block';
+}
+function tnToBoard(id){
+  const d=tnTable(id);if(!d)return;
+  CB.t=d.t.name+' – '+L('পয়েন্ট টেবিল','Points Table');
+  CB.x=d.rows.map((r,i)=>(i+1)+'. '+r.n+'   P '+r.p+'  W '+r.w+'  L '+r.l+'  Pts '+r.pt).join('\n');
+  CB.i='';CB.on=true;PC.on=false;storePC();storeCB();hideCard();
+  if(S)save();else push();render();toast('📺 '+L('কাস্টম বোর্ডে দেওয়া হয়েছে','Sent to custom board'));
+}
+async function tnDel(id){
+  if(!(await dlg(L('এই টুর্নামেন্ট মুছবেন? (ম্যাচের হিস্টোরি থাকবে)','Delete this tournament? (match history stays)'))))return;
+  TN=TN.filter(t=>t.id!=id);storeTN();showTn();
 }
 const Q=new URLSearchParams(location.search),OVM=Q.get('view')==='overlay';
 let CFG={db:'',m:'match1'};try{CFG=Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')))}catch(e){}
 let pt=null;
-function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,spl:S.spl||'',cb:cbp(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,lang:LANG,ts:Date.now()}}
+function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,spl:S.spl||'',cb:cbp(),pc:pcp(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,lang:LANG,ts:Date.now()}}
 const N=v=>Number(v)||0,Sx=v=>String(v==null?'':v);
 function unpack(o){
   const bs=o.bs||{},t=o.t||[];
@@ -647,14 +774,15 @@ function push(){
   if(OVM||!CFG.db)return;clearTimeout(pt);
   pt=setTimeout(async()=>{
     const t=await token();
-    fetch(furl()+(t?'?auth='+encodeURIComponent(t):''),{method:'PUT',body:JSON.stringify(S?pack():{lang:LANG,ts:Date.now(),cb:cbp()})}).then(r=>{if(!r.ok)throw 0;syn(true)}).catch(()=>syn(false))},300);
+    fetch(furl()+(t?'?auth='+encodeURIComponent(t):''),{method:'PUT',body:JSON.stringify(S?pack():{lang:LANG,ts:Date.now(),cb:cbp(),pc:pcp()})}).then(r=>{if(!r.ok)throw 0;syn(true)}).catch(()=>syn(false))},300);
 }
 let lastEv=null;
 function poll(){
   fetch(Q.get('db')+'/matches/'+Q.get('m')+'.json?t='+Date.now()).then(r=>r.json()).then(o=>{
-    CBd=o&&o.cb?{t:Sx(o.cb.t).slice(0,80),x:Sx(o.cb.x).slice(0,1500)}:null;
+    CBd=o&&o.cb?{t:Sx(o.cb.t).slice(0,80),x:Sx(o.cb.x).slice(0,1500),i:Sx(o.cb.i).slice(0,300)}:null;
+    PCd=o&&o.pc?cleanPC(o.pc):null;
     $('bcw').style.visibility=(o&&o.t)?'visible':'hidden';
-    if(!(o&&o.t)){setPanel($('lsc'),false);if(o&&o.lang)LANG=o.lang=='en'?'en':'bn';renderCB()}
+    if(!(o&&o.t)){setPanel($('lsc'),false);if(o&&o.lang)LANG=o.lang=='en'?'en':'bn';renderCB();renderPC()}
     if(o&&o.t){LANG=o.lang=='en'?'en':'bn';S=unpack(o);SCL=o.sc?(o.sc.inns||[]).slice(0,2).map(c=>({team:Sx(c.team),runs:N(c.runs),w:N(c.w),balls:N(c.balls),outs:(c.outs||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),how:Sx(x.how),bw:Sx(x.bw)})),bat:(c.bat||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s)})),bw:(c.bws||[]).reduce((a,b)=>{a[Sx(b.n)]={r:N(b.r),w:N(b.w),b:N(b.b),m:N(b.m)};return a},{})})):[];SCRES=Sx(o.sc&&o.sc.res);render();
       if(o.ev){if(lastEv===null)lastEv=o.ev.id;else if(o.ev.id>lastEv){lastEv=o.ev.id;playEv(o.ev)}}else if(lastEv===null)lastEv=0}}).catch(()=>{});
 }
@@ -693,7 +821,7 @@ function minus(k){
 }
 addEventListener('resize',fit);
 if(OVM){$('lock').style.display='none';document.body.classList.add('ovm');document.body.appendChild($('ov'));$('ov').className='clear';poll();setInterval(poll,1500)}
-else{load();rosUI();$('fdb').value=CFG.db;$('fm').value=CFG.m;$('fk').value=CFG.key||'';$('fe').value=CFG.email||'';render();push();if(needLock())showLock();else $('lock').style.display='none'}
+else{load();rosUI();tnUI();$('fdb').value=CFG.db;$('fm').value=CFG.m;$('fk').value=CFG.key||'';$('fe').value=CFG.email||'';render();push();if(needLock())showLock();else $('lock').style.display='none'}
 if('serviceWorker' in navigator&&location.protocol.indexOf('http')==0)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
