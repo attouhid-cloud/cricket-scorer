@@ -2,6 +2,8 @@
 <html lang="bn">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.firebaseio.com https://*.firebasedatabase.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cricket Scorer + Overlay</title>
 <style>:root{--bg:#0f1220;--card:#1a1e33;--ac:#ffd400;--mut:#8f97b8;--red:#e53935;--grn:#0ea56a}
@@ -31,7 +33,7 @@ summary{cursor:pointer}
 #toast.on{opacity:1}
 button.on{background:var(--grn)}
 body.ovm{background:transparent;padding:0}
-body.ovm #setup,body.ovm #app{display:none!important}
+body.ovm #setup,body.ovm #app,body.ovm #cbcard{display:none!important}
 #dlg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .dbox{background:#1a1e33;border-radius:16px;padding:18px;width:100%;max-width:380px}
 #dmsg{font-size:16px;margin-bottom:12px;line-height:1.4}
@@ -134,6 +136,27 @@ body.ovm #setup,body.ovm #app{display:none!important}
 .g5{color:#e8ecfa;font-size:13px}.g5 .d{font-size:12px;color:#e8ecfa;font-weight:600}
 .c{font-size:13px}
 .inn{color:#ffe14d;font-size:11px}
+#lock{position:fixed;inset:0;background:#0f1220;z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
+/* scorecard design */
+#scb h3,#lsc h3{background:linear-gradient(90deg,#0ea56a,#0a6b47);color:#fff;padding:8px 12px;border-radius:8px;margin:0 0 6px;font-size:1.1em;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+#scb .cols>div>table:nth-of-type(1) th,#lsc .cols>div>table:nth-of-type(1) th{background:#2d3a8c;color:#ffe14d;font-weight:800}
+#scb .cols>div>table:nth-of-type(2) th,#lsc .cols>div>table:nth-of-type(2) th{background:#0f5d6e;color:#7ff0ff;font-weight:800}
+#scb th,#lsc th{padding:7px 6px}
+#scb th:first-child,#lsc th:first-child{border-radius:6px 0 0 6px}
+#scb th:last-child,#lsc th:last-child{border-radius:0 6px 6px 0}
+#scb tr:nth-child(even) td,#lsc tr:nth-child(even) td{background:rgba(255,255,255,.05)}
+#scb tr:last-child td:first-child{font-weight:700}
+#scb .cols>div>table,#lsc .cols>div>table{margin-bottom:12px}
+textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;background:#0f1220;color:#fff;font-size:15px;font-family:inherit}
+#cbd{display:none}
+#ov:not(.inline) #cbd.on{display:block;position:absolute;left:50%;top:calc((100% - var(--bh,68px))/2);transform:translate(-50%,-50%);width:min(900px,92vw);max-height:calc(100% - var(--bh,68px) - 40px);overflow:hidden;background:rgba(15,18,32,.95);border:1px solid #2d3355;border-radius:16px;padding:.7em;font-size:clamp(14px,2.6vw,36px);color:#fff}
+#cbt{background:linear-gradient(90deg,#0ea56a,#0a6b47);padding:.35em .8em;font-weight:800;text-align:center;border-radius:10px;margin-bottom:.5em}
+#cbx{white-space:pre-line;text-align:center;font-weight:700;line-height:1.5}
+/* clearer target / need text */
+#top{height:26px;font-size:13px}
+#top .rs{font-size:15px;font-weight:800;color:#fff}
+#top .rs:not(:empty){background:rgba(0,0,0,.4);border-radius:5px;padding:1px 12px;flex:0 1 auto;margin:0 auto}
+#ov:not(.inline) #bc{height:68px}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -151,6 +174,7 @@ body.ovm #setup,body.ovm #app{display:none!important}
   <div><label>ওভার / Overs</label><input id="ovn" type="number" value="20" min="1"></div></div>
   <label>টুর্নামেন্ট / Tournament</label><input id="tt" value="স্থানীয় ক্রিকেট চ্যাম্পিয়নশিপ ২০২৬" style="margin-bottom:8px">
   <label>স্পনসর / Sponsor</label><input id="sp" value="স্পন্সর ১ - প্রিমিয়াম ব্র্যান্ড" style="margin-bottom:8px">
+  <label>স্পনসর লেবেল (যেমন Presented by) / Sponsor label</label><input id="spl" placeholder="SPONSOR" style="margin-bottom:8px">
   <div class="row"><div><label>ব্যাটসম্যান ১ / Batter 1</label><input id="b1" list="ros" value="তামিম"></div>
   <div><label>ব্যাটসম্যান ২ / Batter 2</label><input id="b2" list="ros" value="সাকিব"></div>
   <div><label>বোলার / Bowler</label><input id="bn" list="ros" value="মাশরাফী"></div></div>
@@ -162,7 +186,7 @@ body.ovm #setup,body.ovm #app{display:none!important}
   <!-- OVERLAY -->
 <div id="ov" class="inline" onclick="bgNext(event)">
   <button id="exit" onclick="hideOv(event)">✕</button>
-  <div id="lsc"></div><div id="bcw"><div id="stg"><div id="spon"><i>SPONSOR</i><span id="oSp"></span></div>
+  <div id="lsc"></div><div id="cbd"><div id="cbt"></div><div id="cbx"></div></div><div id="bcw"><div id="stg"><div id="spon"><i>SPONSOR</i><span id="oSp"></span></div>
   <div id="bc"><div id="anim"><span></span></div>
       <div id="top"><span class="v" id="oVe"></span><span class="t" id="oTt"></span><span class="rs" id="res"></span><span class="fh" id="oFH"></span><span class="lv">● LIVE</span></div>
       <div id="main">
@@ -209,6 +233,7 @@ body.ovm #setup,body.ovm #app{display:none!important}
     <div class="row"><div><label>ভেন্যু / Venue</label><input id="e_ve"></div><div><label>মোট ওভার / Overs</label><input id="e_ov" type="number"></div></div>
     <label>টুর্নামেন্ট / Tournament</label><input id="e_tt" style="margin-bottom:8px">
     <label>স্পনসর / Sponsor</label><input id="e_sp" style="margin-bottom:8px">
+    <label>স্পনসর লেবেল / Sponsor label</label><input id="e_spl" placeholder="SPONSOR" style="margin-bottom:8px">
     <div class="row"><div><label>রান / Runs</label><input id="e_ru" type="number"></div><div><label>উইকেট / Wkts</label><input id="e_wk" type="number"></div><div><label>ওভার (1.2) / Overs (1.2)</label><input id="e_ba"></div></div>
     <div class="row"><div><label>১ম ইনিংস রান / 1st inn.</label><input id="e_fr" type="number"></div></div>
     <div class="row"><div><label>ব্যাট ১ রান / Bat 1 runs</label><input id="e_r0" type="number"></div><div><label>ব্যাট ১ বল / Bat 1 balls</label><input id="e_b0" type="number"></div><div><label>ব্যাট ২ রান / Bat 2 runs</label><input id="e_r1" type="number"></div><div><label>ব্যাট ২ বল / Bat 2 balls</label><input id="e_b1" type="number"></div></div>
@@ -218,14 +243,28 @@ body.ovm #setup,body.ovm #app{display:none!important}
   <div class="card" style="margin-top:10px"><h3>🔗 ওভারলে লিংক / Overlay Link (Prism Live)</h3>
    <label>Firebase Database URL</label><input id="fdb" placeholder="https://your-project-default-rtdb.firebaseio.com" style="margin-bottom:8px">
    <label>ম্যাচ কোড / Match code</label><input id="fm" value="match1" style="margin-bottom:8px">
+   <label>Firebase Web API Key</label><input id="fk" autocomplete="off" style="margin-bottom:8px">
+   <label>ইমেইল / Email</label><input id="fe" type="email" autocomplete="off" style="margin-bottom:8px">
+   <label>পাসওয়ার্ড / Password</label><input id="fp" type="password" autocomplete="off" style="margin-bottom:8px">
+   <div class="row" style="margin:0 0 8px"><button class="g" style="flex:1;font-size:15px;padding:12px" onclick="signIn()">🔐 Firebase লগইন / Firebase Sign-in</button></div>
    <div class="row" style="margin:0"><button class="g" style="flex:1;font-size:15px;padding:12px" onclick="saveCfg()">💾 সেভ / Save</button><button style="flex:1;font-size:15px;padding:12px" onclick="copyLink()">📋 লিংক কপি / Copy Link</button></div>
    <div id="syn" style="font-size:12px;color:var(--mut);margin-top:8px"></div></div>
   <div id="toast"></div>
 </div>
 
+<div id="cbcard" class="card" style="margin-top:10px"><h3>🧾 কাস্টম বোর্ড / Custom Board</h3>
+  <label>শিরোনাম / Title</label><input id="cb_t" placeholder="Upcoming Matches" style="margin-bottom:8px">
+  <label>লেখা (প্রতি লাইনে একটা) / Text (one per line)</label><textarea id="cb_x" rows="6" placeholder="Tigers vs Eagles - 3:00 PM"></textarea>
+  <div class="row" style="margin:8px 0 0"><button class="g" style="flex:1;font-size:15px;padding:12px" onclick="saveCB()">💾 সেভ / Save</button><button id="cbb" style="flex:1;font-size:15px;padding:12px" onclick="toggleCB()"></button></div></div>
 <div id="dlg"><div class="dbox"><div id="dmsg"></div><input id="din"><div id="dch"></div><div class="drow"><button id="dno"></button><button id="dok" class="g"></button></div></div></div>
 
 <div id="scv" style="display:none"><div class="scw"><button id="scx" class="w" onclick="hideCard()">✕</button><div id="scb"></div></div></div>
+
+<div id="lock"><div class="dbox"><h3 id="lt"></h3>
+<label id="lul"></label><input id="lu" autocomplete="username" autocapitalize="off" style="margin-bottom:10px">
+<label id="lpl"></label><input id="lpw" type="password" autocomplete="current-password" onkeydown="if(event.key=='Enter')tryLogin()" style="margin-bottom:10px">
+<label style="display:flex;gap:8px;align-items:center;margin-bottom:12px;font-size:13px"><input id="lrem" type="checkbox" style="width:auto"><span id="lrl"></span></label>
+<button id="lbtn" class="g" style="width:100%;padding:12px;font-size:16px" onclick="tryLogin()"></button></div></div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -234,7 +273,7 @@ const bgs=['','green','black','clear'];let bgi=0;
 function save(){try{localStorage.setItem('cs2',JSON.stringify({S,H}))}catch(e){}push()}
 function load(){try{const d=JSON.parse(localStorage.getItem('cs2'));if(d&&d.S){S=d.S;H=d.H||[];return true}}catch(e){}return false}
 function start(){
-  S={id:Date.now(),t:[$('t1').value,$('t2').value],ve:$('ve').value,tt:$('tt').value,sp:$('sp').value,ov:+$('ovn').value||20,
+  S={spl:($('spl').value||'').trim().slice(0,30),id:Date.now(),t:[$('t1').value,$('t2').value],ve:$('ve').value,tt:$('tt').value,sp:$('sp').value,ov:+$('ovn').value||20,
    inn:0,runs:0,w:0,balls:0,tb:[],first:null,
    bat:[{n:$('b1').value||'ব্যাটসম্যান ১',r:0,b:0},{n:$('b2').value||'ব্যাটসম্যান ২',r:0,b:0}],
    st:0,bn:$('bn').value||'বোলার',bw:{},orun:0};
@@ -345,7 +384,7 @@ function saveName(id){
 }
 function saveEdit(){
   snap();const g=id=>$(id).value,n=id=>+$(id).value||0;
-  S.t=[g('e_t0')||S.t[0],g('e_t1')||S.t[1]];S.ve=g('e_ve');S.tt=g('e_tt');S.sp=g('e_sp');S.ov=n('e_ov')||S.ov;
+  S.t=[g('e_t0')||S.t[0],g('e_t1')||S.t[1]];S.ve=g('e_ve');S.tt=g('e_tt');S.sp=g('e_sp');S.spl=g('e_spl').trim().slice(0,30);S.ov=n('e_ov')||S.ov;
   S.runs=n('e_ru');S.w=Math.min(10,n('e_wk'));S.balls=po(g('e_ba'));
   if(S.first)S.first.runs=n('e_fr');
   S.bat[0].r=n('e_r0');S.bat[0].b=n('e_b0');S.bat[1].r=n('e_r1');S.bat[1].b=n('e_b1');
@@ -356,7 +395,7 @@ async function newMatch(){
   if(!(await dlg(L('নতুন ম্যাচ শুরু করবেন? বর্তমান স্কোর মুছে যাবে।','Start a new match? Current score will be cleared.'))))return;
   if(!S.fin&&(S.runs>0||S.inn==1))saveHist(false);
   S=null;H=[];try{localStorage.removeItem('cs2')}catch(e){}
-  if(CFG.db)fetch(furl(),{method:'DELETE'}).catch(()=>{});
+  if(CFG.db)token().then(t=>fetch(furl()+(t?'?auth='+encodeURIComponent(t):''),{method:'DELETE'})).catch(()=>{});
   render();window.scrollTo(0,0);toast(L('নতুন ম্যাচের সেটআপ দিন','Set up the new match'));
 }
 function result(M){
@@ -367,6 +406,7 @@ function result(M){
   const d=M.first.runs-M.runs;return L(M.t[0]+' '+d+' রানে জিতেছে',M.t[0]+' won by '+d+' runs');
 }
 function render(){
+  renderCB();
   $('lbn').classList.toggle('on',LANG=='bn');$('len').classList.toggle('on',LANG=='en');
   if(!OVM)applyUI();
   if(!S){$('setup').classList.remove('hide');$('app').classList.add('hide');return}
@@ -378,11 +418,11 @@ function render(){
   $('fhb').textContent='🎯 '+L('ফ্রি হিট','Free Hit')+': '+(S.fh?'ON':'OFF');$('fhb').classList.toggle('on',!!S.fh);
   $('oFH').style.display=S.fh?'inline-block':'none';$('oFH').textContent=L('ফ্রি হিট','FREE HIT');
   setv('i0',S.bat[0].n);setv('i1',S.bat[1].n);setv('ib',S.bn);
-  setv('e_t0',S.t[0]);setv('e_t1',S.t[1]);setv('e_ve',S.ve);setv('e_ov',S.ov);setv('e_tt',S.tt);setv('e_sp',S.sp);
+  setv('e_t0',S.t[0]);setv('e_t1',S.t[1]);setv('e_ve',S.ve);setv('e_ov',S.ov);setv('e_tt',S.tt);setv('e_sp',S.sp);setv('e_spl',S.spl||'');
   setv('e_ru',S.runs);setv('e_wk',S.w);setv('e_ba',ovs(S.balls));setv('e_fr',S.first?S.first.runs:'');
   setv('e_r0',S.bat[0].r);setv('e_b0',S.bat[0].b);setv('e_r1',S.bat[1].r);setv('e_b1',S.bat[1].b);
   setv('e_bw',b.w);setv('e_br',b.r);setv('e_bo',ovs(b.b));setv('e_bm',b.m);
-  $('oSp').textContent=S.sp;document.querySelector('#spon i').textContent=L('স্পনসর','SPONSOR');document.querySelector('#top .lv').textContent='● '+L('লাইভ','LIVE');$('oVe').textContent=S.ve;$('oTt').textContent=S.tt;
+  $('oSp').textContent=S.sp;document.querySelector('#spon i').textContent=S.spl||L('স্পনসর','SPONSOR');document.querySelector('#top .lv').textContent='● '+L('লাইভ','LIVE');$('oVe').textContent=S.ve;$('oTt').textContent=S.tt;
   $('oTn').textContent=tn;$('oIn').textContent=L('ইনিংস','INNINGS')+' '+(S.inn+1);
   $('oSc').textContent=S.runs+'/'+S.w;$('oOv').textContent='('+ovs(S.balls)+'/'+S.ov+' '+L('ওভার','ov')+')';
   $('oB0').textContent=S.bat[st].n+'*';$('oR0').innerHTML=S.bat[st].r+' <small style="color:#8f97b8;font-weight:400">('+S.bat[st].b+')</small>';
@@ -390,10 +430,10 @@ function render(){
   $('oBw').textContent=S.bn;$('oBf').textContent=b.w+'-'+b.r;
   $('oBo').textContent=L('ওভার','Over')+': '+ovs(b.b);$('oBm').textContent=L('মেডেন','Maiden')+': '+b.m;
   $('oCr').textContent=rr;
-  {const ls=$('lsc');ls.classList.toggle('on',!!S.showSC);
+  {const ls=$('lsc');ls.classList.toggle('on',!!S.showSC&&!(OVM?CBd:CB.on));
    if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');ls.innerHTML=(r?'<div class="rsl">'+esc(r)+'</div>':'')+cardHTML(S,OVM?SCL:null)}}
   $('lsb').textContent='📺 '+L('লাইভে স্কোরকার্ড','Scorecard on live')+': '+(S.showSC?'ON':'OFF');$('lsb').classList.toggle('on',!!S.showSC);$('oPs').textContent=(S.pr||S.pb)?L('পার্টনারশিপ ','Partnership ')+(S.pr||0)+' ('+(S.pb||0)+')':'';
-  $('oCh').innerHTML=S.tb.map(x=>'<div class="c '+x.c+'">'+x.l+'</div>').join('');
+  $('oCh').innerHTML=S.tb.map(x=>'<div class="c '+x.c+'">'+esc(x.l)+'</div>').join('');
   let r='';
   if(S.inn==1){
     const T=S.first.runs+1,need=T-S.runs,left=S.ov*6-S.balls;
@@ -405,7 +445,7 @@ function render(){
 
 
 function applyUI(){
-  ['setup','app'].forEach(id=>{
+  ['setup','app','cbcard'].forEach(id=>{
     const w=document.createTreeWalker($(id),NodeFilter.SHOW_TEXT);let n;
     while(n=w.nextNode()){
       if(n._b===undefined){
@@ -453,7 +493,7 @@ function fit(){
   const vw=innerWidth,DW=vw>=900?1280:800,k=vw/DW;
   g.classList.toggle('cmp',vw<900);
   g.style.width=DW+'px';g.style.transform='scale('+k+')';
-  w.style.height=(64*k)+'px';ov.style.setProperty('--bh',(64*k)+'px');
+  w.style.height=(68*k)+'px';ov.style.setProperty('--bh',(68*k)+'px');
 }
 
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -502,7 +542,7 @@ async function editPlayers(){
   rosUI();toast('💾 '+ROS.length+' '+L('জন প্লেয়ার','players'));
 }
 let scT=null,SCL=[],SCRES='';
-function toggleSC(){if(!S)return;clearTimeout(scT);S.showSC=!S.showSC;save();render()}
+function toggleSC(){if(!S)return;clearTimeout(scT);S.showSC=!S.showSC;if(S.showSC){CB.on=false;storeCB()}save();render()}
 function scPack(){
   const f=bw=>Object.keys(bw||{}).map(n=>Object.assign({n:n},bw[n]));
   const one=(c,bw)=>({team:c.team,runs:c.runs,w:c.w,balls:c.balls,outs:c.outs||[],bat:c.bat||[],bws:f(bw)});
@@ -510,27 +550,96 @@ function scPack(){
   l.push(one({team:S.t[S.inn],runs:S.runs,w:S.w,balls:S.balls,outs:S.outs,bat:S.bat.filter(x=>!x.out)},S.bw));
   return{inns:l,res:S.fin?result():''};
 }
+
+let AU=null;try{AU=JSON.parse(localStorage.getItem('au'))}catch(e){}
+async function signIn(){
+  const key=$('fk').value.trim(),email=$('fe').value.trim(),pw=$('fp').value;
+  if(!key||!email||!pw){toast('⚠️ '+L('API Key, ইমেইল ও পাসওয়ার্ড দিন','Enter API key, email and password'));return}
+  try{
+    const r=await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pw,returnSecureToken:true})});
+    const d=await r.json();if(!r.ok)throw 0;
+    AU={rt:d.refreshToken,it:d.idToken,exp:Date.now()+(N(d.expiresIn)-60)*1000};
+    CFG.key=key;CFG.email=email;storeCfg();try{localStorage.setItem('au',JSON.stringify(AU))}catch(e){}
+    $('fp').value='';toast('🔐 '+L('লগইন হয়েছে','Signed in'));push();
+  }catch(e){toast('⚠️ '+L('লগইন হয়নি','Sign-in failed'))}
+}
+async function token(){
+  if(!CFG.key||!AU)return null;
+  if(Date.now()<AU.exp)return AU.it;
+  try{
+    const r=await fetch('https://securetoken.googleapis.com/v1/token?key='+encodeURIComponent(CFG.key),{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(AU.rt)});
+    const d=await r.json();if(!r.ok)throw 0;
+    AU={rt:d.refresh_token,it:d.id_token,exp:Date.now()+(N(d.expires_in)-60)*1000};
+    try{localStorage.setItem('au',JSON.stringify(AU))}catch(e){}
+    return AU.it;
+  }catch(e){return null}
+}
+const AUTHH={s:'18fdefcc8b8261d010fa888cb7c58735',h:'6408c2ee69ed6a3588c0acc5a13677b3ab97f7a94caeca18ef431ce15274e2cd',i:100000};
+async function kdf(u,p){
+  const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(u.trim().toLowerCase()+':'+p),'PBKDF2',false,['deriveBits']);
+  const b=await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:new TextEncoder().encode(AUTHH.s),iterations:AUTHH.i},k,256);
+  return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+function needLock(){try{return !OVM&&sessionStorage.getItem('unl')!==AUTHH.h&&localStorage.getItem('unl2')!==AUTHH.h}catch(e){return true}}
+function showLock(){
+  $('lt').textContent='🔐 '+L('লগইন করুন','Sign in');$('lul').textContent=L('ইউজারনেম','Username');$('lpl').textContent=L('পাসওয়ার্ড','Password');
+  $('lrl').textContent=L('এই ডিভাইসে মনে রাখুন','Remember on this device');$('lbtn').textContent=L('প্রবেশ করুন','Enter');
+  $('lock').style.display='flex';setTimeout(()=>$('lu').focus(),60);
+}
+async function tryLogin(){
+  const u=$('lu').value,p=$('lpw').value;$('lpw').value='';
+  let ok=false;try{ok=(await kdf(u,p))===AUTHH.h}catch(e){}
+  if(ok){try{sessionStorage.setItem('unl',AUTHH.h);if($('lrem').checked)localStorage.setItem('unl2',AUTHH.h)}catch(e){}$('lock').style.display='none'}
+  else{toast('⚠️ '+L('ইউজারনেম বা পাসওয়ার্ড ভুল','Wrong username or password'))}
+}
+
+let CB={on:false,t:'',x:''},CBd=null;try{CB=Object.assign(CB,JSON.parse(localStorage.getItem('cb')))}catch(e){}
+const cbp=()=>CB.on?{t:CB.t,x:CB.x}:null;
+function storeCB(){try{localStorage.setItem('cb',JSON.stringify(CB))}catch(e){}}
+function readCB(){CB.t=$('cb_t').value.trim().slice(0,80);CB.x=$('cb_x').value.slice(0,1500)}
+function saveCB(){readCB();storeCB();push();render();toast('💾 '+L('সেভ হয়েছে','Saved'))}
+function toggleCB(){readCB();CB.on=!CB.on;if(CB.on&&S)S.showSC=false;storeCB();if(S)save();else push();render()}
+function renderCB(){
+  const d=$('cbd'),c=OVM?CBd:(CB.on?CB:null);
+  d.classList.toggle('on',!!c);
+  if(c){$('cbt').textContent=c.t||'';$('cbt').style.display=c.t?'':'none';$('cbx').textContent=c.x||''}
+  if(!OVM){setv('cb_t',CB.t);setv('cb_x',CB.x);$('cbb').textContent='📺 '+L('লাইভে দেখান','Show on live')+': '+(CB.on?'ON':'OFF');$('cbb').classList.toggle('on',CB.on)}
+}
 const Q=new URLSearchParams(location.search),OVM=Q.get('view')==='overlay';
 let CFG={db:'',m:'match1'};try{CFG=Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')))}catch(e){}
 let pt=null;
-function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,lang:LANG,ts:Date.now()}}
-function unpack(o){return{t:o.t,ve:o.ve||'',tt:o.tt||'',sp:o.sp||'',ov:o.ov,inn:o.inn,runs:o.runs,w:o.w,balls:o.balls,tb:o.tb||[],first:o.fr>=0?{runs:o.fr}:null,bat:o.bat,st:o.st,bn:o.bn,fh:!!o.fh,showSC:!!o.sc,pr:o.pr||0,pb:o.pb||0,ev:o.ev||null,bw:{[o.bn]:o.bs||{r:0,w:0,b:0,m:0}}}}
+function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,spl:S.spl||'',cb:cbp(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,lang:LANG,ts:Date.now()}}
+const N=v=>Number(v)||0,Sx=v=>String(v==null?'':v);
+function unpack(o){
+  const bs=o.bs||{},t=o.t||[];
+  return{t:[Sx(t[0]),Sx(t[1])],ve:Sx(o.ve),tt:Sx(o.tt),sp:Sx(o.sp),ov:N(o.ov)||20,inn:N(o.inn)?1:0,runs:N(o.runs),w:N(o.w),balls:N(o.balls),
+   tb:(o.tb||[]).slice(0,6).map(x=>({l:Sx(x.l).slice(0,6),c:/^[a-z]?$/.test(Sx(x.c))?Sx(x.c):''})),
+   first:o.fr>=0?{runs:N(o.fr)}:null,
+   bat:[0,1].map(i=>{const x=(o.bat||[])[i]||{};return{n:Sx(x.n),r:N(x.r),b:N(x.b)}}),st:N(o.st)?1:0,bn:Sx(o.bn),
+   fh:!!o.fh,spl:Sx(o.spl).slice(0,30),showSC:!!o.sc,pr:N(o.pr),pb:N(o.pb),ev:o.ev||null,
+   bw:{[Sx(o.bn)]:{r:N(bs.r),w:N(bs.w),b:N(bs.b),m:N(bs.m)}}};
+}
 const furl=()=>CFG.db+'/matches/'+CFG.m+'.json';
-function syn(ok){const e=$('syn');if(e)e.textContent=ok?L('✅ সিঙ্ক হয়েছে','✅ Synced'):L('⚠️ সিঙ্ক হয়নি (URL ও রুলস দেখুন)','⚠️ Sync failed (check URL & rules)')}
+function syn(ok){const e=$('syn');if(e)e.textContent=ok?L('✅ সিঙ্ক হয়েছে','✅ Synced'):L('⚠️ সিঙ্ক হয়নি (লগইন, URL ও রুলস দেখুন)','⚠️ Sync failed (check sign-in, URL & rules)')}
 function push(){
-  if(OVM||!CFG.db||!S)return;clearTimeout(pt);
-  pt=setTimeout(()=>{fetch(furl(),{method:'PUT',body:JSON.stringify(pack())}).then(r=>{if(!r.ok)throw 0;syn(true)}).catch(()=>syn(false))},300);
+  if(OVM||!CFG.db)return;clearTimeout(pt);
+  pt=setTimeout(async()=>{
+    const t=await token();
+    fetch(furl()+(t?'?auth='+encodeURIComponent(t):''),{method:'PUT',body:JSON.stringify(S?pack():{lang:LANG,ts:Date.now(),cb:cbp()})}).then(r=>{if(!r.ok)throw 0;syn(true)}).catch(()=>syn(false))},300);
 }
 let lastEv=null;
 function poll(){
   fetch(Q.get('db')+'/matches/'+Q.get('m')+'.json?t='+Date.now()).then(r=>r.json()).then(o=>{
-    if(o&&o.t){LANG=o.lang=='en'?'en':'bn';S=unpack(o);SCL=o.sc?(o.sc.inns||[]).map(c=>Object.assign({},c,{outs:c.outs||[],bat:c.bat||[],bw:(c.bws||[]).reduce((a,b)=>{a[b.n]=b;return a},{})})):[];SCRES=o.sc&&o.sc.res||'';render();
+    CBd=o&&o.cb?{t:Sx(o.cb.t).slice(0,80),x:Sx(o.cb.x).slice(0,1500)}:null;
+    $('bcw').style.visibility=(o&&o.t)?'visible':'hidden';
+    if(!(o&&o.t)){$('lsc').classList.remove('on');if(o&&o.lang)LANG=o.lang=='en'?'en':'bn';renderCB()}
+    if(o&&o.t){LANG=o.lang=='en'?'en':'bn';S=unpack(o);SCL=o.sc?(o.sc.inns||[]).slice(0,2).map(c=>({team:Sx(c.team),runs:N(c.runs),w:N(c.w),balls:N(c.balls),outs:(c.outs||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),how:Sx(x.how),bw:Sx(x.bw)})),bat:(c.bat||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s)})),bw:(c.bws||[]).reduce((a,b)=>{a[Sx(b.n)]={r:N(b.r),w:N(b.w),b:N(b.b),m:N(b.m)};return a},{})})):[];SCRES=Sx(o.sc&&o.sc.res);render();
       if(o.ev){if(lastEv===null)lastEv=o.ev.id;else if(o.ev.id>lastEv){lastEv=o.ev.id;playEv(o.ev)}}else if(lastEv===null)lastEv=0}}).catch(()=>{});
 }
+function storeCfg(){try{localStorage.setItem('cfg',JSON.stringify(CFG))}catch(e){}}
 function saveCfg(){
-  CFG={db:$('fdb').value.trim().replace(/\/+$/,''),m:($('fm').value.trim().replace(/[^A-Za-z0-9_-]/g,''))||'match1'};
-  try{localStorage.setItem('cfg',JSON.stringify(CFG))}catch(e){}
-  $('fdb').value=CFG.db;$('fm').value=CFG.m;push();toast('💾 '+L('সেভ হয়েছে','Saved'));
+  CFG={db:$('fdb').value.trim().replace(/\/+$/,''),m:($('fm').value.trim().replace(/[^A-Za-z0-9_-]/g,''))||'match1',key:$('fk').value.trim(),email:$('fe').value.trim()};
+  storeCfg();$('fdb').value=CFG.db;$('fm').value=CFG.m;push();toast('💾 '+L('সেভ হয়েছে','Saved'));
 }
 function fbCopy(t){try{const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();const ok=document.execCommand('copy');a.remove();return ok}catch(e){return false}}
 function copyText(t){
@@ -561,8 +670,8 @@ function minus(k){
   save();render();
 }
 addEventListener('resize',fit);
-if(OVM){document.body.classList.add('ovm');document.body.appendChild($('ov'));$('ov').className='clear';poll();setInterval(poll,1500)}
-else{load();rosUI();$('fdb').value=CFG.db;$('fm').value=CFG.m;render();push()}
+if(OVM){$('lock').style.display='none';document.body.classList.add('ovm');document.body.appendChild($('ov'));$('ov').className='clear';poll();setInterval(poll,1500)}
+else{load();rosUI();$('fdb').value=CFG.db;$('fm').value=CFG.m;$('fk').value=CFG.key||'';$('fe').value=CFG.email||'';render();push();if(needLock())showLock();else $('lock').style.display='none'}
 if('serviceWorker' in navigator&&location.protocol.indexOf('http')==0)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
