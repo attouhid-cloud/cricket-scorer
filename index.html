@@ -206,6 +206,27 @@ textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;bac
 #pcn{background:linear-gradient(90deg,rgba(14,165,106,.72),rgba(10,107,71,.72))}
 #pci{border-color:rgba(14,165,106,.85)}
 select{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;background:#0f1220;color:#fff;font-size:15px}
+/* player card — broadcast style */
+#ov:not(.inline) #pcd.on{display:flex;align-items:center;gap:0;width:auto;max-width:94vw;padding:.8em 1.6em .8em 1em;border-radius:1.3em;background:linear-gradient(135deg,rgba(6,12,10,.7),rgba(8,26,18,.6));border:2px solid #22c55e;box-shadow:0 0 0 2px rgba(34,197,94,.22),0 10px 30px rgba(0,0,0,.45),inset 0 0 28px rgba(34,197,94,.14);overflow:hidden;font-size:clamp(9px,1.5vw,20px)}
+#pcd::before{content:"";position:absolute;top:0;left:0;width:55%;height:.35em;background:linear-gradient(90deg,#22c55e,transparent)}
+#pcd::after{content:"";position:absolute;bottom:0;right:0;width:45%;height:.45em;background:linear-gradient(270deg,#22c55e,transparent)}
+.pcl{flex:0 0 auto;position:relative;width:7.4em;text-align:center}
+#pci{display:block;width:6.6em;height:6.6em;aspect-ratio:auto;margin:0 auto;object-fit:cover;border-radius:50%;border:.2em solid #22c55e;box-shadow:0 0 .9em rgba(34,197,94,.65);background:#0b1f17}
+#pcn{position:relative;margin:-1.1em -.8em 0;display:inline-block;transform:skewX(-14deg);background:linear-gradient(90deg,#15803d,#22c55e);padding:.2em .9em;border-radius:.3em;font-size:.85em;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.45);white-space:nowrap}
+#pcn>span{display:inline-flex;align-items:center;gap:.4em;transform:skewX(14deg)}
+.pcr{flex:0 1 auto;display:flex;align-items:center;margin-left:1.2em;padding-left:1.2em;border-left:1px solid rgba(255,255,255,.28);min-height:6em}
+#pcc{display:flex;align-items:center}
+.pgrp{display:flex;align-items:center}
+.pst{text-align:center;padding:0 1.1em}
+.pst b{display:block;font-size:3.2em;line-height:1;font-weight:800;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.6)}
+.pst.m b{color:#ffcc00}
+.pst span{display:inline-block;margin-top:.35em;padding:.05em .9em;font-size:.8em;font-weight:600;color:#e8f4ee;border:1px solid rgba(255,255,255,.5);border-radius:999px;background:rgba(255,255,255,.08)}
+.pdv{display:block;width:1px;height:4.2em;background:rgba(255,255,255,.28)}
+.pdv2{display:block;width:2px;height:5em;background:rgba(34,197,94,.7);margin:0 .6em}
+.pig{width:2em;height:2em;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.14);margin-right:.3em}
+.pig svg{width:1.4em;height:1.4em}
+#pct{display:none}
+#pcd.on #pct.has{display:block;position:absolute;top:0;right:1.4em;z-index:2;background:linear-gradient(90deg,#f59e0b,#fcd34d);color:#111;font-weight:800;font-size:.75em;padding:.15em 1em;border-radius:0 0 .6em .6em;letter-spacing:.05em;text-shadow:none}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -238,7 +259,7 @@ select{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;backg
   <!-- OVERLAY -->
 <div id="ov" class="inline" onclick="bgNext(event)">
   <button id="exit" onclick="hideOv(event)">✕</button>
-  <div id="lsc"></div><div id="cbd"><div id="cbt"></div><img id="cbi" alt=""><div id="cbx"></div></div><div id="pcd"><div class="pcl"><img id="pci" alt=""><div id="pcn"></div></div><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="bcw"><div id="stg"><div id="spon"><i>SPONSOR</i><span id="oSp"></span></div>
+  <div id="lsc"></div><div id="cbd"><div id="cbt"></div><img id="cbi" alt=""><div id="cbx"></div></div><div id="pcd"><div id="pct"></div><div class="pcl"><img id="pci" alt=""><div id="pcn"></div></div><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="bcw"><div id="stg"><div id="spon"><i>SPONSOR</i><span id="oSp"></span></div>
   <div id="bc"><div id="anim"><span></span></div>
       <div id="top"><span class="v" id="oVe"></span><span class="t" id="oTt"></span><span class="rs" id="res"></span><span class="fh" id="oFH"></span><span class="lv">● LIVE</span></div>
       <div id="main">
@@ -705,15 +726,23 @@ function statsIn(list,nm){
   });
   return{bt:bt,bw:bw};
 }
+function topOf(){
+  let tb=null,tw=null;
+  inns(S).forEach(c=>{
+    (c.outs||[]).concat(c.bat||[]).forEach(x=>{if(!tb||N(x.r)>tb.v)tb={n:x.n,v:N(x.r)}});
+    Object.keys(c.bw||{}).forEach(n=>{const b=c.bw[n];if(!tw||N(b.w)>tw.v||(N(b.w)==tw.v&&N(b.r)<tw.r))tw={n:n,v:N(b.w),r:N(b.r)}});
+  });
+  return{tb:tb,tw:tw};
+}
 function pcData(name,role){
   const nm=name.trim().toLowerCase(),pl=PL.find(p=>p.n.trim().toLowerCase()==nm);
-  const x=S?statsIn(inns(S),nm):{bt:null,bw:null};
-  const r=role||((x.bw&&(!x.bt||S.bn.trim().toLowerCase()==nm))?'bowl':'bat');
-  return{n:name.trim(),img:pl?pl.img||'':'',role:r,bt:x.bt,bw:x.bw};
+  const x=S?statsIn(inns(S),nm):{bt:null,bw:null},tp=S?topOf():{},k=n=>String(n).trim().toLowerCase();
+  return{n:name.trim(),img:pl?pl.img||'':'',role:role||'',bt:x.bt,bw:x.bw,
+    tsc:!!(x.bt&&tp.tb&&tp.tb.v>0&&k(tp.tb.n)==nm),twk:!!(x.bw&&tp.tw&&tp.tw.v>0&&k(tp.tw.n)==nm)};
 }
 function cleanPC(o){
   const bt=x=>x?{r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),no:!!x.no}:null,bw=x=>x?{o:Sx(x.o).slice(0,6),bl:N(x.bl),m:N(x.m),r:N(x.r),w:N(x.w)}:null;
-  return{n:Sx(o.n).slice(0,40),img:Sx(o.img).slice(0,300),role:o.role=='bowl'?'bowl':'bat',bt:bt(o.bt),bw:bw(o.bw)};
+  return{n:Sx(o.n).slice(0,40),img:Sx(o.img).slice(0,300),role:'',bt:bt(o.bt),bw:bw(o.bw),tsc:!!o.tsc,twk:!!o.twk};
 }
 let PC={on:false,n:''},PCd=null;try{PC=Object.assign(PC,JSON.parse(localStorage.getItem('pc')))}catch(e){}
 let paT=null;
@@ -723,31 +752,37 @@ function storePC(){try{localStorage.setItem('pc',JSON.stringify(PC))}catch(e){}}
 function livePC(){PC.n=$('pc_n').value.slice(0,40);PC.role='';storePC()}
 function pcFill(k){if(!S)return;$('pc_n').value=k=='st'?S.bat[S.st].n:S.bn;livePC();PC.role=k=='st'?'bat':'bowl';storePC()}
 function pcTop(k){
-  if(!S)return;let best=null;
-  inns(S).forEach(c=>{
-    if(k=='bat')(c.outs||[]).concat(c.bat||[]).forEach(x=>{if(!best||x.r>best.v)best={n:x.n,v:x.r}});
-    else Object.keys(c.bw||{}).forEach(n=>{const b=c.bw[n];if(!best||b.w>best.v||(b.w==best.v&&b.r<best.r))best={n:n,v:b.w,r:b.r}});
-  });
-  if(!best||(k=='bowl'&&!best.v)||(k=='bat'&&!S.balls&&!S.card1)){toast('⚠️ '+L(k=='bat'?'এখনো কোনো রান নেই':'এখনো কেউ উইকেট পায়নি',k=='bat'?'No runs yet':'No wickets yet'));return}
-  PC.n=best.n;PC.role=k;PC.on=true;CB.on=false;storeCB();storePC();S.showSC=false;save();render();
+  if(!S)return;const t=topOf(),b=k=='bat'?t.tb:t.tw;
+  if(!b||!b.v){toast('⚠️ '+L(k=='bat'?'এখনো কোনো রান নেই':'এখনো কেউ উইকেট পায়নি',k=='bat'?'No runs yet':'No wickets yet'));return}
+  PC.n=b.n;PC.role=k;PC.on=true;CB.on=false;storeCB();storePC();S.showSC=false;save();render();
 }
 function togglePC(){
   PC.n=$('pc_n').value.slice(0,40);const on=!PC.on&&!!PC.n.trim();PC.on=on;
   if(on){CB.on=false;storeCB();if(S)S.showSC=false}
   storePC();if(S)save();else push();render();
 }
+const DEF_IMG='data:image/svg+xml;utf8,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' fill='#12392a'/><g fill='#f5e6b8'><rect x='78' y='60' width='10' height='95' rx='3'/><rect x='95' y='60' width='10' height='95' rx='3'/><rect x='112' y='60' width='10' height='95' rx='3'/><rect x='80' y='54' width='22' height='5' rx='2'/><rect x='99' y='54' width='22' height='5' rx='2'/></g><g transform='rotate(-28 60 140)'><rect x='48' y='70' width='26' height='80' rx='8' fill='#d9a05b'/><rect x='56' y='40' width='10' height='34' rx='4' fill='#7a4b1f'/></g><circle cx='146' cy='150' r='17' fill='#d62828'/><path d='M132 144q14 6 28 0M132 156q14-6 28 0' stroke='#fff' stroke-width='2' fill='none'/></svg>");
+const BAT_SVG='<svg viewBox="0 0 24 24"><g transform="rotate(40 12 12)"><rect x="10" y="1" width="4" height="12" rx="1.5" fill="#e3b56a"/><rect x="11" y="13" width="2" height="9" rx="1" fill="#8a5a2b"/></g></svg>';
+const BALL_SVG='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#e11d2e"/><path d="M5 9q7 3 14 0M5 15q7-3 14 0" stroke="#fff" stroke-width="1.3" fill="none"/></svg>';
+const USER_SVG='<svg viewBox="0 0 24 24" width="1em" height="1em" fill="#fff"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg>';
 function renderPC(){
   const d=$('pcd'),c=OVM?PCd:pcp();
   setPanel(d,!!c);
   if(!OVM){setv('pc_n',PC.n);$('pcb').textContent='📺 '+L('প্লেয়ার কার্ড','Player card')+': '+(PC.on?'ON':'OFF');$('pcb').classList.toggle('on',PC.on)}
   if(!c)return;
-  const pi=$('pci'),u=imgUrl(c.img);
-  if(u){if(pi.getAttribute('data-s')!==u){pi.setAttribute('data-s',u);pi.src=u}pi.classList.add('has');pi.onerror=()=>pi.classList.remove('has')}else pi.classList.remove('has');
-  $('pcn').textContent=c.n;
-  const bx=(v,l)=>'<div class="pst"><b>'+esc(v)+'</b><small>'+l+'</small></div>';
-  let h;
-  if(c.role=='bowl'){const w=c.bw;h=w?bx(w.w,L('উইকেট','Wickets'))+bx(w.r,L('রান','Runs'))+bx(w.bl,L('বল','Balls')):'<div class="pcs">'+L('এখনো বল করেনি','Not bowled yet')+'</div>'}
-  else{const b=c.bt;h=b?bx(b.r+(b.no?'*':''),L('রান','Runs'))+bx(b.b,L('বল','Balls')):'<div class="pcs">'+L('এখনো ব্যাট করেনি','Not batted yet')+'</div>'}
+  const pi=$('pci'),u=imgUrl(c.img)||DEF_IMG;
+  if(pi.getAttribute('data-s')!==u){pi.setAttribute('data-s',u);pi.src=u}
+  pi.classList.add('has');
+  pi.onerror=()=>{if(pi.getAttribute('data-s')!==DEF_IMG){pi.setAttribute('data-s',DEF_IMG);pi.src=DEF_IMG}};
+  $('pcn').innerHTML='<span>'+USER_SVG+'<span>'+esc(c.n)+'</span></span>';
+  const tt=[];if(c.tsc)tt.push(L('সেরা ব্যাটসম্যান','TOP SCORER'));if(c.twk)tt.push(L('সেরা বোলার','TOP WICKET TAKER'));
+  const pt=$('pct');pt.textContent=tt.length?'🏆 '+tt.join(' · '):'';pt.classList.toggle('has',tt.length>0);
+  const st=(v,l,m)=>'<div class="pst'+(m?' m':'')+'"><b>'+esc(v)+'</b><span>'+l+'</span></div>',dv='<i class="pdv"></i>',both=!!(c.bt&&c.bw);
+  const ic=k=>both?'<div class="pig">'+(k=='bat'?BAT_SVG:BALL_SVG)+'</div>':'';
+  let h='';
+  if(c.bt)h+='<div class="pgrp">'+ic('bat')+st(c.bt.r+(c.bt.no?'*':''),L('রান','Runs'),1)+dv+st(c.bt.b,L('বল','Balls'))+'</div>';
+  if(c.bw){if(h)h+='<i class="pdv2"></i>';h+='<div class="pgrp">'+ic('bowl')+st(c.bw.w,L('উইকেট','Wickets'),1)+dv+st(c.bw.r,L('রান','Runs'))+dv+st(c.bw.bl,L('বল','Balls'))+'</div>'}
+  if(!h)h='<div class="pcs">'+L('এখনো খেলেনি','Not played yet')+'</div>';
   $('pcc').innerHTML=h;$('pcp').innerHTML='';
 }
 let TN=[];try{TN=JSON.parse(localStorage.getItem('tn'))||[]}catch(e){}
