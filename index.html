@@ -282,6 +282,29 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 #ov.inline .g3,#ov.inline .g4,#ov.inline .g5{border-left:0}
 #ov.inline .ch{margin-left:0;border-left:0;flex-wrap:wrap}
 .fxr.run{background:rgba(255,204,0,.08);border-radius:10px;padding:10px 8px}.fxr.run small{color:#ffcc00;font-weight:700}.fxs{color:#ffcc00;font-weight:800;margin-left:6px}.fxn b{margin-right:4px}
+/* ===== neon match list board ===== */
+#fxd{display:none}
+#ov:not(.inline) #fxd.on{display:block;position:absolute;left:50%;top:calc((100% - var(--bh,104px))/2 + .8em);transform:translate(-50%,-50%);width:min(1000px,94vw);font-size:clamp(11px,2vw,28px);color:#fff;animation:cbIn .5s cubic-bezier(.2,.9,.3,1) both}
+#ov:not(.inline) #fxd.on.out{animation:cbOut .4s ease-in both}
+.fxd-t{position:absolute;left:0;right:0;top:-2.3em;display:flex;justify-content:center;align-items:flex-end;z-index:2;pointer-events:none;filter:drop-shadow(0 0 .45em rgba(57,255,20,.85))}
+.fx-tab{position:relative;min-width:46%;text-align:center;padding:.25em 2.2em .3em;font-size:1.9em;font-style:italic;font-weight:900;line-height:1.1;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6),0 0 14px rgba(140,255,80,.8);background:linear-gradient(180deg,#46ec1c,#18a50b 60%,#0e7a06);clip-path:polygon(5% 0,95% 0,100% 100%,0 100%);border-bottom:.12em solid #a6ff4d}
+.fx-tab small{display:block;font-size:.34em;font-style:normal;font-weight:700;letter-spacing:.08em;opacity:.95}
+.fx-st{align-self:flex-end;flex:0 0 auto;width:3.6em;height:2.2em;background:linear-gradient(115deg,transparent 0 14%,#4dff1f 14% 28%,transparent 28% 40%,#4dff1f 40% 54%,transparent 54%)}
+.fx-r{transform:scaleX(-1)}
+.fxd-b{position:relative;display:flex;align-items:center;padding:2.5em 1.2em 1.1em .8em;border-radius:2em;background:linear-gradient(180deg,rgba(2,45,22,.82),rgba(2,28,15,.88));border:.14em solid #39ff14;box-shadow:0 0 1.1em rgba(57,255,20,.65),inset 0 0 1.6em rgba(57,255,20,.22),0 .6em 1.6em rgba(0,0,0,.5);overflow:hidden;max-height:calc(100vh - 14em)}
+.fxd-ball{flex:0 0 17%;display:flex;align-items:center;justify-content:center;position:relative;align-self:stretch}
+.fxd-ball::before{content:"";position:absolute;inset:-30% -10% -30% -40%;background:repeating-linear-gradient(155deg,transparent 0 .5em,rgba(80,255,40,.55) .5em .75em,transparent .75em 1.4em);opacity:.5;transform:skewX(-18deg)}
+.fxd-ball svg{width:5.4em;height:5.4em;position:relative;filter:drop-shadow(0 .3em .5em rgba(0,0,0,.6))}
+#fxdr{flex:1;min-width:0;display:flex;flex-direction:column;gap:.5em;position:relative}
+.fxd-row{display:flex;align-items:stretch;height:2.7em}
+.fxd-n{flex:0 0 3.3em;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#22d612,#0b7a07);clip-path:polygon(14% 0,100% 0,86% 100%,0 100%);margin-right:-.9em;z-index:1}
+.fxd-n b{font-size:1.7em;font-style:italic;font-weight:900;color:#fff;text-shadow:0 .1em .2em rgba(0,0,0,.6)}
+.fxd-x{flex:1;display:flex;align-items:center;justify-content:center;gap:.8em;padding:0 1em 0 1.4em;font-size:1.55em;font-style:italic;font-weight:800;border-radius:0 1.4em 1.4em 0;background:linear-gradient(180deg,rgba(38,54,50,.92),rgba(8,20,16,.95));border:.045em solid rgba(255,255,255,.28);text-shadow:0 .08em .2em rgba(0,0,0,.7);min-width:0}
+.fxd-x span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fxd-row.hl .fxd-x{background:linear-gradient(90deg,#2fe012,#8dff2b);border-color:#f2ff4a;color:#0a2a05;text-shadow:none;box-shadow:0 0 .9em rgba(160,255,50,.7)}
+.fxd-p{flex:0 0 auto;font-style:normal;font-size:.62em;padding:.12em .9em;border-radius:999px;font-weight:800;text-shadow:none}
+.fxd-p.win{background:#b6ff1a;color:#14350a}
+.fxd-p.live{background:#0b3d12;color:#e6ffd9;border:.1em solid #7dff3a}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -346,7 +369,7 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
   <!-- OVERLAY -->
 <div id="ov" class="inline" onclick="bgNext(event)">
   <button id="exit" onclick="hideOv(event)">✕</button>
-  <div id="lsc"></div><div id="cbd"><div id="cbt"></div><img id="cbi" alt=""><div id="cbx"></div></div><div id="pcd"><div id="pco"></div><div id="pct"></div><div class="pcl"><img id="pci" alt=""><div id="pcn"></div></div><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="bcw"><div id="stg">
+  <div id="lsc"></div><div id="cbd"><div id="cbt"></div><img id="cbi" alt=""><div id="cbx"></div></div><div id="pcd"><div id="pco"></div><div id="pct"></div><div class="pcl"><img id="pci" alt=""><div id="pcn"></div></div><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="fxd"><div class="fxd-t"><span class="fx-st fx-l"></span><div class="fx-tab" id="fxdt"></div><span class="fx-st fx-r"></span></div><div class="fxd-b"><div class="fxd-ball"><svg viewBox="0 0 100 100"><defs><radialGradient id="fxg" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#e2e6ea"/><stop offset="1" stop-color="#9aa3ab"/></radialGradient></defs><circle cx="50" cy="50" r="46" fill="url(#fxg)"/><g fill="none" stroke="#2b2f33" stroke-width="2.2" stroke-dasharray="3 3" stroke-linecap="round"><path d="M24 16C46 34 46 66 24 84"/><path d="M31 12C54 32 54 68 31 88"/><path d="M76 16C54 34 54 66 76 84"/><path d="M69 12C46 32 46 68 69 88"/></g></svg></div><div id="fxdr"></div></div></div><div id="bcw"><div id="stg">
   <div id="bc"><div id="anim"><span></span></div>
    <div id="top">
     <div class="tab1"><span class="trophy">🏆</span><span class="v" id="oVe"></span><span class="sep">|</span><span class="t" id="oTt"></span><span class="lv">● LIVE</span><span class="fh" id="oFH"></span></div>
@@ -613,7 +636,7 @@ function result(M){
   const d=M.first.runs-M.runs;return L(M.t[0]+' '+d+' রানে জিতেছে',M.t[0]+' won by '+d+' runs');
 }
 function render(){
-  renderCB();renderPC();renderVib();renderTop();fxUI();
+  renderCB();renderPC();renderFx();renderVib();renderTop();fxUI();
   $('lbn').classList.toggle('on',LANG=='bn');$('len').classList.toggle('on',LANG=='en');
   if(!OVM)applyUI();
   if(!S){$('setup').classList.remove('hide');$('app').classList.add('hide');if(TAB=='score')setTab('setup');return}
@@ -640,7 +663,7 @@ function render(){
   $('oBw').textContent=S.bn;$('oBf').textContent=b.w+'-'+b.r;
   $('oBo').textContent=L('ওভার','Over')+': '+ovs(b.b);$('oBm').textContent=L('মেডেন','Maiden')+': '+b.m;
   $('oCr').textContent=rr;
-  {const ls=$('lsc');setPanel(ls,!!S.showSC&&!(OVM?(CBd||PCd):(CB.on||pcOn())));
+  {const ls=$('lsc');setPanel(ls,!!S.showSC&&!(OVM?(CBd||PCd||FXd):(CB.on||pcOn()||FXSHOW)));
    if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');ls.innerHTML=(r?'<div class="rsl">'+esc(r)+'</div>':'')+cardHTML(S,OVM?SCL:null)}}
   $('lsb').textContent='📺 '+L('লাইভে স্কোরকার্ড','Scorecard on live')+': '+(S.showSC?'ON':'OFF');$('lsb').classList.toggle('on',!!S.showSC);$('oPs').textContent=(S.pr||S.pb)?L('পার্টনারশিপ ','Partnership ')+(S.pr||0)+' ('+(S.pb||0)+')':'';
   $('oCh').innerHTML=S.tb.map(x=>'<div class="c '+x.c+'">'+esc(x.l)+'</div>').join('');
@@ -808,7 +831,7 @@ async function tryLogin(){
 }
 
 let CB={on:false,t:'',x:''},CBd=null;try{CB=Object.assign(CB,JSON.parse(localStorage.getItem('cb')))}catch(e){}
-const cbp=()=>FXSHOW?fxBoard():(CB.on?{t:CB.t,x:CB.x,i:CB.i||''}:null);
+const cbp=()=>CB.on?{t:CB.t,x:CB.x,i:CB.i||''}:null;
 function storeCB(){try{localStorage.setItem('cb',JSON.stringify(CB))}catch(e){}}
 function liveCB(){CB.i=$('cb_i').value.trim().slice(0,300);CB.t=$('cb_t').value.slice(0,80);CB.x=$('cb_x').value.slice(0,1500);storeCB()}
 function readCB(){CB.i=$('cb_i').value.trim().slice(0,300);CB.t=$('cb_t').value.trim().slice(0,80);CB.x=$('cb_x').value.slice(0,1500)}
@@ -822,8 +845,8 @@ function setPanel(el,on){
   else if(!on&&was&&!el.classList.contains('out')){el.classList.add('out');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on','out'),450)}
 }
 function renderCB(){
-  const d=$('cbd'),c=OVM?CBd:(FXSHOW?fxBoard():(CB.on?CB:null));
-  setPanel(d,!!c&&!(OVM?PCd:pcOn()));
+  const d=$('cbd'),c=OVM?CBd:(CB.on?CB:null);
+  setPanel(d,!!c&&!(OVM?(PCd||FXd):(pcOn()||FXSHOW)));
   if(c){$('cbt').textContent=c.t||'';$('cbt').style.display=c.t?'':'none';$('cbx').textContent=c.x||'';
     const ci=$('cbi'),cu=imgUrl(c.i);
     if(cu){if(ci.getAttribute('data-s')!==cu){ci.setAttribute('data-s',cu);ci.src=cu}ci.classList.add('has');ci.onerror=()=>ci.classList.remove('has')}else ci.classList.remove('has')}
@@ -983,7 +1006,7 @@ function toggleVib(){VIB=!VIB;try{localStorage.setItem('vib',VIB?'1':'0')}catch(
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('button'))vib(12)},true);
 
 let TAB='score',FXLOAD=null,FX=[];try{FX=JSON.parse(localStorage.getItem('fx'))||[]}catch(e){}
-let FXSHOW=false;try{FXSHOW=localStorage.getItem('fxs')==='1'}catch(e){}
+let FXSHOW=false,FXd=null;try{FXSHOW=localStorage.getItem('fxs')==='1'}catch(e){}
 function setTab(t){
   TAB=t;try{document.body.setAttribute('data-tab',t);(document.querySelectorAll?document.querySelectorAll('#tabbar button'):[]).forEach(b=>b.classList.toggle('on',b.getAttribute('data-t')==t));window.scrollTo(0,0);if(t=='overlay')fit()}catch(e){}
 }
@@ -1003,11 +1026,24 @@ function fxUI(){
   box.innerHTML=h;renderFxBtn();
 }
 function renderFxBtn(){['fxb','fxb2'].forEach(id=>{const b=$(id);if(b){b.textContent='📺 '+L('লাইভে ম্যাচ তালিকা','Match list on live')+': '+(FXSHOW?'ON':'OFF');b.classList.toggle('on',FXSHOW)}})}
-function fxBoard(){
-  const tn=curTn(),t=TN.find(x=>x.id==tn),l=FX.filter(f=>(f.tn||'')==tn),off=S?2:1,lines=[];
-  if(S)lines.push('▶ '+L('চলমান','Running')+': '+S.t[0]+' vs '+S.t[1]+'  ('+S.runs+'/'+S.w+')');
-  l.forEach((f,i)=>lines.push(L('পরের ','Next ')+(i+off)+': '+(f.sw?f.t2:f.t1)+' vs '+(f.sw?f.t1:f.t2)));
-  return{t:L('আসন্ন ম্যাচ','Upcoming Matches')+(t?' – '+t.name:''),x:lines.join('\n')||L('কোনো ম্যাচ নেই','No matches'),i:''};
+function fxp(){
+  if(!FXSHOW)return null;
+  const tn=curTn(),t=TN.find(x=>x.id==tn),l=FX.filter(f=>(f.tn||'')==tn),r=[];let n=1;
+  if(S){
+    let p=S.runs+'/'+S.w,win=0;
+    if(S.fin&&S.first){const w=S.runs>S.first.runs?S.t[1]:S.runs<S.first.runs?S.t[0]:'';p='('+(w?L('জয়','Win')+' · '+w:L('টাই','Tie'))+')';win=1}
+    r.push({n:n++,a:S.t[0],b:S.t[1],h:win?0:1,w:win,p:p});
+  }
+  l.forEach(f=>r.push({n:n++,a:f.sw?f.t2:f.t1,b:f.sw?f.t1:f.t2,h:0,w:0,p:''}));
+  return{t:L('আসন্ন ম্যাচ','Upcoming Matches'),s:t?t.name:'',r:r.slice(0,8)};
+}
+function cleanFX(o){return{t:Sx(o.t).slice(0,60),s:Sx(o.s).slice(0,60),r:(o.r||[]).slice(0,8).map(x=>({n:N(x.n),a:Sx(x.a).slice(0,40),b:Sx(x.b).slice(0,40),h:!!x.h,w:!!x.w,p:Sx(x.p).slice(0,40)}))}}
+function renderFx(){
+  const d=$('fxd'),c=OVM?FXd:fxp(),hid=OVM?PCd:pcOn();
+  setPanel(d,!!c&&!hid);
+  if(!c)return;
+  $('fxdt').innerHTML='<span>'+esc(c.t)+'</span>'+(c.s?'<small>'+esc(c.s)+'</small>':'');
+  $('fxdr').innerHTML=c.r.length?c.r.map(x=>'<div class="fxd-row'+(x.h?' hl':'')+'"><div class="fxd-n"><b>'+x.n+'</b></div><div class="fxd-x"><span>'+esc(x.a)+' vs '+esc(x.b)+'</span>'+(x.p?'<em class="fxd-p '+(x.w?'win':'live')+'">'+esc(x.p)+'</em>':'')+'</div></div>').join(''):'<div class="fxd-row"><div class="fxd-x"><span>'+L('কোনো ম্যাচ নেই','No matches')+'</span></div></div>';
 }
 function toggleFX(){
   FXSHOW=!FXSHOW;try{localStorage.setItem('fxs',FXSHOW?'1':'0')}catch(e){}
@@ -1039,7 +1075,7 @@ function swapTeams(){
 const Q=new URLSearchParams(location.search),OVM=Q.get('view')==='overlay';
 let CFG={db:'',m:'match1'};try{CFG=Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')))}catch(e){}
 let pt=null;
-function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,spl:S.spl||'',cb:cbp(),pc:pcp(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,lang:LANG,ts:Date.now()}}
+function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,spl:S.spl||'',cb:cbp(),pc:pcp(),fx:fxp(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,lang:LANG,ts:Date.now()}}
 const N=v=>Number(v)||0,Sx=v=>String(v==null?'':v);
 function unpack(o){
   const bs=o.bs||{},t=o.t||[];
@@ -1060,15 +1096,16 @@ function push(){
   if(OVM||!CFG.db)return;clearTimeout(pt);
   pt=setTimeout(async()=>{
     const t=await token();
-    fetch(furl()+(t?'?auth='+encodeURIComponent(t):''),{method:'PUT',body:JSON.stringify(S?pack():{lang:LANG,ts:Date.now(),cb:cbp(),pc:pcp()})}).then(r=>{if(!r.ok)throw 0;syn(true)}).catch(()=>syn(false))},300);
+    fetch(furl()+(t?'?auth='+encodeURIComponent(t):''),{method:'PUT',body:JSON.stringify(S?pack():{lang:LANG,ts:Date.now(),cb:cbp(),pc:pcp(),fx:fxp()})}).then(r=>{if(!r.ok)throw 0;syn(true)}).catch(()=>syn(false))},300);
 }
 let lastEv=null;
 function poll(){
   fetch(Q.get('db')+'/matches/'+Q.get('m')+'.json?t='+Date.now()).then(r=>r.json()).then(o=>{
     CBd=o&&o.cb?{t:Sx(o.cb.t).slice(0,80),x:Sx(o.cb.x).slice(0,1500),i:Sx(o.cb.i).slice(0,300)}:null;
     PCd=o&&o.pc?cleanPC(o.pc):null;
+    FXd=o&&o.fx?cleanFX(o.fx):null;
     $('bcw').style.visibility=(o&&o.t)?'visible':'hidden';
-    if(!(o&&o.t)){setPanel($('lsc'),false);if(o&&o.lang)LANG=o.lang=='en'?'en':'bn';renderCB();renderPC()}
+    if(!(o&&o.t)){setPanel($('lsc'),false);if(o&&o.lang)LANG=o.lang=='en'?'en':'bn';renderCB();renderPC();renderFx()}
     if(o&&o.t){LANG=o.lang=='en'?'en':'bn';S=unpack(o);SCL=o.sc?(o.sc.inns||[]).slice(0,2).map(c=>({team:Sx(c.team),runs:N(c.runs),w:N(c.w),balls:N(c.balls),outs:(c.outs||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),how:Sx(x.how),bw:Sx(x.bw)})),bat:(c.bat||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s)})),bw:(c.bws||[]).reduce((a,b)=>{a[Sx(b.n)]={r:N(b.r),w:N(b.w),b:N(b.b),m:N(b.m)};return a},{})})):[];SCRES=Sx(o.sc&&o.sc.res);render();
       if(o.ev){if(lastEv===null)lastEv=o.ev.id;else if(o.ev.id>lastEv){lastEv=o.ev.id;playEv(o.ev)}}else if(lastEv===null)lastEv=0}}).catch(()=>{});
 }
