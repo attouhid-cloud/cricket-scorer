@@ -305,6 +305,23 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 .fxd-p{flex:0 0 auto;font-style:normal;font-size:.62em;padding:.12em .9em;border-radius:999px;font-weight:800;text-shadow:none}
 .fxd-p.win{background:#b6ff1a;color:#14350a}
 .fxd-p.live{background:#0b3d12;color:#e6ffd9;border:.1em solid #7dff3a}
+.fxw{display:inline-flex;align-items:center;justify-content:center;width:1.35em;height:1.35em;margin:0 .4em;border-radius:50%;background:linear-gradient(180deg,#ff4545,#c40d0d);color:#fff;font-style:normal;font-size:.62em;font-weight:900;vertical-align:middle;box-shadow:0 0 .5em rgba(255,60,60,.85);text-shadow:none;border:.08em solid #ffb3b3}
+/* ===== Match Summary (batting only) — same neon look as the match list ===== */
+#ov:not(.inline) #lsc.on{width:max-content;max-width:95vw;max-height:none;overflow:visible;padding:2.6em 1.2em 1.1em;font-size:clamp(10px,1.35vw,19px);background:linear-gradient(180deg,rgba(2,45,22,.84),rgba(2,28,15,.9));border:.14em solid #39ff14;border-radius:2em;box-shadow:0 0 1.1em rgba(57,255,20,.65),inset 0 0 1.6em rgba(57,255,20,.22),0 .6em 1.6em rgba(0,0,0,.5);-webkit-backdrop-filter:none;backdrop-filter:none}
+.sm-t{position:absolute;left:0;right:0;top:-2.3em;display:flex;justify-content:center;align-items:flex-end;z-index:2;pointer-events:none;filter:drop-shadow(0 0 .45em rgba(57,255,20,.85))}
+.sm-t .fx-tab{font-size:1.9em}
+.sm-b{display:flex;gap:1.4em;align-items:flex-start;max-height:calc(100vh - var(--bh,104px) - 12em);overflow:hidden}
+.sm-c{display:flex;flex-direction:column;gap:.32em}
+.sm-th{display:flex;justify-content:space-between;align-items:center;gap:1em;padding:.3em 1em;border-radius:.8em;background:linear-gradient(90deg,#2fe012,#8dff2b);color:#0a2a05;font-weight:900;font-size:1.2em;font-style:italic;box-shadow:0 0 .8em rgba(160,255,50,.6);text-shadow:none}
+.sm-th small{font-size:.65em;font-weight:800}
+.sm-hd,.sm-r{display:grid;grid-template-columns:2.2em 9em repeat(5,2.6em);align-items:center}
+.sm-hd{font-size:.8em;font-weight:800;color:#b9ff8f;padding-top:.2em}
+.sm-hd span:nth-child(n+3),.sm-r>*:nth-child(n+3){text-align:center}
+.sm-r{height:1.9em;font-weight:700;background:linear-gradient(180deg,rgba(38,54,50,.92),rgba(8,20,16,.95));border:.045em solid rgba(255,255,255,.25);border-radius:0 1em 1em 0;text-shadow:0 .08em .2em rgba(0,0,0,.7)}
+.sm-r.hl{background:linear-gradient(90deg,#2fe012,#8dff2b);color:#0a2a05;border-color:#f2ff4a;box-shadow:0 0 .8em rgba(160,255,50,.6);text-shadow:none}
+.sm-n{display:flex;align-items:center;justify-content:center;height:100%;background:linear-gradient(135deg,#22d612,#0b7a07);clip-path:polygon(14% 0,100% 0,86% 100%,0 100%);font-style:italic;font-weight:900;color:#fff;text-shadow:0 .1em .2em rgba(0,0,0,.6)}
+.sm-nm{padding-left:.7em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:italic}
+.sm-v{font-weight:900;color:#ffd21f}.sm-r.hl .sm-v{color:#0a2a05}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -336,8 +353,7 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 
 <div id="fxbox" class="card t-setup"><h3>📅 পরের ম্যাচ / Next matches</h3>
   <p class="dim">🏆 <b id="fxtn"></b></p><div id="fxl"></div>
-  <button class="g" style="width:100%;margin-top:10px" onclick="fxAdd()">＋ নেক্সট ম্যাচ যোগ করুন / Add next match</button>
-  <button id="fxb" style="width:100%;margin-top:8px;font-size:15px;padding:12px" onclick="toggleFX()"></button></div>
+  <button class="g" style="width:100%;margin-top:10px" onclick="fxAdd()">＋ নেক্সট ম্যাচ যোগ করুন / Add next match</button></div>
 <!-- SCORER -->
 <div id="app" class="hide">
 <div class="t-score">
@@ -664,7 +680,7 @@ function render(){
   $('oBo').textContent=L('ওভার','Over')+': '+ovs(b.b);$('oBm').textContent=L('মেডেন','Maiden')+': '+b.m;
   $('oCr').textContent=rr;
   {const ls=$('lsc');setPanel(ls,!!S.showSC&&!(OVM?(CBd||PCd||FXd):(CB.on||pcOn()||FXSHOW)));
-   if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');ls.innerHTML=(r?'<div class="rsl">'+esc(r)+'</div>':'')+cardHTML(S,OVM?SCL:null)}}
+   if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');ls.innerHTML=sumHTML(OVM?SCL:inns(S),r)}}
   $('lsb').textContent='📺 '+L('লাইভে স্কোরকার্ড','Scorecard on live')+': '+(S.showSC?'ON':'OFF');$('lsb').classList.toggle('on',!!S.showSC);$('oPs').textContent=(S.pr||S.pb)?L('পার্টনারশিপ ','Partnership ')+(S.pr||0)+' ('+(S.pb||0)+')':'';
   $('oCh').innerHTML=S.tb.map(x=>'<div class="c '+x.c+'">'+esc(x.l)+'</div>').join('');
   let r='';
@@ -779,6 +795,15 @@ function saveHist(fin){
   }catch(x){}
 }
 let scT=null,SCL=[],SCRES='';
+
+function sumHTML(list,res){
+  const cols=list.map(c=>{
+    const bats=(c.outs||[]).concat((c.bat||[]).map(x=>Object.assign({},x,{no:1})));
+    const rows=bats.map((x,i)=>'<div class="sm-r'+(x.no?' hl':'')+'"><i class="sm-n">'+(i+1)+'</i><span class="sm-nm">'+esc(x.n)+'</span><b class="sm-v">'+x.r+(x.no?'*':'')+'</b><span>'+x.b+'</span><span>'+(x.f||0)+'</span><span>'+(x.s||0)+'</span><span>'+(x.b?Math.round(x.r*100/x.b):0)+'</span></div>').join('');
+    return '<div class="sm-c"><div class="sm-th"><span>'+esc(c.team)+'</span><b>'+c.runs+'/'+c.w+' <small>('+ovs(c.balls)+')</small></b></div><div class="sm-hd"><i></i><span></span><span>'+L('রান','R')+'</span><span>'+L('বল','B')+'</span><span>4s</span><span>6s</span><span>SR</span></div>'+rows+'</div>';
+  }).join('');
+  return '<div class="sm-t"><span class="fx-st fx-l"></span><div class="fx-tab"><span>'+L('ম্যাচ সামারি','Match Summary')+'</span>'+(res?'<small>'+esc(res)+'</small>':'')+'</div><span class="fx-st fx-r"></span></div><div class="sm-b">'+cols+'</div>';
+}
 function toggleSC(){if(!S)return;clearTimeout(scT);S.showSC=!S.showSC;if(S.showSC){CB.on=false;storeCB();PC.on=false;storePC()}save();render()}
 function scPack(){
   const f=bw=>Object.keys(bw||{}).map(n=>Object.assign({n:n},bw[n]));
@@ -1028,22 +1053,27 @@ function fxUI(){
 function renderFxBtn(){['fxb','fxb2'].forEach(id=>{const b=$(id);if(b){b.textContent='📺 '+L('লাইভে ম্যাচ তালিকা','Match list on live')+': '+(FXSHOW?'ON':'OFF');b.classList.toggle('on',FXSHOW)}})}
 function fxp(){
   if(!FXSHOW)return null;
-  const tn=curTn(),t=TN.find(x=>x.id==tn),l=FX.filter(f=>(f.tn||'')==tn),r=[];let n=1;
-  if(S){
-    let p=S.runs+'/'+S.w,win=0;
-    if(S.fin&&S.first){const w=S.runs>S.first.runs?S.t[1]:S.runs<S.first.runs?S.t[0]:'';p='('+(w?L('জয়','Win')+' · '+w:L('টাই','Tie'))+')';win=1}
-    r.push({n:n++,a:S.t[0],b:S.t[1],h:win?0:1,w:win,p:p});
-  }
-  l.forEach(f=>r.push({n:n++,a:f.sw?f.t2:f.t1,b:f.sw?f.t1:f.t2,h:0,w:0,p:''}));
-  return{t:L('আসন্ন ম্যাচ','Upcoming Matches'),s:t?t.name:'',r:r.slice(0,8)};
+  const tn=curTn(),t=TN.find(x=>x.id==tn);
+  let hist=[];try{hist=JSON.parse(localStorage.getItem('hist')||'[]')}catch(e){}
+  const today=new Date().toDateString();
+  const fin=hist.filter(e=>e&&e.m&&e.m.fin&&e.m.first&&(e.m.tn||'')==tn&&!(S&&e.id==S.id)&&(tn||new Date(e.ts).toDateString()==today)).reverse().map(e=>e.m);
+  if(S&&S.fin&&S.first)fin.push(S);
+  const win=m=>m.runs>m.first.runs?'b':m.runs<m.first.runs?'a':'t';
+  const shown=fin.map((m,i)=>({n:i+1,a:m.t[0],b:m.t[1],h:0,wn:win(m),p:''})).slice(-3);
+  let n=fin.length+1;const running=!!(S&&!S.fin);
+  if(running)shown.push({n:n++,a:S.t[0],b:S.t[1],h:1,wn:'',p:S.runs+'/'+S.w});
+  FX.filter(f=>(f.tn||'')==tn).forEach(f=>shown.push({n:n++,a:f.sw?f.t2:f.t1,b:f.sw?f.t1:f.t2,h:0,wn:'',p:''}));
+  if(!running){const nx=shown.find(x=>!x.wn);if(nx)nx.h=1}
+  return{t:L('ম্যাচ তালিকা','Match List'),s:t?t.name:'',r:shown.slice(0,8)};
 }
-function cleanFX(o){return{t:Sx(o.t).slice(0,60),s:Sx(o.s).slice(0,60),r:(o.r||[]).slice(0,8).map(x=>({n:N(x.n),a:Sx(x.a).slice(0,40),b:Sx(x.b).slice(0,40),h:!!x.h,w:!!x.w,p:Sx(x.p).slice(0,40)}))}}
+function cleanFX(o){return{t:Sx(o.t).slice(0,60),s:Sx(o.s).slice(0,60),r:(o.r||[]).slice(0,8).map(x=>({n:N(x.n),a:Sx(x.a).slice(0,40),b:Sx(x.b).slice(0,40),h:!!x.h,wn:['a','b','t'].includes(x.wn)?x.wn:'',p:Sx(x.p).slice(0,40)}))}}
 function renderFx(){
   const d=$('fxd'),c=OVM?FXd:fxp(),hid=OVM?PCd:pcOn();
   setPanel(d,!!c&&!hid);
   if(!c)return;
   $('fxdt').innerHTML='<span>'+esc(c.t)+'</span>'+(c.s?'<small>'+esc(c.s)+'</small>':'');
-  $('fxdr').innerHTML=c.r.length?c.r.map(x=>'<div class="fxd-row'+(x.h?' hl':'')+'"><div class="fxd-n"><b>'+x.n+'</b></div><div class="fxd-x"><span>'+esc(x.a)+' vs '+esc(x.b)+'</span>'+(x.p?'<em class="fxd-p '+(x.w?'win':'live')+'">'+esc(x.p)+'</em>':'')+'</div></div>').join(''):'<div class="fxd-row"><div class="fxd-x"><span>'+L('কোনো ম্যাচ নেই','No matches')+'</span></div></div>';
+  const nm=(x,k)=>'<span class="tm">'+esc(x[k])+'</span>'+(x.wn==k?'<i class="fxw">W</i>':'');
+  $('fxdr').innerHTML=c.r.length?c.r.map(x=>'<div class="fxd-row'+(x.h?' hl':'')+'"><div class="fxd-n"><b>'+x.n+'</b></div><div class="fxd-x"><span>'+nm(x,'a')+' vs '+nm(x,'b')+'</span>'+(x.p?'<em class="fxd-p live">'+esc(x.p)+'</em>':'')+(x.wn=='t'?'<em class="fxd-p win">'+L('টাই','Tie')+'</em>':'')+'</div></div>').join(''):'<div class="fxd-row"><div class="fxd-x"><span>'+L('কোনো ম্যাচ নেই','No matches')+'</span></div></div>';
 }
 function toggleFX(){
   FXSHOW=!FXSHOW;try{localStorage.setItem('fxs',FXSHOW?'1':'0')}catch(e){}
