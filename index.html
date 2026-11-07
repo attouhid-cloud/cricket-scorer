@@ -322,6 +322,15 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 .sm-n{display:flex;align-items:center;justify-content:center;height:100%;background:linear-gradient(135deg,#22d612,#0b7a07);clip-path:polygon(14% 0,100% 0,86% 100%,0 100%);font-style:italic;font-weight:900;color:#fff;text-shadow:0 .1em .2em rgba(0,0,0,.6)}
 .sm-nm{padding-left:.7em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:italic}
 .sm-v{font-weight:900;color:#ffd21f}.sm-r.hl .sm-v{color:#0a2a05}
+/* header columns line up with the rows; nothing is clipped (JS shrinks the font instead) */
+.sm-hd{font-size:1em}.sm-hd>span{font-size:.8em}
+.sm-b{max-height:none;overflow:visible}
+.fxd-b{max-height:none}
+#ov:not(.inline) #fxd.on{width:min(36em,94vw);top:calc((100% - var(--bh,104px))/2 + 1.15em)}
+/* live bar: chips never get pushed off the right edge */
+.ch{flex:0 0 auto}
+.g3,.g4{flex:1 1 auto;min-width:0}
+.g1{flex:0 1 auto;min-width:0}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -486,7 +495,7 @@ function load(){try{const d=JSON.parse(localStorage.getItem('cs2'));if(d&&d.S){S
 function start(){
   S={fhr:$('fhr').value!='0',tn:$('tnsel').value||'',spl:($('spl').value||'').trim().slice(0,30),id:Date.now(),t:[$('t1').value,$('t2').value],ve:$('ve').value,tt:$('tt').value,sp:$('sp').value,ov:+$('ovn').value||20,
    inn:0,runs:0,w:0,balls:0,tb:[],first:null,
-   bat:[{n:$('b1').value.trim()||L('ব্যাটসম্যান ১','Batsman 1'),r:0,b:0},{n:$('b2').value.trim()||L('ব্যাটসম্যান ২','Batsman 2'),r:0,b:0}],
+   bat:[{n:$('b1').value.trim()||L('ব্যাটসম্যান ১','Batsman 1'),r:0,b:0,ord:1},{n:$('b2').value.trim()||L('ব্যাটসম্যান ২','Batsman 2'),r:0,b:0,ord:2}],
    st:0,bn:$('bn').value.trim()||L('বোলার ১','Bowler 1'),bw:{},orun:0};
   H=[];if(FXLOAD){FX=FX.filter(x=>x.id!=FXLOAD);FXLOAD=null;storeFX()}
   save();render();setTab('score');
@@ -565,7 +574,7 @@ async function wicket(){
   S.outIdx=idx;S.needBat=true;
   if(fh){S.fh=false;if(S.w>=10)S.done=true}
   else{s.b++;b.b++;legal()}
-  {const x=S.bat[idx];(S.outs=S.outs||[]).push({n:x.n,r:x.r,b:x.b,f:x.f||0,s:x.s||0,how:t,bw:t=='run'?'':S.bn});x.out=1;S.pr=0;S.pb=0;S.pa={n:x.n,role:'bat'};clearTimeout(paT);paT=setTimeout(()=>{if(S){S.pa=null;save();render()}},5000)}emit('W');fin();
+  {const x=S.bat[idx];(S.outs=S.outs||[]).push({n:x.n,r:x.r,b:x.b,f:x.f||0,s:x.s||0,ord:x.ord||0,how:t,bw:t=='run'?'':S.bn});x.out=1;S.pr=0;S.pb=0;S.pa={n:x.n,role:'bat'};clearTimeout(paT);paT=setTimeout(()=>{if(S){S.pa=null;save();render()}},5000)}emit('W');fin();
 }
 async function fin(){
   save();render();
@@ -573,7 +582,7 @@ async function fin(){
     if(S.inn==0)setTimeout(()=>endInn(true),150);else{saveHist(true);dlg(result(),{alert:1}).then(()=>showCard())}return}
   if(S.needBat){S.needBat=false;
     const n=await dlg(L('নতুন ব্যাটসম্যানের নাম (না দিলে অটো নম্বর)','New batsman name (skip = auto number)'),{input:1,skip:1});
-    S.bat[S.outIdx]={n:(n&&n.trim())||autoBat(),r:0,b:0}}
+    S.bat[S.outIdx]={n:(n&&n.trim())||autoBat(),r:0,b:0,ord:(S.outs||[]).length+2}}
   if(S.needBowl){S.needBowl=false;
     const n=await dlg(L('নতুন বোলারের নাম (না দিলে অটো নম্বর)','New bowler name (skip = auto number)'),{input:1,skip:1});
     S.bn=(n&&n.trim())||autoBowl()}
@@ -593,7 +602,7 @@ async function endInn(auto){
   if(!auto&&!(await dlg(L('প্রথম ইনিংস শেষ?','End 1st innings?'))))return;
   snap();S.first={runs:S.runs,w:S.w,balls:S.balls};S.card1={team:S.t[S.inn],runs:S.runs,w:S.w,balls:S.balls,outs:S.outs||[],bat:S.bat.filter(x=>!x.out),bw:S.bw};S.outs=[];S.pr=0;S.pb=0;S.showSC=true;clearTimeout(scT);scT=setTimeout(()=>{if(S){S.showSC=false;save();render()}},15000);
   S.inn=1;S.fh=false;S.runs=0;S.w=0;S.balls=0;S.tb=[];S.bw={};S.orun=0;S.st=0;
-  S.bat=[{n:L('ব্যাটসম্যান ১','Batsman 1'),r:0,b:0},{n:L('ব্যাটসম্যান ২','Batsman 2'),r:0,b:0}];S.bn=L('বোলার ১','Bowler 1');
+  S.bat=[{n:L('ব্যাটসম্যান ১','Batsman 1'),r:0,b:0,ord:1},{n:L('ব্যাটসম্যান ২','Batsman 2'),r:0,b:0,ord:2}];S.bn=L('বোলার ১','Bowler 1');
   save();render();
 }
 const ovs=b=>Math.floor(b/6)+'.'+(b%6);
@@ -680,7 +689,7 @@ function render(){
   $('oBo').textContent=L('ওভার','Over')+': '+ovs(b.b);$('oBm').textContent=L('মেডেন','Maiden')+': '+b.m;
   $('oCr').textContent=rr;
   {const ls=$('lsc');setPanel(ls,!!S.showSC&&!(OVM?(CBd||PCd||FXd):(CB.on||pcOn()||FXSHOW)));
-   if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');ls.innerHTML=sumHTML(OVM?SCL:inns(S),r)}}
+   if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');{const h=sumHTML(OVM?SCL:inns(S),r),k=h+innerHeight+'|'+(ls.classList.contains('on')?1:0);if(ls._k!==k){ls.innerHTML=h;ls._k=k;fitPanel(ls)}}}}
   $('lsb').textContent='📺 '+L('লাইভে স্কোরকার্ড','Scorecard on live')+': '+(S.showSC?'ON':'OFF');$('lsb').classList.toggle('on',!!S.showSC);$('oPs').textContent=(S.pr||S.pb)?L('পার্টনারশিপ ','Partnership ')+(S.pr||0)+' ('+(S.pb||0)+')':'';
   $('oCh').innerHTML=S.tb.map(x=>'<div class="c '+x.c+'">'+esc(x.l)+'</div>').join('');
   let r='';
@@ -751,7 +760,7 @@ function inns(M){return (M.card1?[M.card1]:[]).concat([{team:M.t[M.inn],runs:M.r
 function cardHTML(M,list){
   let top=null,bb=null;
   const L2=list||inns(M);const html='<div class="cols" style="grid-template-columns:repeat('+L2.length+',1fr)">'+L2.map(c=>{
-    const bats=c.outs.concat(c.bat.map(x=>Object.assign({},x,{how:'no'})));
+    const bats=ordBats(c).map(x=>x.no?Object.assign({},x,{how:'no'}):x);
     bats.forEach(x=>{if(!top||x.r>top.r)top=x});
     const br=bats.map(x=>'<tr><td>'+esc(x.n)+'<small>'+(x.how=='no'?L('আউট নয়','not out'):hw(x))+'</small></td><td>'+x.r+'</td><td>'+x.b+'</td><td>'+(x.f||0)+'</td><td>'+(x.s||0)+'</td><td>'+(x.b?Math.round(x.r*100/x.b):'-')+'</td></tr>').join('');
     const ex=c.runs-bats.reduce((a,x)=>a+x.r,0);
@@ -796,9 +805,23 @@ function saveHist(fin){
 }
 let scT=null,SCL=[],SCRES='';
 
+
+function fitPanel(el){
+  try{
+    if(!el||!el.classList.contains('on'))return;
+    el.style.fontSize='';
+    const bh=parseFloat($('ov').style.getPropertyValue('--bh'))||104,avail=innerHeight-bh-34;
+    for(let i=0;i<3;i++){
+      const fs=parseFloat(getComputedStyle(el).fontSize),need=el.offsetHeight+fs*2.5;
+      if(need<=avail)break;
+      el.style.fontSize=Math.max(6,fs*avail/need*0.99)+'px';
+    }
+  }catch(e){}
+}
+function ordBats(c){return (c.outs||[]).concat((c.bat||[]).map(x=>Object.assign({},x,{no:1}))).map((x,i)=>Object.assign({},x,{_o:x.ord||i+1})).sort((a,b)=>a._o-b._o)}
 function sumHTML(list,res){
   const cols=list.map(c=>{
-    const bats=(c.outs||[]).concat((c.bat||[]).map(x=>Object.assign({},x,{no:1})));
+    const bats=ordBats(c);
     const rows=bats.map((x,i)=>'<div class="sm-r'+(x.no?' hl':'')+'"><i class="sm-n">'+(i+1)+'</i><span class="sm-nm">'+esc(x.n)+'</span><b class="sm-v">'+x.r+(x.no?'*':'')+'</b><span>'+x.b+'</span><span>'+(x.f||0)+'</span><span>'+(x.s||0)+'</span><span>'+(x.b?Math.round(x.r*100/x.b):0)+'</span></div>').join('');
     return '<div class="sm-c"><div class="sm-th"><span>'+esc(c.team)+'</span><b>'+c.runs+'/'+c.w+' <small>('+ovs(c.balls)+')</small></b></div><div class="sm-hd"><i></i><span></span><span>'+L('রান','R')+'</span><span>'+L('বল','B')+'</span><span>4s</span><span>6s</span><span>SR</span></div>'+rows+'</div>';
   }).join('');
@@ -1059,10 +1082,12 @@ function fxp(){
   const fin=hist.filter(e=>e&&e.m&&e.m.fin&&e.m.first&&(e.m.tn||'')==tn&&!(S&&e.id==S.id)&&(tn||new Date(e.ts).toDateString()==today)).reverse().map(e=>e.m);
   if(S&&S.fin&&S.first)fin.push(S);
   const win=m=>m.runs>m.first.runs?'b':m.runs<m.first.runs?'a':'t';
-  const shown=fin.map((m,i)=>({n:i+1,a:m.t[0],b:m.t[1],h:0,wn:win(m),p:''})).slice(-3);
-  let n=fin.length+1;const running=!!(S&&!S.fin);
-  if(running)shown.push({n:n++,a:S.t[0],b:S.t[1],h:1,wn:'',p:S.runs+'/'+S.w});
-  FX.filter(f=>(f.tn||'')==tn).forEach(f=>shown.push({n:n++,a:f.sw?f.t2:f.t1,b:f.sw?f.t1:f.t2,h:0,wn:'',p:''}));
+  const finRows=fin.map((m,i)=>({n:i+1,a:m.t[0],b:m.t[1],h:0,wn:win(m),p:''}));
+  let n=fin.length+1;const running=!!(S&&!S.fin),up=[];
+  if(running)up.push({n:n++,a:S.t[0],b:S.t[1],h:1,wn:'',p:S.runs+'/'+S.w});
+  FX.filter(f=>(f.tn||'')==tn).forEach(f=>up.push({n:n++,a:f.sw?f.t2:f.t1,b:f.sw?f.t1:f.t2,h:0,wn:'',p:''}));
+  const k=Math.max(0,5-up.length);
+  const shown=(k?finRows.slice(-k):[]).concat(up);
   if(!running){const nx=shown.find(x=>!x.wn);if(nx)nx.h=1}
   return{t:L('ম্যাচ তালিকা','Match List'),s:t?t.name:'',r:shown.slice(0,8)};
 }
@@ -1071,9 +1096,11 @@ function renderFx(){
   const d=$('fxd'),c=OVM?FXd:fxp(),hid=OVM?PCd:pcOn();
   setPanel(d,!!c&&!hid);
   if(!c)return;
-  $('fxdt').innerHTML='<span>'+esc(c.t)+'</span>'+(c.s?'<small>'+esc(c.s)+'</small>':'');
   const nm=(x,k)=>'<span class="tm">'+esc(x[k])+'</span>'+(x.wn==k?'<i class="fxw">W</i>':'');
-  $('fxdr').innerHTML=c.r.length?c.r.map(x=>'<div class="fxd-row'+(x.h?' hl':'')+'"><div class="fxd-n"><b>'+x.n+'</b></div><div class="fxd-x"><span>'+nm(x,'a')+' vs '+nm(x,'b')+'</span>'+(x.p?'<em class="fxd-p live">'+esc(x.p)+'</em>':'')+(x.wn=='t'?'<em class="fxd-p win">'+L('টাই','Tie')+'</em>':'')+'</div></div>').join(''):'<div class="fxd-row"><div class="fxd-x"><span>'+L('কোনো ম্যাচ নেই','No matches')+'</span></div></div>';
+  const t1='<span>'+esc(c.t)+'</span>'+(c.s?'<small>'+esc(c.s)+'</small>':'');
+  const t2=c.r.length?c.r.map(x=>'<div class="fxd-row'+(x.h?' hl':'')+'"><div class="fxd-n"><b>'+x.n+'</b></div><div class="fxd-x"><span>'+nm(x,'a')+' vs '+nm(x,'b')+'</span>'+(x.p?'<em class="fxd-p live">'+esc(x.p)+'</em>':'')+(x.wn=='t'?'<em class="fxd-p win">'+L('টাই','Tie')+'</em>':'')+'</div></div>').join(''):'<div class="fxd-row"><div class="fxd-x"><span>'+L('কোনো ম্যাচ নেই','No matches')+'</span></div></div>';
+  const key=t1+t2+innerHeight+'|'+(d.classList.contains('on')?1:0);
+  if(d._k!==key){$('fxdt').innerHTML=t1;$('fxdr').innerHTML=t2;d._k=key;fitPanel(d)}
 }
 function toggleFX(){
   FXSHOW=!FXSHOW;try{localStorage.setItem('fxs',FXSHOW?'1':'0')}catch(e){}
@@ -1136,7 +1163,7 @@ function poll(){
     FXd=o&&o.fx?cleanFX(o.fx):null;
     $('bcw').style.visibility=(o&&o.t)?'visible':'hidden';
     if(!(o&&o.t)){setPanel($('lsc'),false);if(o&&o.lang)LANG=o.lang=='en'?'en':'bn';renderCB();renderPC();renderFx()}
-    if(o&&o.t){LANG=o.lang=='en'?'en':'bn';S=unpack(o);SCL=o.sc?(o.sc.inns||[]).slice(0,2).map(c=>({team:Sx(c.team),runs:N(c.runs),w:N(c.w),balls:N(c.balls),outs:(c.outs||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),how:Sx(x.how),bw:Sx(x.bw)})),bat:(c.bat||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s)})),bw:(c.bws||[]).reduce((a,b)=>{a[Sx(b.n)]={r:N(b.r),w:N(b.w),b:N(b.b),m:N(b.m)};return a},{})})):[];SCRES=Sx(o.sc&&o.sc.res);render();
+    if(o&&o.t){LANG=o.lang=='en'?'en':'bn';S=unpack(o);SCL=o.sc?(o.sc.inns||[]).slice(0,2).map(c=>({team:Sx(c.team),runs:N(c.runs),w:N(c.w),balls:N(c.balls),outs:(c.outs||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),ord:N(x.ord),how:Sx(x.how),bw:Sx(x.bw)})),bat:(c.bat||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),ord:N(x.ord)})),bw:(c.bws||[]).reduce((a,b)=>{a[Sx(b.n)]={r:N(b.r),w:N(b.w),b:N(b.b),m:N(b.m)};return a},{})})):[];SCRES=Sx(o.sc&&o.sc.res);render();
       if(o.ev){if(lastEv===null)lastEv=o.ev.id;else if(o.ev.id>lastEv){lastEv=o.ev.id;playEv(o.ev)}}else if(lastEv===null)lastEv=0}}).catch(()=>{});
 }
 function storeCfg(){try{localStorage.setItem('cfg',JSON.stringify(CFG))}catch(e){}}
@@ -1172,7 +1199,7 @@ function minus(k){
   if(k=='b')S.balls=Math.max(0,S.balls-1);
   save();render();
 }
-addEventListener('resize',fit);
+addEventListener('resize',fit);addEventListener('resize',()=>{['lsc','fxd'].forEach(id=>{const e=$(id);if(e)e._k=null});try{render()}catch(e){}});
 if(OVM){$('lock').style.display='none';document.body.classList.add('ovm');document.body.appendChild($('ov'));$('ov').className='clear';poll();setInterval(poll,1500)}
 else{load();if(S)S.pa=null;rosUI();tnUI();setTab(S?'score':'setup');$('fdb').value=CFG.db;$('fm').value=CFG.m;$('fk').value=CFG.key||'';$('fe').value=CFG.email||'';render();push();if(needLock())showLock();else $('lock').style.display='none'}
 if('serviceWorker' in navigator&&location.protocol.indexOf('http')==0)navigator.serviceWorker.register('sw.js').catch(()=>{});
