@@ -54,57 +54,19 @@ body.ovm #setup,body.ovm #app,body.ovm #cbcard,body.ovm #pccard,body.ovm #livebo
 @keyframes shk{0%,100%{transform:none}20%{transform:translateX(-12px)}40%{transform:translateX(12px)}60%{transform:translateX(-7px)}80%{transform:translateX(7px)}}
 #ov.inline{position:static;inset:auto;z-index:auto;background:transparent;padding:0;margin-bottom:10px;justify-content:flex-start;align-items:stretch}
 #ov.inline #exit{display:none}
-#ov.inline #spon{margin-bottom:8px}
 #ov{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:12px 12px max(14px,env(safe-area-inset-bottom));background:#fff}
 #ov.green{background:#00b140}
 #ov.black{background:#000}
 #ov.clear{background:transparent}
 #exit{position:fixed;top:8px;right:8px;z-index:30;font-size:12px;padding:8px 12px;opacity:.55;background:#333}
-/* ===== OVERLAY (thin, wide) ===== */
-#bcw{width:100%;position:relative}#stg{position:relative}
-#spon{display:flex;align-items:center;gap:10px;background:#1a1e33;border:1px solid #2d3355;border-radius:30px;padding:5px 14px;font-size:12px;font-weight:600;color:#fff;margin:0 0 6px auto;width:fit-content}
-#spon i{font-style:normal;color:#0ea56a;letter-spacing:2px;font-size:10px}
-#bc{position:relative;width:100%;background:linear-gradient(90deg,#10152b,#1a1e33);border-top:2px solid #0ea56a;overflow:hidden;color:#fff;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.3)}
-#top{display:flex;align-items:center;gap:10px;padding:0 14px;height:20px;font-size:11px;background:#0ea56a;white-space:nowrap}
-#top .v{background:#0a6b47;padding:1px 8px;border-radius:4px}
-#top .t{min-width:0;overflow:hidden;text-overflow:ellipsis}
-#top .rs{flex:1;text-align:center;color:#fff176;min-width:0;overflow:hidden;text-overflow:ellipsis}
-#top .lv{background:var(--red);padding:1px 10px;border-radius:4px;letter-spacing:1px}
-#top .fh{background:#f59e0b;color:#111;padding:1px 10px;border-radius:4px;font-weight:800;display:none}
-#main{display:flex;align-items:center;height:42px;padding:0 6px}
-#main>div{padding:0 14px;border-right:1px solid #30365a;min-width:0;white-space:nowrap}
-#main>div:last-child{border:0;margin-left:auto}
-.g1{display:flex;align-items:center;gap:8px}.tn{font-size:18px;font-weight:800}
-.inn{font-size:10px;background:#2a3157;color:var(--ac);padding:2px 7px;border-radius:5px}
-.g2{display:flex;align-items:baseline;gap:6px}.big{font-size:30px;font-weight:800;color:var(--ac);line-height:1}
-.g2 small{font-size:12px;color:var(--mut);font-weight:400}
-.g3,.g4{display:flex;flex-direction:column;justify-content:center;font-size:12.5px;line-height:1.3;overflow:hidden}
-.g3 b{color:var(--ac)}.g4 b,.g4 .bo{color:#22d3ee}.g3 .d,.g4 .d{color:var(--mut);font-weight:400}
-.g5{font-size:12px;color:var(--mut)}.g5 b{color:var(--grn);font-size:18px;margin-left:4px}
-.ch{display:flex;gap:5px;align-items:center}
-.c{min-width:26px;height:24px;padding:0 5px;border-radius:6px;background:#2a3157;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
-.c.f{background:#0ea56a}.c.s{background:#9333ea}.c.n{background:#2563eb}.c.x{background:var(--red)}.c.h{background:#f59e0b;color:#111}
 #anim.ev-wd{background:rgba(245,158,11,.94)}
 #dmsg{white-space:pre-line}
-/* full-screen: thin bar, full width, scaled by JS */
 #ov:not(.inline){padding:0 0 env(safe-area-inset-bottom,0px);align-items:stretch}
-#ov:not(.inline) #stg{position:absolute;left:0;top:0;transform-origin:0 0}
-#ov:not(.inline) #bc{height:64px;display:flex;flex-direction:column}
-#ov:not(.inline) #main{flex:1;height:auto}
-#ov:not(.inline) #spon{position:absolute;right:16px;bottom:calc(100% + 6px);margin:0}
 #ov:not(.inline) #anim{font-size:34px}
-#stg.cmp .ch,#stg.cmp .g5{display:none}
-/* admin preview: wraps so it stays readable on a phone */
-#ov.inline #main{flex-wrap:wrap;height:auto;padding:6px 4px}
-#ov.inline #main>div{border:0;padding:4px 10px}
-#ov.inline #main>div:last-child{margin-left:0}
-#ov.inline #top{height:auto;flex-wrap:wrap;padding:3px 10px;row-gap:3px}
-#ov.inline #top .rs{flex:1 1 220px}
-#top .rs:empty{display:none}
-.g5{display:flex;flex-direction:column;justify-content:center;line-height:1.3}.g5 .d{font-size:11px;color:var(--mut);font-weight:400}
 #anim.ev-m{background:rgba(202,138,4,.96)}
 #scv{position:fixed;inset:0;background:#0f1220;z-index:150;overflow:auto;padding:12px}
-.scw{max-width:760px;margin:0 auto}#scx{float:right;padding:8px 16px;font-size:16px}
+.scw{max-width:760px;margin:0 auto}
+#scx{float:right;padding:8px 16px;font-size:16px}
 #scb table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px}
 #scb th,#scb td{padding:6px 4px;text-align:right;border-bottom:1px solid #2d3355}
 #scb th:first-child,#scb td:first-child{text-align:left}
@@ -124,20 +86,9 @@ body.ovm #setup,body.ovm #app,body.ovm #cbcard,body.ovm #pccard,body.ovm #livebo
 .cols{display:grid;gap:18px}
 @media(max-width:700px){#scb .cols{grid-template-columns:1fr!important}}
 #ov:not(.inline) #lsc.on{width:min(1500px,96vw)}
-#lsc .cols{gap:26px}#lsc th,#lsc td{padding:2px 3px}
-/* clearer, brighter overlay text */
-#top{height:22px;font-size:12px}
-.tn{font-size:20px}
-.big{font-size:32px}
-.g2 small{font-size:16px;color:#fff;font-weight:700}
-.g3,.g4{font-size:13.5px;line-height:1.25}
-.g3 .d,.g4 .d{color:#e8ecfa;font-weight:600}
-#oBo{color:#fff;font-weight:800;font-size:14px}
-.g5{color:#e8ecfa;font-size:13px}.g5 .d{font-size:12px;color:#e8ecfa;font-weight:600}
-.c{font-size:13px}
-.inn{color:#ffe14d;font-size:11px}
+#lsc .cols{gap:26px}
+#lsc th,#lsc td{padding:2px 3px}
 #lock{position:fixed;inset:0;background:#0f1220;z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
-/* scorecard design */
 #scb h3,#lsc h3{background:linear-gradient(90deg,#0ea56a,#0a6b47);color:#fff;padding:8px 12px;border-radius:8px;margin:0 0 6px;font-size:1.1em;text-shadow:0 1px 2px rgba(0,0,0,.3)}
 #scb .cols>div>table:nth-of-type(1) th,#lsc .cols>div>table:nth-of-type(1) th{background:#2d3a8c;color:#ffe14d;font-weight:800}
 #scb .cols>div>table:nth-of-type(2) th,#lsc .cols>div>table:nth-of-type(2) th{background:#0f5d6e;color:#7ff0ff;font-weight:800}
@@ -152,30 +103,25 @@ textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;bac
 #ov:not(.inline) #cbd.on{display:block;position:absolute;left:50%;top:calc((100% - var(--bh,68px))/2);transform:translate(-50%,-50%);width:min(900px,92vw);max-height:calc(100% - var(--bh,68px) - 40px);overflow:hidden;background:rgba(15,18,32,.95);border:1px solid #2d3355;border-radius:16px;padding:.7em;font-size:clamp(14px,2.6vw,36px);color:#fff}
 #cbt{background:linear-gradient(90deg,#0ea56a,#0a6b47);padding:.35em .8em;font-weight:800;text-align:center;border-radius:10px;margin-bottom:.5em}
 #cbx{white-space:pre-line;text-align:center;font-weight:700;line-height:1.5}
-/* clearer target / need text */
-#top{height:26px;font-size:13px}
-#top .rs{font-size:15px;font-weight:800;color:#fff}
-#top .rs:not(:empty){background:rgba(0,0,0,.4);border-radius:5px;padding:1px 12px;flex:0 1 auto;margin:0 auto}
-#ov:not(.inline) #bc{height:68px}
-#top{height:22px;font-size:12px}
-#top .rs,#top .rs:not(:empty){background:none;padding:0;border-radius:0;font-size:14px;font-weight:800;color:#fff;flex:1;margin:0;text-shadow:none}
-#ov:not(.inline) #bc{height:64px}
-#cbi{display:none;max-width:100%;max-height:42vh;margin:.4em auto;border-radius:10px;object-fit:contain}#cbi.has{display:block}
+#cbi{display:none;max-width:100%;max-height:42vh;margin:.4em auto;border-radius:10px;object-fit:contain}
+#cbi.has{display:block}
 #pcd{display:none}
 #ov:not(.inline) #pcd.on{display:flex;gap:1.2em;position:absolute;left:50%;top:calc((100% - var(--bh,64px))/2);transform:translate(-50%,-50%);width:min(1000px,94vw);max-height:calc(100% - var(--bh,64px) - 40px);overflow:hidden;background:rgba(15,18,32,.95);border:1px solid #2d3355;border-radius:16px;padding:.9em;font-size:clamp(11px,1.9vw,26px);color:#fff}
 .pcl{flex:0 0 30%;text-align:center}
-#pci{display:none;width:100%;aspect-ratio:1;object-fit:cover;border-radius:50%;border:3px solid #0ea56a}#pci.has{display:block}
+#pci{display:none;width:100%;aspect-ratio:1;object-fit:cover;border-radius:50%;border:3px solid #0ea56a}
+#pci.has{display:block}
 #pcn{margin-top:.5em;font-size:1.3em;font-weight:800;background:linear-gradient(90deg,#0ea56a,#0a6b47);border-radius:8px;padding:.25em .4em}
-.pcr{flex:1;min-width:0}.pcr h4{margin:.3em 0;color:#ffe14d;font-size:1em}
+.pcr{flex:1;min-width:0}
+.pcr h4{margin:.3em 0;color:#ffe14d;font-size:1em}
 .pcs{font-weight:700;margin-bottom:.6em}
 .pr1{display:flex;justify-content:space-between;gap:.8em;padding:.25em 0;border-bottom:1px solid #2d3355;font-weight:600}
-.prow{display:flex;gap:6px;margin-bottom:8px}.prow input{flex:1}.prow button{padding:0 14px}
-/* animations: panels slide/zoom in and out, bar slides up, score pops on change */
+.prow{display:flex;gap:6px;margin-bottom:8px}
+.prow input{flex:1}
+.prow button{padding:0 14px}
 #ov:not(.inline) #lsc.on{animation:lscIn .45s cubic-bezier(.2,.9,.3,1) both}
 #ov:not(.inline) #lsc.on.out{animation:lscOut .4s ease-in both}
 #ov:not(.inline) #cbd.on,#ov:not(.inline) #pcd.on{animation:cbIn .5s cubic-bezier(.2,.9,.3,1) both}
 #ov:not(.inline) #cbd.on.out,#ov:not(.inline) #pcd.on.out{animation:cbOut .4s ease-in both}
-#ov:not(.inline) #stg{animation:barIn .7s cubic-bezier(.2,.9,.3,1) both}
 #oSc.pop{animation:popn .55s ease}
 @keyframes lscIn{from{opacity:0;transform:translate(-50%,60px)}to{opacity:1;transform:translate(-50%,0)}}
 @keyframes lscOut{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,60px)}}
@@ -183,18 +129,15 @@ textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;bac
 @keyframes cbOut{from{opacity:1;transform:translate(-50%,-50%) scale(1)}to{opacity:0;transform:translate(-50%,-50%) scale(.8)}}
 @keyframes barIn{from{opacity:0;margin-top:40px}to{opacity:1;margin-top:0}}
 @keyframes popn{0%{transform:scale(1)}40%{transform:scale(1.3)}100%{transform:scale(1)}}
-.g1{flex-direction:column;align-items:flex-start;justify-content:center;gap:0}
-.g1a{display:flex;align-items:center;gap:8px}
-.g1b{font-size:11px;color:#e8ecfa;font-weight:600;line-height:1.1}
 #ov:not(.inline) #pcd.on{width:min(620px,90vw);align-items:center}
 .pcl{flex:0 0 28%}
 .pcr{display:flex;flex-direction:column;justify-content:center}
 #pcc{display:flex;gap:1.3em;align-items:flex-end}
-.pst{text-align:center}.pst b{display:block;font-size:1.7em;font-weight:800;line-height:1.1}
+.pst{text-align:center}
+.pst b{display:block;font-size:1.7em;font-weight:800;line-height:1.1}
 .pst:first-child b{font-size:3em;color:#ffe14d}
 .pst small{display:block;color:#e8ecfa;font-weight:600}
 #pcp{display:none}
-/* more transparent player card & scorecard */
 #ov:not(.inline) #lsc.on,#ov:not(.inline) #pcd.on{background:rgba(15,18,32,.5);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);border-color:rgba(255,255,255,.2)}
 #lsc,#pcd{text-shadow:0 1px 3px rgba(0,0,0,.75)}
 #lsc h3{background:linear-gradient(90deg,rgba(14,165,106,.72),rgba(10,107,71,.72))}
@@ -206,7 +149,6 @@ textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;bac
 #pcn{background:linear-gradient(90deg,rgba(14,165,106,.72),rgba(10,107,71,.72))}
 #pci{border-color:rgba(14,165,106,.85)}
 select{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;background:#0f1220;color:#fff;font-size:15px}
-/* player card — broadcast style */
 #ov:not(.inline) #pcd.on{display:flex;align-items:center;gap:0;width:auto;max-width:94vw;padding:.8em 1.6em .8em 1em;border-radius:1.3em;background:linear-gradient(135deg,rgba(6,12,10,.7),rgba(8,26,18,.6));border:2px solid #22c55e;box-shadow:0 0 0 2px rgba(34,197,94,.22),0 10px 30px rgba(0,0,0,.45),inset 0 0 28px rgba(34,197,94,.14);overflow:hidden;font-size:clamp(9px,1.5vw,20px)}
 #pcd::before{content:"";position:absolute;top:0;left:0;width:55%;height:.35em;background:linear-gradient(90deg,#22c55e,transparent)}
 #pcd::after{content:"";position:absolute;bottom:0;right:0;width:45%;height:.45em;background:linear-gradient(270deg,#22c55e,transparent)}
@@ -227,7 +169,6 @@ select{width:100%;padding:10px;border-radius:10px;border:1px solid #333a5e;backg
 .pig svg{width:1.4em;height:1.4em}
 #pct{display:none}
 #pcd.on #pct.has{display:block;position:absolute;top:0;right:1.4em;z-index:2;background:linear-gradient(90deg,#f59e0b,#fcd34d);color:#111;font-weight:800;font-size:.75em;padding:.15em 1em;border-radius:0 0 .6em .6em;letter-spacing:.05em;text-shadow:none}
-/* friendlier layout */
 button,summary,label.photobtn{touch-action:manipulation}
 details.sec{margin-bottom:10px}
 details.sec>summary{list-style:none;cursor:pointer;background:var(--card);border-radius:14px;padding:15px 16px;font-size:16px;font-weight:700;display:flex;justify-content:space-between;align-items:center;-webkit-user-select:none;user-select:none}
@@ -244,47 +185,30 @@ details.sec>.sb.nb>.card:first-child{margin-top:0;border-radius:0 0 14px 14px}
 #app .grid>button.sm{min-height:52px}
 .adj>summary{cursor:pointer;padding:8px 4px;color:var(--mut);font-size:14px}
 .adj>div{margin-top:8px}
-/* players with photos */
 .prow2{display:flex;gap:8px;align-items:center;margin-bottom:10px}
 .pth{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid #22c55e;flex:0 0 auto;background:#0b1f17}
 .pf{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
 .pb{display:flex;flex-direction:column;gap:6px}
 .pb button,.photobtn{padding:8px 12px;border-radius:10px;background:#2a3157;font-size:16px;text-align:center;cursor:pointer;display:block;color:#fff}
 .pb .w{background:var(--red)}
-/* OUT ribbon on the auto player card */
 #pco{display:none}
 #pcd.on #pco.has{display:block;position:absolute;top:0;left:1.4em;z-index:2;background:linear-gradient(90deg,#dc2626,#ef4444);color:#fff;font-weight:900;font-size:.95em;padding:.15em 1.3em;border-radius:0 0 .6em .6em;letter-spacing:.15em;text-shadow:none}
-/* custom board: transparent glass */
 #ov:not(.inline) #cbd.on{background:linear-gradient(135deg,rgba(6,12,10,.48),rgba(8,26,18,.38));-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);border:2px solid rgba(34,197,94,.75);box-shadow:0 10px 30px rgba(0,0,0,.4),inset 0 0 28px rgba(34,197,94,.12);border-radius:1.2em;padding:.8em 1em}
 #cbd{text-shadow:0 2px 6px rgba(0,0,0,.85)}
 #cbt{background:linear-gradient(90deg,rgba(21,128,61,.88),rgba(34,197,94,.88));clip-path:polygon(2% 0,100% 0,98% 100%,0 100%);letter-spacing:.04em;padding:.4em 1em}
 #cbx{font-size:1.05em}
-/* bigger text on the live bar */
-#top{height:24px;font-size:13px}
-#top .rs,#top .rs:not(:empty){font-size:15px}
-#ov:not(.inline) #bc{height:72px}
-.tn{font-size:22px}
-.big{font-size:36px}
-.g2 small{font-size:17px}
-.g1b{font-size:12px}
-.g3,.g4{font-size:15px}
-#oBo{font-size:15px}
-.g5{font-size:14px}.g5 b{font-size:20px}.g5 .d{font-size:13px}
-.c{min-width:28px;height:26px;font-size:14px}
-.inn{font-size:12px}
-#main>div{padding:0 11px}
-/* tabs + app-like layout */
 .t-score,.t-setup,.t-overlay,.t-more{display:none}
 body[data-tab=score] .t-score,body[data-tab=setup] .t-setup,body[data-tab=overlay] .t-overlay,body[data-tab=more] .t-more{display:block}
 body{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
 body.ovm{padding-bottom:0}
 body[data-tab=score] #app{padding-bottom:250px}
 body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom,0px));z-index:40;background:#0f1220;border-top:1px solid #2d3355;padding:10px 12px}
-#sbox .grid{gap:9px}#sbox .grid>button{min-height:54px}#sbox .grid>button.sm{min-height:54px}
+#sbox .grid{gap:9px}
+#sbox .grid>button{min-height:54px}
+#sbox .grid>button.sm{min-height:54px}
 #tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;background:#0b0f1d;border-top:1px solid #2d3355;padding-bottom:env(safe-area-inset-bottom,0px)}
 #tabbar button{flex:1;background:none;border-radius:0;font-size:13px;font-weight:600;padding:12px 2px 10px;color:var(--mut);border-top:3px solid transparent;min-height:56px}
 #tabbar button.on{color:#ffcc00;border-top-color:#ffcc00}
-#topbar{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 #livepill{background:#ef4444;color:#fff;font-weight:800;font-size:13px;padding:6px 14px;border-radius:999px}
 #stdot{width:9px;height:9px;border-radius:50%;background:#64748b;display:inline-block}
 #stsync{font-size:13px;color:#cbd5e1}
@@ -301,12 +225,63 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 .sd{color:#ffcc00;font-style:normal}
 #sw{background:transparent;border:1px dashed #3a4270;color:#e8ecfa;font-size:17px;padding:16px 0;margin:2px 0 12px;border-radius:12px;width:100%}
 .fxr{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid #2d3355}
-.fxn{flex:1;min-width:0;font-size:15px}.fxn small{color:var(--mut);margin-right:6px}.fxn i{font-style:normal;font-size:11px;color:var(--ac);margin:0 6px}
+.fxn{flex:1;min-width:0;font-size:15px}
+.fxn small{color:var(--mut);margin-right:6px}
+.fxn i{font-style:normal;font-size:11px;color:var(--ac);margin:0 6px}
 .fxr button{padding:8px 12px;min-height:40px;font-size:15px}
 .dim{color:var(--mut);font-size:14px}
 #toast{bottom:auto;top:64px}
 #ov:not(.inline){z-index:120}
 #dch[style*="grid"] button{margin-bottom:0}
+/* ===== BROADCAST BAR: navy + gold ===== */
+#bcw{width:100%;position:relative}#stg{position:relative}
+#bc{position:relative;margin-top:30px;height:74px;border-radius:28px 14px 14px 28px;color:#fff;font-weight:700;background:linear-gradient(90deg,#08174a 0%,#0a2266 48%,#061136 100%);border-top:2px solid #f5c518;border-bottom:2px solid rgba(245,197,24,.55);box-shadow:0 0 26px rgba(40,90,255,.35),0 10px 26px rgba(0,0,0,.5)}
+#bc #anim{border-radius:inherit}
+#main{display:flex;align-items:stretch;height:100%}
+.g1{display:flex;align-items:center;gap:12px;padding:0 42px 0 14px;margin:2px 0 2px 2px;min-width:0;background:linear-gradient(180deg,#fff,#d7dff3);color:#0b1230;border-radius:24px 0 0 24px;clip-path:polygon(0 0,calc(100% - 30px) 0,100% 100%,0 100%)}
+.emb{flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffe27a,#e08a00);color:#0b1230;font-weight:900;font-size:23px;display:flex;align-items:center;justify-content:center;border:2px solid #0b1230}
+.g1t{display:flex;flex-direction:column;justify-content:center;min-width:0}
+.g1a{display:flex;align-items:center;gap:10px}
+.tn{font-size:23px;font-weight:800;color:#0b1230;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.inn{flex:0 0 auto;background:#ffd21f;color:#0b1230;font-size:12px;font-weight:800;padding:3px 12px;border-radius:999px;white-space:nowrap}
+.g1b{font-size:13px;font-weight:700;color:#1f2a55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g2{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 22px;min-width:150px}
+.big{font-size:42px;font-weight:800;color:#ffd21f;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.g2 small{font-size:15px;color:#fff;font-weight:700;margin-top:2px}
+.g3,.g4,.g5{display:flex;flex-direction:column;justify-content:center;padding:0 18px;border-left:1px solid rgba(255,255,255,.3);min-width:0;white-space:nowrap;overflow:hidden}
+.g3,.g4{font-size:16px;line-height:1.3}
+.ic{display:inline-flex;vertical-align:middle;margin-right:6px}
+.g3 b{color:#ffd21f}.g3 #oR0{color:#fff}.g3 #oR0 small{color:#8fd3ff!important}
+.g3 .d{color:#fff}
+.g4 .bo,.g4 .bo b{color:#67e8f9}.g4 .d{color:#fff}
+#oBo{color:#fff;font-weight:800}
+.g5{align-items:center;font-size:15px;color:#fff}
+.g5 b{display:block;color:#ffd21f;font-size:30px;line-height:1}
+.g5 .d{font-size:12px;color:#dbe4ff;font-weight:600}
+.ch{display:flex;align-items:center;gap:7px;padding:0 20px 0 16px;margin-left:auto;border-left:1px solid rgba(255,255,255,.3)}
+.c{min-width:32px;height:32px;padding:0 4px;border-radius:8px;background:#17265f;border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800}
+.c.f{background:#16a34a}.c.s{background:#7c3aed}.c.n{background:#2563eb}.c.x{background:#e11d1d}.c.h{background:#f59e0b;color:#111}
+#top{position:absolute;left:22px;right:22px;top:-30px;height:30px;display:flex;align-items:flex-end;gap:16px;white-space:nowrap}
+.tab1{display:flex;align-items:center;gap:10px;height:30px;padding:0 32px 0 18px;background:linear-gradient(90deg,#0a1a52,#0d2468);border-radius:15px 0 0 0;clip-path:polygon(0 0,calc(100% - 22px) 0,100% 100%,0 100%);font-size:15px;font-weight:800;box-shadow:inset 3px 0 0 #f5c518}
+.trophy{font-size:17px}.sep{opacity:.6}
+#top .lv{background:#e11d1d;border-radius:999px;padding:2px 14px 2px 12px;font-weight:900;font-size:14px;letter-spacing:.5px;box-shadow:0 0 10px rgba(225,29,29,.6)}
+#top .fh{display:none;background:#f59e0b;color:#111;padding:2px 12px;border-radius:999px;font-weight:800;font-size:13px}
+#top .rs{flex:1;text-align:center;font-size:17px;font-weight:800;color:#fff;min-width:0;overflow:hidden;text-overflow:ellipsis;padding-bottom:3px}
+#top .rs:empty{display:none}
+#spon{margin-left:auto;display:flex;align-items:center;gap:8px;height:30px;padding:0 24px 0 32px;background:linear-gradient(90deg,#fff,#dfe6f6);color:#0b1230;border-radius:0 15px 0 0;clip-path:polygon(22px 0,100% 0,100% 100%,0 100%);font-weight:700;box-shadow:inset -3px 0 0 #f5c518}
+#spon i{font-style:normal;font-size:13px;color:#33406b;letter-spacing:0;font-weight:700}
+#oSp{color:#ea580c;font-weight:900;font-size:17px}
+#ov:not(.inline) #stg{position:absolute;left:0;top:0;transform-origin:0 0;animation:barIn .7s cubic-bezier(.2,.9,.3,1) both}
+#stg.cmp .ch,#stg.cmp .g5,#stg.cmp .emb,#stg.cmp .g1b{display:none}
+#ov.inline #bc{margin-top:0;height:auto;border-radius:18px}
+#ov.inline #top{position:static;height:auto;flex-wrap:wrap;padding:8px 10px;gap:8px}
+#ov.inline #top .rs{flex:1 1 100%;order:9;text-align:left}
+#ov.inline #main{flex-wrap:wrap;height:auto;padding:6px}
+#ov.inline .g1{clip-path:none;border-radius:14px;margin:0;flex:1 1 100%;padding:8px 14px}
+#ov.inline #main>div{padding:6px 10px}
+#ov.inline .g3,#ov.inline .g4,#ov.inline .g5{border-left:0}
+#ov.inline .ch{margin-left:0;border-left:0;flex-wrap:wrap}
+.fxr.run{background:rgba(255,204,0,.08);border-radius:10px;padding:10px 8px}.fxr.run small{color:#ffcc00;font-weight:700}.fxs{color:#ffcc00;font-weight:800;margin-left:6px}.fxn b{margin-right:4px}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -338,7 +313,8 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 
 <div id="fxbox" class="card t-setup"><h3>📅 পরের ম্যাচ / Next matches</h3>
   <p class="dim">🏆 <b id="fxtn"></b></p><div id="fxl"></div>
-  <button class="g" style="width:100%;margin-top:10px" onclick="fxAdd()">＋ নেক্সট ম্যাচ যোগ করুন / Add next match</button></div>
+  <button class="g" style="width:100%;margin-top:10px" onclick="fxAdd()">＋ নেক্সট ম্যাচ যোগ করুন / Add next match</button>
+  <button id="fxb" style="width:100%;margin-top:8px;font-size:15px;padding:12px" onclick="toggleFX()"></button></div>
 <!-- SCORER -->
 <div id="app" class="hide">
 <div class="t-score">
@@ -365,27 +341,31 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
     <button class="w sm" onclick="wicket()">আউট / Wicket</button><button class="sm" onclick="undo()">↶ আনডু / Undo</button>
     <button class="ex" onclick="extra('Wd')">ওয়াইড / Wide</button><button class="ex" onclick="extra('NB')">নো বল / No Ball</button>
     <button class="ex" style="grid-column:span 2" onclick="extraSheet()">➕ এক্সট্রা / Extra</button>
-    <button id="fhb" class="ex" style="grid-column:span 4;font-size:15px;padding:12px" onclick="toggleFH()"></button>
   </div></div>
 <div class="t-overlay">
   <!-- OVERLAY -->
 <div id="ov" class="inline" onclick="bgNext(event)">
   <button id="exit" onclick="hideOv(event)">✕</button>
-  <div id="lsc"></div><div id="cbd"><div id="cbt"></div><img id="cbi" alt=""><div id="cbx"></div></div><div id="pcd"><div id="pco"></div><div id="pct"></div><div class="pcl"><img id="pci" alt=""><div id="pcn"></div></div><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="bcw"><div id="stg"><div id="spon"><i>SPONSOR</i><span id="oSp"></span></div>
+  <div id="lsc"></div><div id="cbd"><div id="cbt"></div><img id="cbi" alt=""><div id="cbx"></div></div><div id="pcd"><div id="pco"></div><div id="pct"></div><div class="pcl"><img id="pci" alt=""><div id="pcn"></div></div><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="bcw"><div id="stg">
   <div id="bc"><div id="anim"><span></span></div>
-      <div id="top"><span class="v" id="oVe"></span><span class="t" id="oTt"></span><span class="rs" id="res"></span><span class="fh" id="oFH"></span><span class="lv">● LIVE</span></div>
-      <div id="main">
-        <div class="g1"><div class="g1a"><span class="tn" id="oTn"></span><span class="inn" id="oIn"></span></div><div class="g1b" id="oBt"></div></div>
-        <div class="g2"><span class="big" id="oSc"></span><small id="oOv"></small></div>
-        <div class="g3"><span>🏏 <b id="oB0"></b> <b id="oR0"></b></span><span class="d"><span id="oB1"></span> <span id="oR1"></span></span></div>
-        <div class="g4"><span class="bo">🎯 <span id="oBw"></span> <b id="oBf"></b></span><span class="d"><span id="oBo"></span> • <span id="oBm"></span></span></div>
-        <div class="g5"><span>CRR<b id="oCr"></b></span><span class="d" id="oPs"></span></div>
-        <div class="ch" id="oCh"></div>
-      </div></div>
-</div></div></div>
+   <div id="top">
+    <div class="tab1"><span class="trophy">🏆</span><span class="v" id="oVe"></span><span class="sep">|</span><span class="t" id="oTt"></span><span class="lv">● LIVE</span><span class="fh" id="oFH"></span></div>
+    <span class="rs" id="res"></span>
+    <div id="spon"><i>SPONSOR</i><span id="oSp"></span></div>
+   </div>
+   <div id="main">
+    <div class="g1"><span class="emb" id="oEm"></span><div class="g1t"><div class="g1a"><span class="tn" id="oTn"></span><span class="inn" id="oIn"></span></div><div class="g1b" id="oBt"></div></div></div>
+    <div class="g2"><span class="big" id="oSc"></span><small id="oOv"></small></div>
+    <div class="g3"><span><i class="ic"><svg viewBox="0 0 24 24" width="22" height="22"><g transform="rotate(40 12 12)"><rect x="9.5" y="1" width="5" height="13" rx="2" fill="#ffd21f"/><rect x="11" y="14" width="2" height="8" rx="1" fill="#c58a00"/></g></svg></i><b id="oB0"></b> <b id="oR0"></b></span><span class="d"><span id="oB1"></span> <span id="oR1"></span></span></div>
+    <div class="g4"><span class="bo"><i class="ic"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="9" fill="#e11d1d"/><path d="M6 18L18 6" stroke="#fff" stroke-width="2"/></svg></i><span id="oBw"></span> <b id="oBf"></b></span><span class="d"><span id="oBo"></span> • <span id="oBm"></span></span></div>
+    <div class="g5"><span>CRR<b id="oCr"></b></span><span class="d" id="oPs"></span></div>
+    <div class="ch" id="oCh"></div>
+   </div>
+  </div></div></div></div>
   <button class="g sm" style="width:100%;padding:14px;margin:10px 0" onclick="showOv()">📺 ফুল-স্ক্রিন ওভারলে / Fullscreen overlay</button>
   <details class="sec" open><summary>📺 লাইভ কন্ট্রোল / Live controls</summary><div class="sb">
   <button id="lsb" class="sm" style="width:100%;padding:12px;margin-top:8px" onclick="toggleSC()"></button>
+  <button id="fxb2" class="sm" style="width:100%;padding:12px;margin-top:8px" onclick="toggleFX()"></button>
   <button class="sm" style="width:100%;padding:10px;margin-bottom:10px" onclick="copyLink()">📋 ওভারলে লিংক কপি / Copy Overlay Link</button>
   <div><label>🌐 ভাষা / Language</label>
    <div class="row" style="margin:0"><button id="lbn" style="flex:1;font-size:16px;padding:12px" onclick="setLang('bn')">বাংলা (BN)</button><button id="len" style="flex:1;font-size:16px;padding:12px" onclick="setLang('en')">English (EN)</button></div></div>
@@ -405,6 +385,7 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
     <div class="row"><div><label>১ম ইনিংস রান / 1st inn.</label><input id="e_fr" type="number"></div></div>
     <div class="row"><div><label>ব্যাট ১ রান / Bat 1 runs</label><input id="e_r0" type="number"></div><div><label>ব্যাট ১ বল / Bat 1 balls</label><input id="e_b0" type="number"></div><div><label>ব্যাট ২ রান / Bat 2 runs</label><input id="e_r1" type="number"></div><div><label>ব্যাট ২ বল / Bat 2 balls</label><input id="e_b1" type="number"></div></div>
     <div class="row"><div><label>বোলার উইকেট / Bowler wkts</label><input id="e_bw" type="number"></div><div><label>বোলার রান / Bowler runs</label><input id="e_br" type="number"></div><div><label>বোলার ওভার / Bowler overs</label><input id="e_bo"></div><div><label>মেডেন / Maidens</label><input id="e_bm" type="number"></div></div>
+    <button id="fhb" class="ex" style="width:100%;font-size:15px;padding:12px;margin-bottom:8px" onclick="toggleFH()"></button>
     <button class="sm" style="width:100%;margin-bottom:8px" onclick="swapTeams()">⇄ ব্যাটিং ও বোলিং টিম বদল / Swap batting & bowling team</button>
     <button class="g" style="width:100%" onclick="saveEdit()">💾 সব সেভ / Save All</button>
    </div></details>
@@ -650,8 +631,8 @@ function render(){
   setv('e_ru',S.runs);setv('e_wk',S.w);setv('e_ba',ovs(S.balls));setv('e_fr',S.first?S.first.runs:'');
   setv('e_r0',S.bat[0].r);setv('e_b0',S.bat[0].b);setv('e_r1',S.bat[1].r);setv('e_b1',S.bat[1].b);
   setv('e_bw',b.w);setv('e_br',b.r);setv('e_bo',ovs(b.b));setv('e_bm',b.m);
-  $('oSp').textContent=S.sp;document.querySelector('#spon i').textContent=S.spl||L('স্পনসর','SPONSOR');document.querySelector('#top .lv').textContent='● '+L('লাইভ','LIVE');$('oVe').textContent=S.ve;$('oTt').textContent=S.tt;
-  $('oTn').textContent=tn;$('oBt').textContent=L('বোলিং','Bowling')+': '+S.t[1-S.inn];$('oIn').textContent=L('ইনিংস','INNINGS')+' '+(S.inn+1);
+  $('oSp').textContent=S.sp;document.querySelector('#spon i').textContent=S.spl||L('পরিবেশনায়','Powered by');$('spon').style.display=(S.sp||'').trim()?'':'none';document.querySelector('#top .lv').textContent='● '+L('লাইভ','LIVE');$('oVe').textContent=S.ve;$('oTt').textContent=S.tt;
+  $('oTn').textContent=tn;$('oEm').textContent=Array.from(tn.trim())[0]||'';$('oBt').textContent=L('বোলিং','Bowling')+': '+S.t[1-S.inn];$('oIn').textContent=L('ইনিংস','INNINGS')+' '+(S.inn+1);
   {const sc=S.runs+'/'+S.w,el=$('oSc');if(lastSc&&sc!==lastSc){el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop')}lastSc=sc}
   $('oSc').textContent=S.runs+'/'+S.w;$('oOv').textContent='('+ovs(S.balls)+'/'+S.ov+' '+L('ওভার','ov')+')';
   $('oB0').textContent=S.bat[st].n+'*';$('oR0').innerHTML=S.bat[st].r+' <small style="color:#8f97b8;font-weight:400">('+S.bat[st].b+')</small>';
@@ -719,10 +700,10 @@ function playEv(e){
 function fit(){
   const ov=$('ov'),w=$('bcw'),g=$('stg');if(!ov||!w||!g)return;
   if(ov.classList.contains('inline')){g.style.cssText='';g.classList.remove('cmp');w.style.height='';return}
-  const vw=innerWidth,DW=vw>=900?1280:800,k=vw/DW;
+  const vw=innerWidth,DW=vw>=900?1400:800,k=vw/DW;
   g.classList.toggle('cmp',vw<900);
   g.style.width=DW+'px';g.style.transform='scale('+k+')';
-  w.style.height=(72*k)+'px';ov.style.setProperty('--bh',(72*k)+'px');
+  w.style.height=(104*k)+'px';ov.style.setProperty('--bh',(104*k)+'px');
 }
 
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -827,12 +808,12 @@ async function tryLogin(){
 }
 
 let CB={on:false,t:'',x:''},CBd=null;try{CB=Object.assign(CB,JSON.parse(localStorage.getItem('cb')))}catch(e){}
-const cbp=()=>CB.on?{t:CB.t,x:CB.x,i:CB.i||''}:null;
+const cbp=()=>FXSHOW?fxBoard():(CB.on?{t:CB.t,x:CB.x,i:CB.i||''}:null);
 function storeCB(){try{localStorage.setItem('cb',JSON.stringify(CB))}catch(e){}}
 function liveCB(){CB.i=$('cb_i').value.trim().slice(0,300);CB.t=$('cb_t').value.slice(0,80);CB.x=$('cb_x').value.slice(0,1500);storeCB()}
 function readCB(){CB.i=$('cb_i').value.trim().slice(0,300);CB.t=$('cb_t').value.trim().slice(0,80);CB.x=$('cb_x').value.slice(0,1500)}
 function saveCB(){readCB();storeCB();push();render();toast('💾 '+L('সেভ হয়েছে','Saved'))}
-function toggleCB(){readCB();CB.on=!CB.on;if(CB.on){PC.on=false;storePC()}if(CB.on&&S)S.showSC=false;storeCB();if(S)save();else push();render()}
+function toggleCB(){readCB();CB.on=!CB.on;if(CB.on){PC.on=false;storePC();FXSHOW=false;try{localStorage.setItem('fxs','0')}catch(e){}}if(CB.on&&S)S.showSC=false;storeCB();if(S)save();else push();render()}
 let lastSc='';
 function setPanel(el,on){
   const was=el.classList.contains('on');
@@ -841,7 +822,7 @@ function setPanel(el,on){
   else if(!on&&was&&!el.classList.contains('out')){el.classList.add('out');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on','out'),450)}
 }
 function renderCB(){
-  const d=$('cbd'),c=OVM?CBd:(CB.on?CB:null);
+  const d=$('cbd'),c=OVM?CBd:(FXSHOW?fxBoard():(CB.on?CB:null));
   setPanel(d,!!c&&!(OVM?PCd:pcOn()));
   if(c){$('cbt').textContent=c.t||'';$('cbt').style.display=c.t?'':'none';$('cbx').textContent=c.x||'';
     const ci=$('cbi'),cu=imgUrl(c.i);
@@ -1002,6 +983,7 @@ function toggleVib(){VIB=!VIB;try{localStorage.setItem('vib',VIB?'1':'0')}catch(
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('button'))vib(12)},true);
 
 let TAB='score',FXLOAD=null,FX=[];try{FX=JSON.parse(localStorage.getItem('fx'))||[]}catch(e){}
+let FXSHOW=false;try{FXSHOW=localStorage.getItem('fxs')==='1'}catch(e){}
 function setTab(t){
   TAB=t;try{document.body.setAttribute('data-tab',t);(document.querySelectorAll?document.querySelectorAll('#tabbar button'):[]).forEach(b=>b.classList.toggle('on',b.getAttribute('data-t')==t));window.scrollTo(0,0);if(t=='overlay')fit()}catch(e){}
 }
@@ -1009,19 +991,34 @@ function renderTop(){
   const b=$('lgb');if(b)b.textContent=LANG=='bn'?'EN':'BN';
   const t=$('stsync');if(t&&!t.textContent){t.textContent=CFG.db?L('সংযুক্ত নয়','Waiting'):L('শুধু লোকাল','Local only')}
 }
-function storeFX(){try{localStorage.setItem('fx',JSON.stringify(FX))}catch(e){}fxUI()}
+function storeFX(){try{localStorage.setItem('fx',JSON.stringify(FX))}catch(e){}fxUI();if(FXSHOW){if(S)save();else push()}}
 const curTn=()=>S?(S.tn||''):($('tnsel')?$('tnsel').value:'');
 function fxUI(){
   const box=$('fxl');if(!box)return;const tn=curTn(),t=TN.find(x=>x.id==tn);
   $('fxtn').textContent=t?t.name:L('কোনো টুর্নামেন্ট নির্বাচিত নয়','No tournament selected');
-  const l=FX.filter(f=>(f.tn||'')==tn);
-  box.innerHTML=l.length?l.map((f,i)=>{const a=f.sw?f.t2:f.t1,b=f.sw?f.t1:f.t2;return '<div class="fxr"><div class="fxn"><small>#'+(i+1)+'</small><b>'+esc(a)+'</b><i>'+L('আগে ব্যাট','bats first')+'</i> vs '+esc(b)+'</div><button class="sm" onclick="fxGo(\''+f.id+'\')">▶</button><button class="sm" onclick="fxSw(\''+f.id+'\')">⇄</button><button class="w sm" onclick="fxDel(\''+f.id+'\')">✕</button></div>'}).join(''):'<p class="dim">'+L('এখনো কোনো পরের ম্যাচ নেই','No next matches yet')+'</p>';
+  const l=FX.filter(f=>(f.tn||'')==tn),off=S?2:1;let h='';
+  if(S)h+='<div class="fxr run"><div class="fxn"><small>▶ '+L('চলমান','Running')+'</small><b>'+esc(S.t[0])+'</b> vs <b>'+esc(S.t[1])+'</b> <span class="fxs">'+S.runs+'/'+S.w+'</span></div></div>';
+  h+=l.map((f,i)=>{const a=f.sw?f.t2:f.t1,b=f.sw?f.t1:f.t2;return '<div class="fxr"><div class="fxn"><small>'+L('পরের ','Next ')+(i+off)+'</small><b>'+esc(a)+'</b><i>'+L('আগে ব্যাট','bats first')+'</i> vs '+esc(b)+'</div><button class="sm" onclick="fxGo(\''+f.id+'\')">▶</button><button class="sm" onclick="fxSw(\''+f.id+'\')">⇄</button><button class="w sm" onclick="fxDel(\''+f.id+'\')">✕</button></div>'}).join('');
+  if(!h)h='<p class="dim">'+L('এখনো কোনো ম্যাচ নেই','No matches yet')+'</p>';
+  box.innerHTML=h;renderFxBtn();
+}
+function renderFxBtn(){['fxb','fxb2'].forEach(id=>{const b=$(id);if(b){b.textContent='📺 '+L('লাইভে ম্যাচ তালিকা','Match list on live')+': '+(FXSHOW?'ON':'OFF');b.classList.toggle('on',FXSHOW)}})}
+function fxBoard(){
+  const tn=curTn(),t=TN.find(x=>x.id==tn),l=FX.filter(f=>(f.tn||'')==tn),off=S?2:1,lines=[];
+  if(S)lines.push('▶ '+L('চলমান','Running')+': '+S.t[0]+' vs '+S.t[1]+'  ('+S.runs+'/'+S.w+')');
+  l.forEach((f,i)=>lines.push(L('পরের ','Next ')+(i+off)+': '+(f.sw?f.t2:f.t1)+' vs '+(f.sw?f.t1:f.t2)));
+  return{t:L('আসন্ন ম্যাচ','Upcoming Matches')+(t?' – '+t.name:''),x:lines.join('\n')||L('কোনো ম্যাচ নেই','No matches'),i:''};
+}
+function toggleFX(){
+  FXSHOW=!FXSHOW;try{localStorage.setItem('fxs',FXSHOW?'1':'0')}catch(e){}
+  if(FXSHOW){CB.on=false;storeCB()}
+  if(S)save();else push();render();
 }
 async function fxAdd(){
-  const t1=((S?S.t[0]:$('t1').value)||'').trim()||L('টিম ১','Team 1');
-  const t2=await dlg(L('পরের ম্যাচের টিম ২ এর নাম','Team 2 name for the next match'),{input:1});
-  if(!t2||!t2.trim())return;
-  FX.push({id:'f'+Date.now(),tn:curTn(),t1:t1.slice(0,40),t2:t2.trim().slice(0,40),sw:false});storeFX();
+  const d1=((S?S.t[0]:$('t1').value)||'').trim();
+  const t1=await dlg(L('টিম ১ এর নাম','Team 1 name'),{input:1,def:d1});if(t1===null)return;
+  const t2=await dlg(L('টিম ২ এর নাম','Team 2 name'),{input:1});if(!t2||!t2.trim())return;
+  FX.push({id:'f'+Date.now(),tn:curTn(),t1:(t1.trim()||d1||L('টিম ১','Team 1')).slice(0,40),t2:t2.trim().slice(0,40),sw:false});storeFX();
   toast('📅 '+L('পরের ম্যাচ যোগ হয়েছে','Next match added'));
 }
 function fxGo(id){
