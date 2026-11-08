@@ -331,6 +331,28 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 .ch{flex:0 0 auto}
 .g3,.g4{flex:1 1 auto;min-width:0}
 .g1{flex:0 1 auto;min-width:0}
+/* batter boxes + white bowler/ball panel */
+.g3{flex-direction:row;align-items:center;justify-content:center;gap:10px;padding:0 14px}
+.bb{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:128px;max-width:175px;padding:5px 12px;border-radius:12px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.22)}
+.bb.s{border-color:#ffd21f;background:rgba(255,210,31,.14);box-shadow:0 0 10px rgba(255,210,31,.35)}
+.bn{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px;font-weight:800;color:#fff;line-height:1.2}
+.bb.s .bn{color:#ffd21f}
+.bs{font-size:21px;font-weight:900;line-height:1.15;color:#fff}
+.bs small{font-size:13px;font-weight:700;color:#8fd3ff;margin-left:3px}
+.g6{flex:0 0 auto;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;padding:0 20px 0 50px;margin:2px 2px 2px 0;min-width:0;background:linear-gradient(180deg,#fff,#d7dff3);color:#0b1230;border-radius:0 12px 12px 0;clip-path:polygon(34px 0,100% 0,100% 100%,0 100%)}
+.g6a{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:800;max-width:260px;white-space:nowrap;color:#0b1230}
+.g6a #oBw{overflow:hidden;text-overflow:ellipsis}
+.g6 .ch{margin:0;padding:0;border:0}
+.g6 .c{height:30px;min-width:30px}
+#stg.cmp .g6{display:none}
+#ov.inline .g6{clip-path:none;border-radius:14px;margin:0;flex:1 1 100%;padding:8px 14px}
+#ov.inline .g3{flex:1 1 100%}
+/* match list: no ball picture, wider rows; bar: longer team name; CRR / Target label */
+#ov:not(.inline) #fxd.on{width:min(60em,95vw)}
+.fxd-b{padding-left:1.2em}
+.fxd-x span{min-width:0}
+.tn{max-width:340px}
+.g5 i{font-style:normal;display:block}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -394,7 +416,7 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
   <!-- OVERLAY -->
 <div id="ov" class="inline" onclick="bgNext(event)">
   <button id="exit" onclick="hideOv(event)">✕</button>
-  <div id="lsc"></div><div id="cbd"><div id="cbt"></div><img id="cbi" alt=""><div id="cbx"></div></div><div id="pcd"><div id="pco"></div><div id="pct"></div><div class="pcl"><img id="pci" alt=""><div id="pcn"></div></div><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="fxd"><div class="fxd-t"><span class="fx-st fx-l"></span><div class="fx-tab" id="fxdt"></div><span class="fx-st fx-r"></span></div><div class="fxd-b"><div class="fxd-ball"><svg viewBox="0 0 100 100"><defs><radialGradient id="fxg" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#e2e6ea"/><stop offset="1" stop-color="#9aa3ab"/></radialGradient></defs><circle cx="50" cy="50" r="46" fill="url(#fxg)"/><g fill="none" stroke="#2b2f33" stroke-width="2.2" stroke-dasharray="3 3" stroke-linecap="round"><path d="M24 16C46 34 46 66 24 84"/><path d="M31 12C54 32 54 68 31 88"/><path d="M76 16C54 34 54 66 76 84"/><path d="M69 12C46 32 46 68 69 88"/></g></svg></div><div id="fxdr"></div></div></div><div id="bcw"><div id="stg">
+  <div id="lsc"></div><div id="cbd"><div id="cbt"></div><img id="cbi" alt=""><div id="cbx"></div></div><div id="pcd"><div id="pco"></div><div id="pct"></div><div class="pcl"><img id="pci" alt=""><div id="pcn"></div></div><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="fxd"><div class="fxd-t"><span class="fx-st fx-l"></span><div class="fx-tab" id="fxdt"></div><span class="fx-st fx-r"></span></div><div class="fxd-b"><div id="fxdr"></div></div></div><div id="bcw"><div id="stg">
   <div id="bc"><div id="anim"><span></span></div>
    <div id="top">
     <div class="tab1"><span class="trophy">🏆</span><span class="v" id="oVe"></span><span class="sep">|</span><span class="t" id="oTt"></span><span class="lv">● LIVE</span><span class="fh" id="oFH"></span></div>
@@ -404,10 +426,9 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
    <div id="main">
     <div class="g1"><span class="emb" id="oEm"></span><div class="g1t"><div class="g1a"><span class="tn" id="oTn"></span><span class="inn" id="oIn"></span></div><div class="g1b" id="oBt"></div></div></div>
     <div class="g2"><span class="big" id="oSc"></span><small id="oOv"></small></div>
-    <div class="g3"><span><i class="ic"><svg viewBox="0 0 24 24" width="22" height="22"><g transform="rotate(40 12 12)"><rect x="9.5" y="1" width="5" height="13" rx="2" fill="#ffd21f"/><rect x="11" y="14" width="2" height="8" rx="1" fill="#c58a00"/></g></svg></i><b id="oB0"></b> <b id="oR0"></b></span><span class="d"><span id="oB1"></span> <span id="oR1"></span></span></div>
-    <div class="g4"><span class="bo"><i class="ic"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="9" fill="#e11d1d"/><path d="M6 18L18 6" stroke="#fff" stroke-width="2"/></svg></i><span id="oBw"></span> <b id="oBf"></b></span><span class="d"><span id="oBo"></span> • <span id="oBm"></span></span></div>
-    <div class="g5"><span>CRR<b id="oCr"></b></span><span class="d" id="oPs"></span></div>
-    <div class="ch" id="oCh"></div>
+    <div class="g3"><div class="bb" id="bb0"><span class="bn" id="oB0"></span><span class="bs" id="oR0"></span></div><div class="bb" id="bb1"><span class="bn" id="oB1"></span><span class="bs" id="oR1"></span></div></div>
+    <div class="g5"><span><i id="oCl">CRR</i><b id="oCr"></b></span><span class="d" id="oPs"></span></div>
+    <div class="g6"><div class="g6a"><i class="ic"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="9" fill="#e11d1d"/><path d="M6 18L18 6" stroke="#fff" stroke-width="2"/></svg></i><span id="oBw"></span></div><div class="ch" id="oCh"></div></div>
    </div>
   </div></div></div></div>
   <button class="g sm" style="width:100%;padding:14px;margin:10px 0" onclick="showOv()">📺 ফুল-স্ক্রিন ওভারলে / Fullscreen overlay</button>
@@ -680,14 +701,13 @@ function render(){
   setv('e_r0',S.bat[0].r);setv('e_b0',S.bat[0].b);setv('e_r1',S.bat[1].r);setv('e_b1',S.bat[1].b);
   setv('e_bw',b.w);setv('e_br',b.r);setv('e_bo',ovs(b.b));setv('e_bm',b.m);
   $('oSp').textContent=S.sp;document.querySelector('#spon i').textContent=S.spl||L('পরিবেশনায়','Powered by');$('spon').style.display=(S.sp||'').trim()?'':'none';document.querySelector('#top .lv').textContent='● '+L('লাইভ','LIVE');$('oVe').textContent=S.ve;$('oTt').textContent=S.tt;
-  $('oTn').textContent=tn;$('oEm').textContent=Array.from(tn.trim())[0]||'';$('oBt').textContent=L('বোলিং','Bowling')+': '+S.t[1-S.inn];$('oIn').textContent=L('ইনিংস','INNINGS')+' '+(S.inn+1);
+  $('oTn').textContent=tn;$('oEm').textContent=Array.from(tn.trim())[0]||'';fitIf($('oTn'),tn,.6,false);$('oBt').textContent=L('বোলিং','Bowling')+': '+S.t[1-S.inn];$('oIn').textContent=L('ইনিংস','INNINGS')+' '+(S.inn+1);
   {const sc=S.runs+'/'+S.w,el=$('oSc');if(lastSc&&sc!==lastSc){el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop')}lastSc=sc}
   $('oSc').textContent=S.runs+'/'+S.w;$('oOv').textContent='('+ovs(S.balls)+'/'+S.ov+' '+L('ওভার','ov')+')';
-  $('oB0').textContent=S.bat[st].n+'*';$('oR0').innerHTML=S.bat[st].r+' <small style="color:#8f97b8;font-weight:400">('+S.bat[st].b+')</small>';
-  $('oB1').textContent=S.bat[ns].n;$('oR1').textContent=S.bat[ns].r+' ('+S.bat[ns].b+')';
-  $('oBw').textContent=S.bn;$('oBf').textContent=b.w+'-'+b.r;
-  $('oBo').textContent=L('ওভার','Over')+': '+ovs(b.b);$('oBm').textContent=L('মেডেন','Maiden')+': '+b.m;
-  $('oCr').textContent=rr;
+  {const od=[0,1].sort((i,j)=>(S.bat[i].ord||i+1)-(S.bat[j].ord||j+1));
+   [0,1].forEach(k=>{const i=od[k],x=S.bat[i],on=(i==st);$('oB'+k).textContent=x.n+(on?'*':'');$('oR'+k).innerHTML=x.r+' <small>('+x.b+')</small>';$('bb'+k).classList.toggle('s',on)})}
+  $('oBw').textContent=S.bn;
+  $('oCl').textContent=S.inn==1?L('টার্গেট','Target'):'CRR';$('oCr').textContent=(S.inn==1&&S.first)?S.first.runs+1:rr;
   {const ls=$('lsc');setPanel(ls,!!S.showSC&&!(OVM?(CBd||PCd||FXd):(CB.on||pcOn()||FXSHOW)));
    if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');{const h=sumHTML(OVM?SCL:inns(S),r),k=h+innerHeight+'|'+(ls.classList.contains('on')?1:0);if(ls._k!==k){ls.innerHTML=h;ls._k=k;fitPanel(ls)}}}}
   $('lsb').textContent='📺 '+L('লাইভে স্কোরকার্ড','Scorecard on live')+': '+(S.showSC?'ON':'OFF');$('lsb').classList.toggle('on',!!S.showSC);$('oPs').textContent=(S.pr||S.pb)?L('পার্টনারশিপ ','Partnership ')+(S.pr||0)+' ('+(S.pb||0)+')':'';
@@ -806,6 +826,20 @@ function saveHist(fin){
 let scT=null,SCL=[],SCRES='';
 
 
+
+function fitText(el,minPct,wrap){
+  try{
+    el.style.fontSize='';el.style.whiteSpace='';el.style.lineHeight='';
+    const base=parseFloat(getComputedStyle(el).fontSize);let f=1;
+    while(el.scrollWidth>el.clientWidth+1&&f>(minPct||.55)){f-=.05;el.style.fontSize=(base*f)+'px'}
+    if(wrap&&el.scrollWidth>el.clientWidth+1){el.style.whiteSpace='normal';el.style.lineHeight='1.05';el.style.fontSize=(base*.62)+'px'}
+  }catch(e){}
+}
+function fitIf(el,text,minPct,wrap){
+  if(!el)return;const k=text+'|'+innerWidth+'|'+(el.offsetWidth>0?1:0);
+  if(el._ft!==k){el._ft=k;fitText(el,minPct,wrap)}
+}
+function fitRows(d){try{d.querySelectorAll('.fxd-x>span').forEach(sp=>fitText(sp,.55,true))}catch(e){}}
 function fitPanel(el){
   try{
     if(!el||!el.classList.contains('on'))return;
@@ -1100,7 +1134,7 @@ function renderFx(){
   const t1='<span>'+esc(c.t)+'</span>'+(c.s?'<small>'+esc(c.s)+'</small>':'');
   const t2=c.r.length?c.r.map(x=>'<div class="fxd-row'+(x.h?' hl':'')+'"><div class="fxd-n"><b>'+x.n+'</b></div><div class="fxd-x"><span>'+nm(x,'a')+' vs '+nm(x,'b')+'</span>'+(x.p?'<em class="fxd-p live">'+esc(x.p)+'</em>':'')+(x.wn=='t'?'<em class="fxd-p win">'+L('টাই','Tie')+'</em>':'')+'</div></div>').join(''):'<div class="fxd-row"><div class="fxd-x"><span>'+L('কোনো ম্যাচ নেই','No matches')+'</span></div></div>';
   const key=t1+t2+innerHeight+'|'+(d.classList.contains('on')?1:0);
-  if(d._k!==key){$('fxdt').innerHTML=t1;$('fxdr').innerHTML=t2;d._k=key;fitPanel(d)}
+  if(d._k!==key){$('fxdt').innerHTML=t1;$('fxdr').innerHTML=t2;d._k=key;fitPanel(d);fitRows(d)}
 }
 function toggleFX(){
   FXSHOW=!FXSHOW;try{localStorage.setItem('fxs',FXSHOW?'1':'0')}catch(e){}
@@ -1139,7 +1173,7 @@ function unpack(o){
   return{t:[Sx(t[0]),Sx(t[1])],ve:Sx(o.ve),tt:Sx(o.tt),sp:Sx(o.sp),ov:N(o.ov)||20,inn:N(o.inn)?1:0,runs:N(o.runs),w:N(o.w),balls:N(o.balls),
    tb:(o.tb||[]).slice(0,6).map(x=>({l:Sx(x.l).slice(0,6),c:/^[a-z]?$/.test(Sx(x.c))?Sx(x.c):''})),
    first:o.fr>=0?{runs:N(o.fr)}:null,
-   bat:[0,1].map(i=>{const x=(o.bat||[])[i]||{};return{n:Sx(x.n),r:N(x.r),b:N(x.b)}}),st:N(o.st)?1:0,bn:Sx(o.bn),
+   bat:[0,1].map(i=>{const x=(o.bat||[])[i]||{};return{n:Sx(x.n),r:N(x.r),b:N(x.b),ord:N(x.ord)}}),st:N(o.st)?1:0,bn:Sx(o.bn),
    fh:!!o.fh,spl:Sx(o.spl).slice(0,30),showSC:!!o.sc,pr:N(o.pr),pb:N(o.pb),ev:o.ev||null,
    bw:{[Sx(o.bn)]:{r:N(bs.r),w:N(bs.w),b:N(bs.b),m:N(bs.m)}}};
 }
