@@ -407,6 +407,19 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 #killb{padding:6px 14px;min-height:0;font-size:13px;border-radius:999px;background:#16203a;border:1px solid #2d3355;color:#e8ecfa}
 #killb.on{background:#0ea56a;border-color:#0ea56a;color:#fff}
 #killb:disabled{opacity:.45}
+/* ===== no bright green anywhere: golden title tabs, dark-green badges/banners ===== */
+.fx-tab{background:linear-gradient(180deg,#ffe066,#f2b705 60%,#c98f00);color:#0b1a4a;text-shadow:0 1px 0 rgba(255,255,255,.5);border-bottom:.12em solid #fff1b0;white-space:nowrap}
+.fx-tab>span{white-space:nowrap}
+.fx-tab small{color:#0b1a4a;opacity:.9}
+.fx-st{background:linear-gradient(115deg,transparent 0 14%,#f5c518 14% 28%,transparent 28% 40%,#f5c518 40% 54%,transparent 54%)}
+.fxd-t,.sm-t{filter:drop-shadow(0 0 .45em rgba(245,197,24,.7))}
+#cbt{background:linear-gradient(180deg,#ffe066,#f2b705 70%);color:#0b1a4a;border-bottom:.1em solid #fff1b0;text-shadow:0 1px 0 rgba(255,255,255,.45)}
+.fxd-n,.sm-n{background:linear-gradient(135deg,#127a2c,#06400f)}
+.sm-th{background:linear-gradient(180deg,#127a2c,#06400f);box-shadow:0 0 .6em rgba(245,197,24,.35)}
+#pcn{background:linear-gradient(90deg,#0c5a1f,#127a2c)}
+.c.f{background:#0f6b1f}
+.fxd-p.win{background:#0d3b12;color:#ffd54a}
+.sm-res{text-align:center;margin-top:.55em;font-weight:800;font-size:1.05em;color:#ffd21f}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -914,7 +927,7 @@ function sumHTML(list,res){
     const rows=bats.map((x,i)=>'<div class="sm-r'+(x.no?' hl':'')+'"><i class="sm-n">'+(i+1)+'</i><span class="sm-nm">'+esc(x.n)+'</span><b class="sm-v">'+x.r+(x.no?'*':'')+'</b><span>'+x.b+'</span><span>'+(x.f||0)+'</span><span>'+(x.s||0)+'</span><span>'+(x.b?Math.round(x.r*100/x.b):0)+'</span></div>').join('');
     return '<div class="sm-c"><div class="sm-th"><span>'+esc(c.team)+'</span><b>'+c.runs+'/'+c.w+' <small>('+ovs(c.balls)+')</small></b></div><div class="sm-hd"><i></i><span></span><span>'+L('রান','R')+'</span><span>'+L('বল','B')+'</span><span>4s</span><span>6s</span><span>SR</span></div>'+rows+'</div>';
   }).join('');
-  return '<div class="sm-t"><span class="fx-st fx-l"></span><div class="fx-tab"><span>'+L('ম্যাচ সামারি','Match Summary')+'</span>'+(res?'<small>'+esc(res)+'</small>':'')+'</div><span class="fx-st fx-r"></span></div><div class="sm-b">'+cols+'</div>';
+  return '<div class="sm-t"><span class="fx-st fx-l"></span><div class="fx-tab"><span>'+L('ম্যাচ সামারি','Match Summary')+'</span></div><span class="fx-st fx-r"></span></div><div class="sm-b">'+cols+'</div>'+(res?'<div class="sm-res">'+esc(res)+'</div>':'');
 }
 
 const anyBoard=()=>!!(S&&(S.showSC||S.pa))||CB.on||FXSHOW||PC.on;
