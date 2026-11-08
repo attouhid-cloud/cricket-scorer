@@ -353,6 +353,51 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 .fxd-x span{min-width:0}
 .tn{max-width:340px}
 .g5 i{font-style:normal;display:block}
+/* batsmen: no boxes — plain text split by white lines (like the reference) */
+.g3{gap:0;padding:0;border-left:0;justify-content:center}
+.bb{background:none;border:0;border-left:2px solid #fff;border-radius:0;box-shadow:none;padding:0 22px;min-width:150px;max-width:210px;align-self:center;height:78%}
+.bb.s{background:none;box-shadow:none;border-color:#fff}
+.bn{font-size:19px;font-weight:800;color:#fff}
+.bb.s .bn{color:#ffd21f}
+.bs{font-size:31px;font-weight:900;color:#fff}
+.bs small{font-size:15px;color:#8fd3ff}
+.g5{border-left:2px solid #fff;align-self:center;height:78%;padding:0 20px}
+/* ===== match list: navy board, light rows, round VS badge ===== */
+.fxd-b{background:linear-gradient(180deg,#0d1f5c,#07123a);border:.16em solid #f5c518;box-shadow:0 0 1em rgba(245,197,24,.55),inset 0 0 1.4em rgba(20,60,200,.25),0 .6em 1.6em rgba(0,0,0,.5)}
+.fxd-row{height:2.8em;align-items:center}
+.fxd-row.hl{height:3.2em}
+.fxd-x{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;column-gap:.7em;padding:0 1em 0 1.6em;font-size:1.5em;font-style:italic;font-weight:900;color:#0b1a4a;text-shadow:none;border:0;border-radius:0 1.4em 1.4em 0;background:linear-gradient(180deg,#fff,#dde4f5);height:100%;overflow:visible;box-shadow:0 .1em .3em rgba(0,0,0,.35)}
+.fxd-x.hasp{padding-right:5.2em}
+.fxd-row.hl .fxd-x{background:linear-gradient(180deg,#ffe24d,#f3c000);box-shadow:0 0 .9em rgba(255,210,40,.8);border:0;color:#fff}
+.tA,.tB{display:flex;align-items:center;gap:.35em;min-width:0}
+.tA{justify-content:flex-end;text-align:right}
+.tB{justify-content:flex-start}
+.tm{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fxd-row.hl .tm{background:#0b1a4a;color:#fff;padding:.12em .9em;border-radius:999px;box-shadow:inset 0 0 0 .06em rgba(255,255,255,.12)}
+.vs{justify-self:center;width:2.3em;height:2.3em;margin:-.2em 0;display:flex;align-items:center;justify-content:center;border-radius:50%;background:radial-gradient(circle at 35% 30%,#2a43a0,#081437);border:.13em solid #f5c518;color:#fff;font-size:.72em;font-weight:900;font-style:italic;box-shadow:0 .15em .4em rgba(0,0,0,.5)}
+.fxd-row.hl .vs{width:2.8em;height:2.8em;font-size:.9em}
+.fxd-p{position:absolute;right:.9em;top:50%;transform:translateY(-50%)}
+.fxd-row.hl .fxd-p.live{background:#0d3b12;color:#fff;border:0;font-size:.62em;padding:.2em 1em}
+.fxd-p.win{background:#0d3b12;color:#b6ff1a}
+/* ===== ONE colour theme for every board: navy panel, gold border, green title tab, light rows, yellow highlight ===== */
+#ov:not(.inline) #lsc.on,#ov:not(.inline) #cbd.on,#ov:not(.inline) #pcd.on{background:linear-gradient(180deg,rgba(13,31,92,.93),rgba(7,18,58,.95));border:.16em solid #f5c518;box-shadow:0 0 1em rgba(245,197,24,.55),inset 0 0 1.4em rgba(20,60,200,.25),0 .6em 1.6em rgba(0,0,0,.5);-webkit-backdrop-filter:none;backdrop-filter:none}
+/* Match Summary */
+.sm-th{background:linear-gradient(180deg,#24b915,#0e7a06);color:#fff;box-shadow:0 0 .6em rgba(40,200,20,.45)}
+.sm-th b,.sm-th small{color:#fff}
+.sm-hd{color:#ffd21f}
+.sm-r{background:linear-gradient(180deg,#fff,#dde4f5);color:#0b1a4a;border:0;text-shadow:none;box-shadow:0 .1em .3em rgba(0,0,0,.35)}
+.sm-r.hl{background:linear-gradient(180deg,#ffe24d,#f3c000);color:#0b1a4a;border:0;box-shadow:0 0 .8em rgba(255,210,40,.8)}
+.sm-nm{font-weight:800}
+.sm-v,.sm-r.hl .sm-v{color:#0b1a4a}
+/* Custom board */
+#cbt{background:linear-gradient(180deg,#24b915,#0e7a06 70%);border-bottom:.1em solid #a6ff4d}
+#cbx{color:#fff}
+/* Player card */
+#pcd::before{background:linear-gradient(90deg,#f5c518,transparent)}
+#pcd::after{background:linear-gradient(270deg,#f5c518,transparent)}
+#pci{border-color:#f5c518;box-shadow:0 0 .9em rgba(245,197,24,.6)}
+.pcr{border-left-color:rgba(255,255,255,.35)}
+.pdv2{background:rgba(245,197,24,.8)}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -839,7 +884,7 @@ function fitIf(el,text,minPct,wrap){
   if(!el)return;const k=text+'|'+innerWidth+'|'+(el.offsetWidth>0?1:0);
   if(el._ft!==k){el._ft=k;fitText(el,minPct,wrap)}
 }
-function fitRows(d){try{d.querySelectorAll('.fxd-x>span').forEach(sp=>fitText(sp,.55,true))}catch(e){}}
+function fitRows(d){try{d.querySelectorAll('.fxd-x .tm').forEach(sp=>fitText(sp,.55,true))}catch(e){}}
 function fitPanel(el){
   try{
     if(!el||!el.classList.contains('on'))return;
@@ -1130,9 +1175,9 @@ function renderFx(){
   const d=$('fxd'),c=OVM?FXd:fxp(),hid=OVM?PCd:pcOn();
   setPanel(d,!!c&&!hid);
   if(!c)return;
-  const nm=(x,k)=>'<span class="tm">'+esc(x[k])+'</span>'+(x.wn==k?'<i class="fxw">W</i>':'');
+  const W='<i class="fxw">W</i>';
   const t1='<span>'+esc(c.t)+'</span>'+(c.s?'<small>'+esc(c.s)+'</small>':'');
-  const t2=c.r.length?c.r.map(x=>'<div class="fxd-row'+(x.h?' hl':'')+'"><div class="fxd-n"><b>'+x.n+'</b></div><div class="fxd-x"><span>'+nm(x,'a')+' vs '+nm(x,'b')+'</span>'+(x.p?'<em class="fxd-p live">'+esc(x.p)+'</em>':'')+(x.wn=='t'?'<em class="fxd-p win">'+L('টাই','Tie')+'</em>':'')+'</div></div>').join(''):'<div class="fxd-row"><div class="fxd-x"><span>'+L('কোনো ম্যাচ নেই','No matches')+'</span></div></div>';
+  const t2=c.r.length?c.r.map(x=>'<div class="fxd-row'+(x.h?' hl':'')+'"><div class="fxd-n"><b>'+x.n+'</b></div><div class="fxd-x'+((x.p||x.wn=='t')?' hasp':'')+'"><div class="tA">'+(x.wn=='a'?W:'')+'<span class="tm">'+esc(x.a)+'</span></div><i class="vs">VS</i><div class="tB"><span class="tm">'+esc(x.b)+'</span>'+(x.wn=='b'?W:'')+'</div>'+(x.p?'<em class="fxd-p live">'+esc(x.p)+'</em>':'')+(x.wn=='t'?'<em class="fxd-p win">'+L('টাই','Tie')+'</em>':'')+'</div></div>').join(''):'<div class="fxd-row"><div class="fxd-x" style="display:flex;justify-content:center"><span class="tm">'+L('কোনো ম্যাচ নেই','No matches')+'</span></div></div>';
   const key=t1+t2+innerHeight+'|'+(d.classList.contains('on')?1:0);
   if(d._k!==key){$('fxdt').innerHTML=t1;$('fxdr').innerHTML=t2;d._k=key;fitPanel(d);fitRows(d)}
 }
