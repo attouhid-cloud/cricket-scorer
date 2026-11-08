@@ -398,6 +398,15 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 #pci{border-color:#f5c518;box-shadow:0 0 .9em rgba(245,197,24,.6)}
 .pcr{border-left-color:rgba(255,255,255,.35)}
 .pdv2{background:rgba(245,197,24,.8)}
+/* match list: plain names on the yellow row, VS always dead centre */
+.fxd-x{padding:0 5.2em}
+.fxd-row.hl .fxd-x{color:#0b1a4a}
+.fxd-row.hl .tm{background:none;padding:0;border-radius:0;box-shadow:none;color:#0b1a4a}
+/* small master switch for all boards (score tab) */
+.kill{display:flex;justify-content:flex-end;margin:0 0 8px}
+#killb{padding:6px 14px;min-height:0;font-size:13px;border-radius:999px;background:#16203a;border:1px solid #2d3355;color:#e8ecfa}
+#killb.on{background:#0ea56a;border-color:#0ea56a;color:#fff}
+#killb:disabled{opacity:.45}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -433,6 +442,7 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 <!-- SCORER -->
 <div id="app" class="hide">
 <div class="t-score">
+  <div class="kill"><button id="killb" onclick="killBoards()"></button></div>
   <div class="card mini"><div id="mT"></div><div id="mS"></div><small id="mO"></small></div>
   <div class="card pl">
     <div class="plr"><div><small id="rl0"></small><b id="rn0"></b></div><span id="rs0"></span></div>
@@ -727,7 +737,7 @@ function result(M){
   const d=M.first.runs-M.runs;return L(M.t[0]+' '+d+' রানে জিতেছে',M.t[0]+' won by '+d+' runs');
 }
 function render(){
-  renderCB();renderPC();renderFx();renderVib();renderTop();fxUI();
+  renderCB();renderPC();renderFx();renderVib();renderTop();renderKill();fxUI();
   $('lbn').classList.toggle('on',LANG=='bn');$('len').classList.toggle('on',LANG=='en');
   if(!OVM)applyUI();
   if(!S){$('setup').classList.remove('hide');$('app').classList.add('hide');if(TAB=='score')setTab('setup');return}
@@ -905,6 +915,14 @@ function sumHTML(list,res){
     return '<div class="sm-c"><div class="sm-th"><span>'+esc(c.team)+'</span><b>'+c.runs+'/'+c.w+' <small>('+ovs(c.balls)+')</small></b></div><div class="sm-hd"><i></i><span></span><span>'+L('রান','R')+'</span><span>'+L('বল','B')+'</span><span>4s</span><span>6s</span><span>SR</span></div>'+rows+'</div>';
   }).join('');
   return '<div class="sm-t"><span class="fx-st fx-l"></span><div class="fx-tab"><span>'+L('ম্যাচ সামারি','Match Summary')+'</span>'+(res?'<small>'+esc(res)+'</small>':'')+'</div><span class="fx-st fx-r"></span></div><div class="sm-b">'+cols+'</div>';
+}
+
+const anyBoard=()=>!!(S&&(S.showSC||S.pa))||CB.on||FXSHOW||PC.on;
+function renderKill(){const b=$('killb');if(!b)return;const on=anyBoard();b.textContent='📺 '+L('বোর্ড ওভারলে','Board overlay')+': '+(on?'ON':'OFF');b.classList.toggle('on',on);b.disabled=!on}
+function killBoards(){
+  if(S){S.showSC=false;S.pa=null;clearTimeout(scT);clearTimeout(paT)}
+  CB.on=false;PC.on=false;FXSHOW=false;storeCB();storePC();try{localStorage.setItem('fxs','0')}catch(e){}
+  if(S)save();else push();render();toast('📺 '+L('সব বোর্ড বন্ধ, শুধু স্কোর বার আছে','All boards off — only the score bar remains'));
 }
 function toggleSC(){if(!S)return;clearTimeout(scT);S.showSC=!S.showSC;if(S.showSC){CB.on=false;storeCB();PC.on=false;storePC()}save();render()}
 function scPack(){
