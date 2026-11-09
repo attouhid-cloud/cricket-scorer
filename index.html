@@ -420,6 +420,43 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 .c.f{background:#0f6b1f}
 .fxd-p.win{background:#0d3b12;color:#ffd54a}
 .sm-res{text-align:center;margin-top:.55em;font-weight:800;font-size:1.05em;color:#ffd21f}
+/* ===== player card: angular navy + yellow (reference style) ===== */
+#ov:not(.inline) #pcd.on{display:block;position:absolute;width:30em;max-width:94vw;height:14em;padding:0;border:0;border-radius:0;background:none;box-shadow:none;overflow:visible;font-size:clamp(9px,1.45vw,19px);filter:drop-shadow(0 .5em .8em rgba(0,0,0,.55));-webkit-backdrop-filter:none;backdrop-filter:none;gap:0}
+#pcd::after{content:"";position:absolute;top:0;left:0;right:0;bottom:0;width:auto;height:auto;z-index:0;background:#ffd21f;clip-path:polygon(0 12%,7% 0,100% 0,100% 100%,0 100%)}
+#pcd::before{content:"";position:absolute;top:.15em;left:.15em;right:.15em;bottom:.15em;width:auto;height:auto;z-index:1;background:linear-gradient(180deg,#10308f,#06133f);clip-path:polygon(0 12%,7% 0,100% 0,100% 100%,0 100%)}
+.pcl{position:absolute;left:.15em;top:.15em;bottom:.15em;width:12.6em;flex:none;overflow:hidden;z-index:2;text-align:left;background:linear-gradient(115deg,#fff 0 5%,#ffd21f 5% 11%,#0a1f66 11%);clip-path:polygon(0 12.5%,9% 0,100% 0,100% 100%,0 100%)}
+#pci{position:absolute;left:0;top:0;width:100%;height:100%;margin:0;border:0;border-radius:0;box-shadow:none;aspect-ratio:auto;object-fit:cover;object-position:center top;clip-path:polygon(16% 0,100% 0,100% 100%,0 100%);display:block}
+#pcn{position:absolute;right:-.7em;bottom:-.9em;z-index:4;margin:0;min-width:16em;max-width:24em;padding:.3em 1.8em;text-align:center;font-size:1.25em;font-weight:900;font-style:normal;letter-spacing:.02em;text-transform:uppercase;color:#0b1a4a;background:linear-gradient(180deg,#ffe066,#f2b705 70%,#d99a00);clip-path:polygon(4% 0,100% 0,96% 100%,0 100%);border-radius:0;transform:none;box-shadow:none;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcr{position:absolute;left:12.8em;right:1.2em;top:2.4em;bottom:2.4em;z-index:3;margin:0;padding:0;border:0;min-height:0;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#pcc{display:flex;flex-direction:column;align-items:center;gap:.1em}
+.pcb{display:flex;align-items:flex-start;font-size:4.7em;font-weight:900;font-style:italic;line-height:.95;color:#fff;text-shadow:.04em .05em 0 #8fa4e8,0 .08em .25em rgba(0,0,0,.55)}
+.pcb b{font-weight:900}
+.pcb sup{font-size:.45em;line-height:1;margin-left:.05em}
+.pcb .wk{font-size:.22em;align-self:flex-end;margin-left:.4em;letter-spacing:.06em;color:#ffd21f;font-style:normal}
+.pcs2{font-size:2.2em;font-weight:800;color:#fff;line-height:1.1;text-shadow:0 .06em .2em rgba(0,0,0,.5)}
+.pcs3{font-size:1.1em;font-weight:700;color:#cfd9ff;display:flex;align-items:center;gap:.35em;margin-top:.3em}
+.pcs3 svg{width:1.2em;height:1.2em}
+#pcd.on #pct.has{display:block;position:absolute;top:-1em;right:2.4em;left:auto;z-index:4;background:linear-gradient(180deg,#ffe066,#f2b705 70%,#d99a00);color:#0b1a4a;font-weight:900;font-style:italic;font-size:1.05em;letter-spacing:.05em;padding:.25em 2.6em;clip-path:polygon(8% 0,100% 0,92% 100%,0 100%);border-radius:0;text-shadow:none}
+#pcd.on #pco.has{display:block;position:absolute;top:-1em;left:14em;right:auto;z-index:4;background:linear-gradient(180deg,#ef4444,#b91c1c);color:#fff;font-weight:900;font-size:1.05em;letter-spacing:.15em;padding:.25em 2em;clip-path:polygon(6% 0,100% 0,94% 100%,0 100%);border-radius:0;text-shadow:none}
+/* ===== overlay tab: board tiles + editors ===== */
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.btile{background:var(--card);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.bth{font-weight:700;font-size:15px;line-height:1.25}
+.btile button{min-height:46px;font-size:15px}
+.btile button.on{background:#0ea56a}
+.btile .ed{background:#16203a;border:1px solid #2d3355;font-size:14px}
+.chk{display:flex;gap:8px;align-items:center;font-size:14px;color:#fff;margin:8px 0}.chk input{width:auto}
+.edh{margin:14px 0 6px;color:#ffd21f;font-size:15px}
+.smrow{display:grid;grid-template-columns:1fr repeat(4,3.3em) 2.3em;gap:4px;margin-bottom:6px;align-items:center}
+.smrow input{padding:7px 6px;font-size:14px;min-width:0}
+.smrow.smh{color:var(--mut);font-size:12px;text-align:center}.smrow.smh span:first-child{text-align:left}
+.smrow button{padding:6px 0;min-height:0;font-size:14px}
+.mlh{display:flex;flex-direction:column;gap:6px;margin:8px 0 12px}
+.mlr{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #2d3355}
+.mlr>b{width:1.6em;text-align:center;color:var(--ac)}
+.mlr input{flex:1 1 38%;min-width:0;padding:8px;font-size:14px}.mlr input[type=checkbox]{flex:0 0 auto}
+.mlr select{flex:0 0 auto;padding:8px;font-size:13px}
+.mlr button{padding:6px 12px;min-height:0;font-size:14px}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -500,11 +537,15 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
    </div>
   </div></div></div></div>
   <button class="g sm" style="width:100%;padding:14px;margin:10px 0" onclick="showOv()">📺 ফুল-স্ক্রিন ওভারলে / Fullscreen overlay</button>
-  <details class="sec" open><summary>📺 লাইভ কন্ট্রোল / Live controls</summary><div class="sb">
-  <button id="lsb" class="sm" style="width:100%;padding:12px;margin-top:8px" onclick="toggleSC()"></button>
-  <button id="fxb2" class="sm" style="width:100%;padding:12px;margin-top:8px" onclick="toggleFX()"></button>
+  <div class="bgrid">
+   <div class="btile"><div class="bth">📊 ম্যাচ সামারি / Match Summary</div><button id="lsb" onclick="toggleSC()"></button><button class="ed" onclick="editSummary()">✏️ এডিট / Edit</button></div>
+   <div class="btile"><div class="bth">📅 ম্যাচ তালিকা / Match List</div><button id="fxb2" onclick="toggleFX()"></button><button class="ed" onclick="editList()">✏️ এডিট / Edit</button></div>
+   <div class="btile"><div class="bth">🧾 কাস্টম বোর্ড / Custom Board</div><button id="cbb2" onclick="toggleCB()"></button><button class="ed" onclick="openEd('cbcard')">✏️ এডিট / Edit</button></div>
+   <div class="btile"><div class="bth">⭐ প্লেয়ার কার্ড / Player Card</div><button id="pcb2" onclick="togglePC()"></button><button class="ed" onclick="editPC()">✏️ এডিট / Edit</button></div>
+  </div>
+  <details class="sec"><summary>🔗 লিংক ও ভাষা / Link & language</summary><div class="sb">
   <button class="sm" style="width:100%;padding:10px;margin-bottom:10px" onclick="copyLink()">📋 ওভারলে লিংক কপি / Copy Overlay Link</button>
-  <div><label>🌐 ভাষা / Language</label>
+<div><label>🌐 ভাষা / Language</label>
    <div class="row" style="margin:0"><button id="lbn" style="flex:1;font-size:16px;padding:12px" onclick="setLang('bn')">বাংলা (BN)</button><button id="len" style="flex:1;font-size:16px;padding:12px" onclick="setLang('en')">English (EN)</button></div></div>
   </div></details>
 </div>
@@ -550,7 +591,7 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 </div>
 </div>
 
-<details class="sec t-overlay" id="livebox" open><summary>🖥️ লাইভ বোর্ড (কাস্টম বোর্ড ও প্লেয়ার কার্ড) / Live boards</summary><div class="sb nb">
+<details class="sec t-overlay" id="livebox"><summary>📝 কাস্টম বোর্ড ও প্লেয়ার কার্ড ফর্ম / Custom board & player card form</summary><div class="sb nb">
 <div id="cbcard" class="card" style="margin-top:10px"><h3>🧾 কাস্টম বোর্ড / Custom Board</h3>
   <label>শিরোনাম / Title</label><input id="cb_t" oninput="liveCB()" placeholder="Upcoming Matches" style="margin-bottom:8px">
   <label>ছবির লিংক (Google Drive) / Image link (Google Drive)</label><input id="cb_i" oninput="liveCB()" placeholder="https://drive.google.com/file/d/..." style="margin-bottom:8px">
@@ -778,7 +819,7 @@ function render(){
   $('oCl').textContent=S.inn==1?L('টার্গেট','Target'):'CRR';$('oCr').textContent=(S.inn==1&&S.first)?S.first.runs+1:rr;
   {const ls=$('lsc');setPanel(ls,!!S.showSC&&!(OVM?(CBd||PCd||FXd):(CB.on||pcOn()||FXSHOW)));
    if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');{const h=sumHTML(OVM?SCL:inns(S),r),k=h+innerHeight+'|'+(ls.classList.contains('on')?1:0);if(ls._k!==k){ls.innerHTML=h;ls._k=k;fitPanel(ls)}}}}
-  $('lsb').textContent='📺 '+L('লাইভে স্কোরকার্ড','Scorecard on live')+': '+(S.showSC?'ON':'OFF');$('lsb').classList.toggle('on',!!S.showSC);$('oPs').textContent=(S.pr||S.pb)?L('পার্টনারশিপ ','Partnership ')+(S.pr||0)+' ('+(S.pb||0)+')':'';
+  tileTxt($('lsb'),!!S.showSC);$('oPs').textContent=(S.pr||S.pb)?L('পার্টনারশিপ ','Partnership ')+(S.pr||0)+' ('+(S.pb||0)+')':'';
   $('oCh').innerHTML=S.tb.map(x=>'<div class="c '+x.c+'">'+esc(x.l)+'</div>').join('');
   let r='';
   if(S.inn==1){
@@ -937,6 +978,69 @@ function killBoards(){
   CB.on=false;PC.on=false;FXSHOW=false;storeCB();storePC();try{localStorage.setItem('fxs','0')}catch(e){}
   if(S)save();else push();render();toast('📺 '+L('সব বোর্ড বন্ধ, শুধু স্কোর বার আছে','All boards off — only the score bar remains'));
 }
+
+function tileTxt(b,on){if(!b)return;b.textContent=on?'● ON':'○ OFF';b.classList.toggle('on',!!on)}
+let ML={on:false,t:'',s:'',rows:[]},PCX={use:false,n:'',l:'',v:'',s:'',img:''};
+try{ML=Object.assign(ML,JSON.parse(localStorage.getItem('ml')))}catch(e){}
+try{PCX=Object.assign(PCX,JSON.parse(localStorage.getItem('pcx')))}catch(e){}
+function storeML(){try{localStorage.setItem('ml',JSON.stringify(ML))}catch(e){}if(FXSHOW){if(S)save();else push()}render()}
+function storePCX(){try{localStorage.setItem('pcx',JSON.stringify(PCX))}catch(e){}if(PC.on||PCX.use){if(S)save();else push()}render()}
+function photo200(f,cb){
+  const fr=new FileReader();
+  fr.onload=()=>{const im=new Image();
+    im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=200;const x=c.getContext('2d'),m=Math.min(im.width,im.height);x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,200,200);cb(c.toDataURL('image/jpeg',0.8))};
+    im.onerror=()=>toast('⚠️ '+L('ছবি পড়া যায়নি','Could not read the image'));im.src=fr.result};
+  fr.readAsDataURL(f);
+}
+function openEd(id){const d=$('livebox');if(d)d.open=true;const e=$(id);if(e)setTimeout(()=>e.scrollIntoView({behavior:'smooth',block:'center'}),60)}
+/* ---- Match Summary editor ---- */
+let SMX=[];
+const smBuild=()=>{SMX=inns(S).map(c=>{const o=c.outs||[],rows=o.concat(c.bat||[]).map(x=>({x:x,out:o.indexOf(x)>=0}));rows.sort((a,b)=>(a.x.ord||99)-(b.x.ord||99));return{c:c,rows:rows}})};
+function editSummary(){
+  if(!S){toast('⚠️ '+L('আগে ম্যাচ শুরু করুন','Start a match first'));return}
+  S.outs=S.outs||[];if(S.card1)S.card1.outs=S.card1.outs||[];smBuild();showSumEd();
+}
+function showSumEd(){
+  const inp=(i,k,key,v,num)=>'<input '+(num?'type="number" inputmode="numeric" ':'')+'value="'+esc(v)+'" onchange="smSet('+i+','+k+',\''+key+'\',this.value)">';
+  $('scb').innerHTML='<h3>📊 '+L('ম্যাচ সামারি এডিট','Edit Match Summary')+'</h3><p class="tp">'+L('নাম, রান, বল, 4s, 6s বদলান। বদল সাথে সাথে লাইভ ওভারলেতে যায়।','Change names, runs, balls, 4s, 6s. Changes go to the live overlay instantly.')+'</p>'
+   +SMX.map((o,i)=>'<h4 class="edh">'+esc(o.c.team)+' · '+o.c.runs+'/'+o.c.w+'</h4><div class="smrow smh"><span>'+L('নাম','Name')+'</span><span>R</span><span>B</span><span>4s</span><span>6s</span><i></i></div>'
+     +o.rows.map((r,k)=>'<div class="smrow">'+inp(i,k,'n',r.x.n)+inp(i,k,'r',r.x.r,1)+inp(i,k,'b',r.x.b,1)+inp(i,k,'f',r.x.f||0,1)+inp(i,k,'s',r.x.s||0,1)+(r.out?'<button class="w" onclick="smDel('+i+','+k+')">✕</button>':'<i></i>')+'</div>').join('')
+     +'<button class="g sm" style="width:100%;margin:4px 0 14px" onclick="smAdd('+i+')">＋ '+L('ব্যাটসম্যান যোগ','Add batter')+'</button>').join('');
+}
+function smSet(i,k,key,v){const x=SMX[i].rows[k].x;x[key]=key=='n'?String(v).trim().slice(0,40):Math.max(0,Math.floor(+v||0));save();render()}
+function smDel(i,k){const o=SMX[i],x=o.rows[k].x,a=o.c.outs,ix=a.indexOf(x);if(ix>=0)a.splice(ix,1);smBuild();showSumEd();save();render()}
+function smAdd(i){const o=SMX[i],mx=Math.max(0,...o.rows.map(r=>r.x.ord||0));o.c.outs.push({n:'',r:0,b:0,f:0,s:0,ord:mx+1,how:'out',bw:''});smBuild();showSumEd();save();render()}
+/* ---- Match List editor ---- */
+function editList(){showListEd()}
+function showListEd(){
+  const rows=ML.rows.map((x,i)=>'<div class="mlr"><b>'+(i+1)+'</b><input value="'+esc(x.a)+'" placeholder="'+L('টিম ১','Team 1')+'" onchange="mlSet('+i+',\'a\',this.value)"><input value="'+esc(x.b)+'" placeholder="'+L('টিম ২','Team 2')+'" onchange="mlSet('+i+',\'b\',this.value)"><select onchange="mlSet('+i+',\'wn\',this.value)"><option value="">—</option><option value="a"'+(x.wn=='a'?' selected':'')+'>W: '+L('টিম ১','T1')+'</option><option value="b"'+(x.wn=='b'?' selected':'')+'>W: '+L('টিম ২','T2')+'</option><option value="t"'+(x.wn=='t'?' selected':'')+'>'+L('টাই','Tie')+'</option></select><label class="chk" style="margin:0"><input type="checkbox"'+(x.h?' checked':'')+' onchange="mlSet('+i+',\'h\',this.checked)">★</label><input value="'+esc(x.p||'')+'" placeholder="'+L('স্কোর','Score')+'" style="max-width:5em" onchange="mlSet('+i+',\'p\',this.value)"><button class="w" onclick="mlDel('+i+')">✕</button></div>').join('');
+  $('scb').innerHTML='<h3>📅 '+L('ম্যাচ তালিকা এডিট','Edit Match List')+'</h3>'
+   +'<label class="chk"><input type="checkbox"'+(ML.on?' checked':'')+' onchange="mlOn(this.checked)"> '+L('আমার নিজের তালিকা দেখান (বন্ধ থাকলে নিজে থেকে তৈরি তালিকা)','Show my own list (off = automatic list)')+'</label>'
+   +'<div class="mlh"><input id="ml_t" value="'+esc(ML.t)+'" placeholder="'+L('শিরোনাম (ফাঁকা = ম্যাচ তালিকা)','Title (empty = Match List)')+'" onchange="mlHead()"><input id="ml_s" value="'+esc(ML.s)+'" placeholder="'+L('নিচের ছোট লেখা (যেমন টুর্নামেন্টের নাম)','Small line (e.g. tournament)')+'" onchange="mlHead()"></div>'
+   +rows+'<div class="row"><button class="g" style="flex:1" onclick="mlAdd()">＋ '+L('সারি যোগ','Add row')+'</button><button class="sm" style="flex:1" onclick="mlFill()">↻ '+L('নিজে থেকে তৈরি তালিকা থেকে কপি','Copy from automatic list')+'</button></div>';
+}
+function mlOn(v){ML.on=!!v;storeML()}
+function mlHead(){ML.t=$('ml_t').value.slice(0,50);ML.s=$('ml_s').value.slice(0,50);storeML()}
+function mlSet(i,k,v){if(!ML.rows[i])return;ML.rows[i][k]=(k=='h')?!!v:String(v).slice(0,60);storeML()}
+function mlAdd(){ML.rows.push({a:'',b:'',wn:'',h:false,p:''});storeML();showListEd()}
+function mlDel(i){ML.rows.splice(i,1);storeML();showListEd()}
+function mlFill(){const f=fxAuto();ML.rows=f.r.map(x=>({a:x.a,b:x.b,wn:x.wn,h:!!x.h,p:x.p}));if(!ML.s)ML.s=f.s||'';storeML();showListEd()}
+/* ---- Player card editor (own text + photo) ---- */
+function editPC(){showPCEd()}
+function showPCEd(){
+  const f=(id,lbl,v,ph)=>'<label>'+lbl+'</label><input id="'+id+'" value="'+esc(v)+'" placeholder="'+ph+'" onchange="pcxSet()" style="margin-bottom:8px">';
+  $('scb').innerHTML='<h3>⭐ '+L('প্লেয়ার কার্ড এডিট','Edit Player Card')+'</h3>'
+   +'<label class="chk"><input type="checkbox"'+(PCX.use?' checked':'')+' onchange="pcxUse(this.checked)"> '+L('আমার নিজের লেখা দেখান (বন্ধ থাকলে স্কোর থেকে নিজে আসে)','Show my own text (off = live stats)')+'</label>'
+   +f('px_l',L('উপরের লেবেল','Top label'),PCX.l,'TONIGHT')+f('px_n',L('নাম','Name'),PCX.n,'')+f('px_v',L('বড় লেখা (যেমন 50*)','Big text (e.g. 50*)'),PCX.v,'50*')+f('px_s',L('ছোট লেখা (যেমন (31))','Small text (e.g. (31))'),PCX.s,'(31)')
+   +'<div class="prow2"><img class="pth" src="'+(imgUrl(PCX.img)||DEF_IMG)+'" alt=""><div class="pf"><input id="px_i" value="'+esc(String(PCX.img).startsWith('data:')?'':PCX.img)+'" placeholder="Google Drive link" onchange="pcxSet()"></div><div class="pb"><label class="photobtn">📷<input type="file" accept="image/*" hidden onchange="pcxPhoto(this)"></label><button class="sm" onclick="pcxClr()">🧹</button></div></div>'
+   +'<p class="dim">'+L('ছবি না দিলে প্লেয়ার লিস্টে ওই নামের ছবি নেয়, সেটাও না থাকলে ডিফল্ট ছবি।','No photo here → the roster photo for that name, otherwise the default picture.')+'</p>'
+   +'<button class="g" style="width:100%" onclick="pcxShow()">📺 '+L('লাইভে দেখান','Show on live')+'</button>';
+}
+function pcxSet(){PCX.l=$('px_l').value.slice(0,30);PCX.n=$('px_n').value.slice(0,40);PCX.v=$('px_v').value.slice(0,12);PCX.s=$('px_s').value.slice(0,30);const i=$('px_i').value.trim();if(i||!String(PCX.img).startsWith('data:'))PCX.img=i.slice(0,300);storePCX()}
+function pcxUse(v){PCX.use=!!v;storePCX()}
+function pcxPhoto(inp){const f=inp.files&&inp.files[0];if(f)photo200(f,d=>{PCX.img=d;storePCX();showPCEd();toast('📷 200×200 '+L('সেভ হয়েছে','saved'))})}
+function pcxClr(){PCX.img='';storePCX();showPCEd()}
+function pcxShow(){pcxSet();PCX.use=true;PC.on=true;CB.on=false;storeCB();FXSHOW=false;try{localStorage.setItem('fxs','0')}catch(e){}if(S)S.showSC=false;storePC();storePCX();hideCard();toast('📺 '+L('প্লেয়ার কার্ড চালু','Player card is on'))}
 function toggleSC(){if(!S)return;clearTimeout(scT);S.showSC=!S.showSC;if(S.showSC){CB.on=false;storeCB();PC.on=false;storePC()}save();render()}
 function scPack(){
   const f=bw=>Object.keys(bw||{}).map(n=>Object.assign({n:n},bw[n]));
@@ -1008,7 +1112,7 @@ function renderCB(){
   if(c){$('cbt').textContent=c.t||'';$('cbt').style.display=c.t?'':'none';$('cbx').textContent=c.x||'';
     const ci=$('cbi'),cu=imgUrl(c.i);
     if(cu){if(ci.getAttribute('data-s')!==cu){ci.setAttribute('data-s',cu);ci.src=cu}ci.classList.add('has');ci.onerror=()=>ci.classList.remove('has')}else ci.classList.remove('has')}
-  if(!OVM){setv('cb_t',CB.t);setv('cb_x',CB.x);setv('cb_i',CB.i||'');$('cbb').textContent='📺 '+L('লাইভে দেখান','Show on live')+': '+(CB.on?'ON':'OFF');$('cbb').classList.toggle('on',CB.on)}
+  if(!OVM){setv('cb_t',CB.t);setv('cb_x',CB.x);setv('cb_i',CB.i||'');$('cbb').textContent='📺 '+L('লাইভে দেখান','Show on live')+': '+(CB.on?'ON':'OFF');$('cbb').classList.toggle('on',CB.on);tileTxt($('cbb2'),CB.on)}
 }
 
 function imgUrl(l){
@@ -1062,12 +1166,16 @@ function pcData(name,role){
 }
 function cleanPC(o){
   const bt=x=>x?{r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),no:!!x.no}:null,bw=x=>x?{o:Sx(x.o).slice(0,6),bl:N(x.bl),m:N(x.m),r:N(x.r),w:N(x.w)}:null;
-  return{n:Sx(o.n).slice(0,40),img:Sx(o.img).slice(0,60000),role:'',bt:bt(o.bt),bw:bw(o.bw),tsc:!!o.tsc,twk:!!o.twk,out:!!o.out};
+  return{n:Sx(o.n).slice(0,40),img:Sx(o.img).slice(0,60000),role:'',bt:bt(o.bt),bw:bw(o.bw),tsc:!!o.tsc,twk:!!o.twk,out:!!o.out,x:!!o.x,l:Sx(o.l).slice(0,30),v:Sx(o.v).slice(0,12),s:Sx(o.s).slice(0,30)};
 }
 let PC={on:false,n:''},PCd=null;try{PC=Object.assign(PC,JSON.parse(localStorage.getItem('pc')))}catch(e){}
 let paT=null;
 const pcOn=()=>!!(S&&S.pa)||PC.on;
-const pcp=()=>{const a=S&&S.pa;if(a)return Object.assign(pcData(a.n,a.role),{out:true});return(PC.on&&PC.n.trim())?pcData(PC.n,PC.role):null};
+const pcp=()=>{
+  const a=S&&S.pa;if(a)return Object.assign(pcData(a.n,a.role),{out:true});
+  if(!PC.on)return null;
+  if(PCX.use)return{x:1,n:PCX.n||PC.n,l:PCX.l,v:PCX.v,s:PCX.s,img:PCX.img||pcData(PCX.n||PC.n||'').img};
+  return PC.n.trim()?pcData(PC.n,PC.role):null};
 function storePC(){try{localStorage.setItem('pc',JSON.stringify(PC))}catch(e){}}
 function livePC(){PC.n=$('pc_n').value.slice(0,40);PC.role='';storePC()}
 function pcFill(k){if(!S)return;$('pc_n').value=k=='st'?S.bat[S.st].n:S.bn;livePC();PC.role=k=='st'?'bat':'bowl';storePC()}
@@ -1077,7 +1185,7 @@ function pcTop(k){
   PC.n=b.n;PC.role=k;PC.on=true;CB.on=false;storeCB();storePC();S.showSC=false;save();render();
 }
 function togglePC(){
-  PC.n=$('pc_n').value.slice(0,40);const on=!PC.on&&!!PC.n.trim();PC.on=on;
+  PC.n=$('pc_n').value.slice(0,40);const on=!PC.on&&(!!PC.n.trim()||PCX.use);PC.on=on;
   if(on){CB.on=false;storeCB();if(S)S.showSC=false}
   storePC();if(S)save();else push();render();
 }
@@ -1088,22 +1196,28 @@ const USER_SVG='<svg viewBox="0 0 24 24" width="1em" height="1em" fill="#fff"><c
 function renderPC(){
   const d=$('pcd'),c=OVM?PCd:pcp();
   setPanel(d,!!c);
-  if(!OVM){setv('pc_n',PC.n);$('pcb').textContent='📺 '+L('প্লেয়ার কার্ড','Player card')+': '+(PC.on?'ON':'OFF');$('pcb').classList.toggle('on',PC.on)}
+  if(!OVM){setv('pc_n',PC.n);$('pcb').textContent='📺 '+L('প্লেয়ার কার্ড','Player card')+': '+(PC.on?'ON':'OFF');$('pcb').classList.toggle('on',PC.on);tileTxt($('pcb2'),PC.on)}
   if(!c)return;
   const pi=$('pci'),u=imgUrl(c.img)||DEF_IMG;
   if(pi.getAttribute('data-s')!==u){pi.setAttribute('data-s',u);pi.src=u}
   pi.classList.add('has');
   pi.onerror=()=>{if(pi.getAttribute('data-s')!==DEF_IMG){pi.setAttribute('data-s',DEF_IMG);pi.src=DEF_IMG}};
-  $('pcn').innerHTML='<span>'+USER_SVG+'<span>'+esc(c.n)+'</span></span>';
+  $('pcn').textContent=c.n;
+  let lab,h;
+  if(c.x){
+    lab=c.l||L('প্লেয়ার','PLAYER');
+    const v=esc(c.v||'');
+    h=(v?'<div class="pcb"><b>'+(v.endsWith('*')?v.slice(0,-1)+'</b><sup>*</sup>':v+'</b>')+'</div>':'')+(c.s?'<div class="pcs2">'+esc(c.s)+'</div>':'');
+  }else if(c.bt){
+    lab=L('ব্যাটিং','BATTING');
+    h='<div class="pcb"><b>'+c.bt.r+'</b>'+(c.bt.no?'<sup>*</sup>':'')+'</div><div class="pcs2">('+c.bt.b+')</div>'+(c.bw?'<div class="pcs3">'+BALL_SVG+' '+c.bw.w+'/'+c.bw.r+' ('+c.bw.bl+')</div>':'');
+  }else if(c.bw){
+    lab=L('বোলিং','BOWLING');
+    h='<div class="pcb"><b>'+c.bw.w+'</b><span class="wk">'+L('উইকেট','WKT')+'</span></div><div class="pcs2">'+c.bw.r+' '+L('রান','R')+' · '+c.bw.bl+' '+L('বল','B')+'</div>';
+  }else{lab=L('প্লেয়ার','PLAYER');h='<div class="pcs2">'+L('এখনো খেলেনি','Not played yet')+'</div>'}
   const tt=[];if(c.tsc)tt.push(L('সেরা ব্যাটসম্যান','TOP SCORER'));if(c.twk)tt.push(L('সেরা বোলার','TOP WICKET TAKER'));
-  const pt=$('pct');pt.textContent=tt.length?'🏆 '+tt.join(' · '):'';pt.classList.toggle('has',tt.length>0);
+  const pt=$('pct');pt.textContent=tt.length?'🏆 '+tt.join(' · '):lab;pt.classList.add('has');
   const po=$('pco');po.textContent=c.out?'❌ '+L('আউট','OUT'):'';po.classList.toggle('has',!!c.out);
-  const st=(v,l,m)=>'<div class="pst'+(m?' m':'')+'"><b>'+esc(v)+'</b><span>'+l+'</span></div>',dv='<i class="pdv"></i>',both=!!(c.bt&&c.bw);
-  const ic=k=>both?'<div class="pig">'+(k=='bat'?BAT_SVG:BALL_SVG)+'</div>':'';
-  let h='';
-  if(c.bt)h+='<div class="pgrp">'+ic('bat')+st(c.bt.r+(c.bt.no?'*':''),L('রান','Runs'),1)+dv+st(c.bt.b,L('বল','Balls'))+'</div>';
-  if(c.bw){if(h)h+='<i class="pdv2"></i>';h+='<div class="pgrp">'+ic('bowl')+st(c.bw.w,L('উইকেট','Wickets'),1)+dv+st(c.bw.r,L('রান','Runs'))+dv+st(c.bw.bl,L('বল','Balls'))+'</div>'}
-  if(!h)h='<div class="pcs">'+L('এখনো খেলেনি','Not played yet')+'</div>';
   $('pcc').innerHTML=h;$('pcp').innerHTML='';
 }
 let TN=[];try{TN=JSON.parse(localStorage.getItem('tn'))||[]}catch(e){}
@@ -1183,9 +1297,8 @@ function fxUI(){
   if(!h)h='<p class="dim">'+L('এখনো কোনো ম্যাচ নেই','No matches yet')+'</p>';
   box.innerHTML=h;renderFxBtn();
 }
-function renderFxBtn(){['fxb','fxb2'].forEach(id=>{const b=$(id);if(b){b.textContent='📺 '+L('লাইভে ম্যাচ তালিকা','Match list on live')+': '+(FXSHOW?'ON':'OFF');b.classList.toggle('on',FXSHOW)}})}
-function fxp(){
-  if(!FXSHOW)return null;
+function renderFxBtn(){tileTxt($('fxb2'),FXSHOW)}
+function fxAuto(){
   const tn=curTn(),t=TN.find(x=>x.id==tn);
   let hist=[];try{hist=JSON.parse(localStorage.getItem('hist')||'[]')}catch(e){}
   const today=new Date().toDateString();
@@ -1200,6 +1313,11 @@ function fxp(){
   const shown=(k?finRows.slice(-k):[]).concat(up);
   if(!running){const nx=shown.find(x=>!x.wn);if(nx)nx.h=1}
   return{t:L('ম্যাচ তালিকা','Match List'),s:t?t.name:'',r:shown.slice(0,8)};
+}
+function fxp(){
+  if(!FXSHOW)return null;
+  if(ML.on)return{t:ML.t||L('ম্যাচ তালিকা','Match List'),s:ML.s||'',r:ML.rows.slice(0,8).map((x,i)=>({n:i+1,a:x.a,b:x.b,h:x.h?1:0,wn:x.wn||'',p:x.p||''}))};
+  return fxAuto();
 }
 function cleanFX(o){return{t:Sx(o.t).slice(0,60),s:Sx(o.s).slice(0,60),r:(o.r||[]).slice(0,8).map(x=>({n:N(x.n),a:Sx(x.a).slice(0,40),b:Sx(x.b).slice(0,40),h:!!x.h,wn:['a','b','t'].includes(x.wn)?x.wn:'',p:Sx(x.p).slice(0,40)}))}}
 function renderFx(){
