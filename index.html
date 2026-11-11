@@ -1035,14 +1035,14 @@ function fitPanel(el){
     }
   }catch(e){}
 }
-function fitBoard(el,wf,hf,cache){
+function fitBoard(el,wf,hf,cache,top){
   try{
     if(!el||!el.classList.contains('on'))return;
     const bh=parseFloat($('ov').style.getPropertyValue('--bh'))||104;
     if(cache){const k=innerWidth+'x'+innerHeight+'|'+bh;if(el._bk===k&&el.style.fontSize)return;el._bk=k}
     const B=20;el.style.fontSize=B+'px';
-    const aw=innerWidth*wf,ah=(innerHeight-bh-30)*hf;
-    const w=el.offsetWidth||1,h=el.offsetHeight||1;
+    const aw=innerWidth*wf,ah=(innerHeight-bh-16)*hf;
+    const w=el.offsetWidth||1,h=(el.offsetHeight||1)+B*(top||0);
     el.style.fontSize=Math.max(3,Math.min(300,B*Math.min(aw/w,ah/h)))+'px';
   }catch(e){}
 }
@@ -1051,7 +1051,7 @@ function fitSum(el){
     if(!el||!el.classList.contains('on'))return;
     const B=20;el.style.fontSize=B+'px';
     const bh=parseFloat($('ov').style.getPropertyValue('--bh'))||104;
-    const aw=innerWidth*.96,ah=innerHeight-bh-30;
+    const aw=innerWidth*.97,ah=innerHeight-bh-16;
     const w=el.offsetWidth||1,h=(el.offsetHeight||1)+B*2.5;
     el.style.fontSize=Math.max(6,Math.min(80,B*Math.min(aw/w,ah/h)*.98))+'px';
   }catch(e){}
@@ -1217,7 +1217,7 @@ function renderCB(){
   if(c){$('cbt').textContent=c.t||'';$('cbt').style.display=c.t?'':'none';$('cbx').textContent=c.x||'';
     const ci=$('cbi'),cu=imgUrl(c.i);
     if(cu){if(ci.getAttribute('data-s')!==cu){ci.setAttribute('data-s',cu);ci.src=cu}ci.classList.add('has');ci.onerror=()=>ci.classList.remove('has')}else ci.classList.remove('has')}
-  if(c)fitBoard(d,.7,.85);
+  if(c)fitBoard(d,.9,1);
   if(!OVM){setv('cb_t',CB.t);setv('cb_x',CB.x);setv('cb_i',CB.i||'');$('cbb').textContent='📺 '+L('লাইভে দেখান','Show on live')+': '+(CB.on?'ON':'OFF');$('cbb').classList.toggle('on',CB.on);tileTxt($('cbb2'),CB.on)}
 }
 
@@ -1327,7 +1327,7 @@ function renderPC(){
   const pt=$('pct');pt.textContent=tt.length?'🏆 '+tt.join(' · '):lab;pt.classList.add('has');
   const po=$('pco');po.textContent=c.out?'OUT':'';d.classList.toggle('isout',!!c.out);po.classList.toggle('has',!!c.out);
   $('pcc').innerHTML=h;$('pcp').innerHTML='';
-  fitBoard(d,.55,.85,1);
+  fitBoard(d,.9,1,1);
 }
 let TN=[];try{TN=JSON.parse(localStorage.getItem('tn'))||[]}catch(e){}
 function storeTN(){try{localStorage.setItem('tn',JSON.stringify(TN))}catch(e){}tnUI()}
@@ -1437,7 +1437,7 @@ function renderFx(){
   const t1='<span>'+esc(c.t)+'</span>'+(c.s?'<small>'+esc(c.s)+'</small>':'');
   const t2=c.r.length?c.r.map(x=>'<div class="fxd-row'+(x.h?' hl':'')+'"><div class="fxd-n"><b>'+x.n+'</b></div><div class="fxd-x'+((x.p||x.wn=='t')?' hasp':'')+'"><div class="tA">'+(x.wn=='a'?W:'')+'<span class="tm">'+esc(x.a)+'</span></div><i class="vs">VS</i><div class="tB"><span class="tm">'+esc(x.b)+'</span>'+(x.wn=='b'?W:'')+'</div>'+(x.p?'<em class="fxd-p live">'+esc(x.p)+'</em>':'')+(x.wn=='t'?'<em class="fxd-p win">'+L('টাই','Tie')+'</em>':'')+'</div></div>').join(''):'<div class="fxd-row"><div class="fxd-x" style="display:flex;justify-content:center"><span class="tm">'+L('কোনো ম্যাচ নেই','No matches')+'</span></div></div>';
   const key=t1+t2+innerHeight+'|'+(d.classList.contains('on')?1:0);
-  if(d._k!==key){$('fxdt').innerHTML=t1;$('fxdr').innerHTML=t2;d._k=key;fitBoard(d,.72,.9);fitRows(d)}
+  if(d._k!==key){$('fxdt').innerHTML=t1;$('fxdr').innerHTML=t2;d._k=key;fitBoard(d,.94,1,0,2.4);fitRows(d)}
 }
 function toggleFX(){
   FXSHOW=!FXSHOW;try{localStorage.setItem('fxs',FXSHOW?'1':'0')}catch(e){}
