@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://drive.google.com https://*.googleusercontent.com; connect-src 'self' https://*.firebaseio.com https://*.firebasedatabase.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover">
 <title>Cricket Scorer + Overlay</title>
 <style>:root{--bg:#0f1220;--card:#1a1e33;--ac:#ffd400;--mut:#8f97b8;--red:#e53935;--grn:#0ea56a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -495,6 +495,50 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 #ov:not(.inline) #fxd.on{width:60em;max-width:none}
 #ov:not(.inline) #cbd.on{width:40em;max-width:none;max-height:none;overflow:visible}
 #ov:not(.inline) #cbi{max-height:18em}
+
+/* ===== score tab: compact top buttons + one-line players ===== */
+.kill{align-items:center;gap:6px}
+.qb{padding:6px 12px;min-height:0;font-size:13px;font-weight:800;border-radius:999px;background:#16203a;border:1px solid #2d3355;color:#e8ecfa;letter-spacing:.04em}
+.qb.on{background:#0ea56a;border-color:#0ea56a;color:#fff}
+.pl3{display:flex;padding:0}
+.pl3 .plc{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px 4px;border-right:1px solid #2d3355}
+.pl3 .plc:last-child{border-right:0}
+.pl3 .plc small{display:none}
+.pl3 .plc b{font-size:15px;font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl3 .plc span{font-size:20px;font-weight:800;margin-top:3px;color:#ffcc00}
+.pl3 .plc.bw span{color:#67e8f9}
+
+/* ===== v2: bigger overs, bigger PC/MS/ML ===== */
+#mO{font-size:22px;font-weight:700;color:#fff;margin-top:6px}
+.kill{flex-wrap:wrap;gap:8px}
+.kill .qb{flex:1 1 0;min-height:44px;padding:10px 0;font-size:17px;border-radius:12px}
+.kill #killb{flex:1 1 100%}
+
+/* ===== v3: one line (PC MS ML + board overlay), no inline demo ===== */
+.kill{flex-wrap:nowrap;gap:6px}
+.kill .qb{flex:1 1 0;min-width:0}
+.kill #killb{flex:1 1 0;min-width:0;min-height:44px;padding:10px 0;font-size:16px;font-weight:800;border-radius:12px}
+.kill span{display:none}
+#ov.inline{display:none!important}
+
+/* ===== v4: editors never wider than the phone screen ===== */
+html,body{max-width:100%;overflow-x:hidden}
+body:not(.ovm) #scv{overflow-x:hidden;max-width:100vw}
+.scw{width:100%;max-width:760px}
+#scb,#scb *{min-width:0}
+#scb input,#scb select,#scb textarea{max-width:100%}
+#scb .row{flex-wrap:wrap}
+#scb .row>*{min-width:0}
+.prow2{flex-wrap:wrap}
+.prow2 .pf{flex:1 1 140px}
+.pf input{width:100%}
+#scb .chk{align-items:flex-start}
+#scb .chk input[type=checkbox]{flex:0 0 auto;margin-top:3px}
+#dlg input{margin-bottom:10px}
+
+/* ===== v5: current over ball-by-ball on score page ===== */
+.tbr{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px;min-height:38px;align-items:center}
+.tbr .c{min-width:38px;height:38px;font-size:19px;border-radius:50%;padding:0 6px}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -530,12 +574,12 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 <!-- SCORER -->
 <div id="app" class="hide">
 <div class="t-score">
-  <div class="kill"><button id="killb" onclick="killBoards()"></button></div>
-  <div class="card mini"><div id="mT"></div><div id="mS"></div><small id="mO"></small></div>
-  <div class="card pl">
-    <div class="plr"><div><small id="rl0"></small><b id="rn0"></b></div><span id="rs0"></span></div>
-    <div class="plr"><div><small id="rl1"></small><b id="rn1"></b></div><span id="rs1"></span></div>
-    <div class="plr"><div><small id="rlb"></small><b id="rnb"></b></div><span id="rsb"></span></div>
+  <div class="kill"><button id="sPC" class="qb" onclick="togglePC()">PC</button><button id="sMS" class="qb" onclick="toggleSC()">MS</button><button id="sML" class="qb" onclick="toggleFX()">ML</button><span style="flex:1"></span><button id="killb" onclick="killBoards()"></button></div>
+  <div class="card mini"><div id="mT"></div><div id="mS"></div><small id="mO"></small><div id="mTb" class="tbr"></div></div>
+  <div class="card pl pl3">
+    <div class="plc"><small id="rl0"></small><b id="rn0"></b><span id="rs0"></span></div>
+    <div class="plc"><small id="rl1"></small><b id="rn1"></b><span id="rs1"></span></div>
+    <div class="plc bw"><small id="rlb"></small><b id="rnb"></b><span id="rsb"></span></div>
   </div>
     <button id="sw" class="sm" style="width:100%;padding:10px" onclick="swap()">⇄</button>
   <details class="sec"><summary>✏️ নাম বদল / Edit names</summary><div class="sb">
@@ -600,6 +644,7 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
    <div class="btile"><div class="bth">🧾 কাস্টম বোর্ড / Custom Board</div><button id="cbb2" onclick="toggleCB()"></button><button class="ed" onclick="openEd('cbcard')">✏️ এডিট / Edit</button></div>
    <div class="btile"><div class="bth">⭐ প্লেয়ার কার্ড / Player Card</div><button id="pcb2" onclick="togglePC()"></button><button class="ed" onclick="editPC()">✏️ এডিট / Edit</button></div>
   </div>
+  <details class="sec"><summary>📐 প্যানেল সাইজ ও অটো-হাইড / Panel size & auto-hide</summary><div class="sb"><div class="dim" style="font-size:12px;line-height:1.3;margin-bottom:8px">১০০% = পুরো স্ক্রিন ভরে সবচেয়ে বড় / 100% = biggest, fills the screen</div><div style="margin-bottom:8px"><label>ম্যাচ সামারি সাইজ / Match Summary size: <b id="pzv_sc"></b></label><input type="range" id="pz_sc" min="30" max="100" step="5" value="100" style="padding:0" oninput="setPz('sc',this.value)"></div><div style="margin-bottom:8px"><label>ম্যাচ লিস্ট সাইজ / Match List size: <b id="pzv_fx"></b></label><input type="range" id="pz_fx" min="30" max="100" step="5" value="100" style="padding:0" oninput="setPz('fx',this.value)"></div><div style="margin-bottom:8px"><label>প্লেয়ার কার্ড সাইজ / Player Card size: <b id="pzv_pc"></b></label><input type="range" id="pz_pc" min="30" max="100" step="5" value="100" style="padding:0" oninput="setPz('pc',this.value)"></div><div style="margin-bottom:8px"><label>কাস্টম বোর্ড সাইজ / Custom Board size: <b id="pzv_cb"></b></label><input type="range" id="pz_cb" min="30" max="100" step="5" value="100" style="padding:0" oninput="setPz('cb',this.value)"></div><div style="margin-bottom:8px"><label>ম্যাচ লিস্ট অটো-হাইড / Match List auto-hide</label><select id="ah_fx" onchange="setAh('fx',this.value)"><option value="0">বন্ধ / Off</option><option value="5">৫ সেকেন্ড / 5 sec</option><option value="8">৮ সেকেন্ড / 8 sec</option><option value="10">১০ সেকেন্ড / 10 sec</option><option value="15">১৫ সেকেন্ড / 15 sec</option><option value="20">২০ সেকেন্ড / 20 sec</option><option value="30">৩০ সেকেন্ড / 30 sec</option></select></div><div style="margin-bottom:8px"><label>প্লেয়ার কার্ড অটো-হাইড / Player Card auto-hide</label><select id="ah_pc" onchange="setAh('pc',this.value)"><option value="0">বন্ধ / Off</option><option value="5">৫ সেকেন্ড / 5 sec</option><option value="8">৮ সেকেন্ড / 8 sec</option><option value="10">১০ সেকেন্ড / 10 sec</option><option value="15">১৫ সেকেন্ড / 15 sec</option><option value="20">২০ সেকেন্ড / 20 sec</option><option value="30">৩০ সেকেন্ড / 30 sec</option></select></div><div style="margin-bottom:8px"><label>কাস্টম বোর্ড অটো-হাইড / Custom Board auto-hide</label><select id="ah_cb" onchange="setAh('cb',this.value)"><option value="0">বন্ধ / Off</option><option value="5">৫ সেকেন্ড / 5 sec</option><option value="8">৮ সেকেন্ড / 8 sec</option><option value="10">১০ সেকেন্ড / 10 sec</option><option value="15">১৫ সেকেন্ড / 15 sec</option><option value="20">২০ সেকেন্ড / 20 sec</option><option value="30">৩০ সেকেন্ড / 30 sec</option></select></div></div></details>
   <details class="sec"><summary>🔗 লিংক ও ভাষা / Link & language</summary><div class="sb">
   <button class="sm" style="width:100%;padding:10px;margin-bottom:10px" onclick="copyLink()">📋 ওভারলে লিংক কপি / Copy Overlay Link</button>
 <div><label>🌐 ভাষা / Language</label>
@@ -656,7 +701,7 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
   <div class="row" style="margin:8px 0 0"><button class="g" style="flex:1;font-size:15px;padding:12px" onclick="saveCB()">💾 সেভ / Save</button><button id="cbb" style="flex:1;font-size:15px;padding:12px" onclick="toggleCB()"></button></div></div>
 </div></details>
 <div id="toast"></div>
-<div id="dlg"><div class="dbox"><div id="dmsg"></div><input id="din"><div id="dch"></div><div class="drow"><button id="dno"></button><button id="dok" class="g"></button></div></div></div>
+<div id="dlg"><div class="dbox"><div id="dmsg"></div><input id="din"><input id="din2" style="display:none"><div id="dch"></div><div class="drow"><button id="dno"></button><button id="dok" class="g"></button></div></div></div>
 
 <div id="scv" style="display:none"><div class="scw"><button id="scx" class="w" onclick="hideCard()">✕</button><div id="scb"></div></div></div>
 
@@ -844,15 +889,17 @@ function result(M){
   const d=M.first.runs-M.runs;return L(M.t[0]+' '+d+' রানে জিতেছে',M.t[0]+' won by '+d+' runs');
 }
 function render(){
-  renderCB();renderPC();renderFx();renderVib();renderTop();renderKill();fxUI();
+  renderCB();renderPC();renderFx();renderVib();renderTop();renderKill();fxUI();try{const _a=$('sPC'),_b=$('sMS'),_c=$('sML');if(_a)_a.classList.toggle('on',!!PC.on);if(_b)_b.classList.toggle('on',!!(S&&S.showSC));if(_c)_c.classList.toggle('on',!!FXSHOW)}catch(e){}
   {const e=$('scm');if(e&&e.value!==SCM&&document.activeElement!==e)e.value=SCM}
+  if(!OVM)syncPanelUI();
   $('lbn').classList.toggle('on',LANG=='bn');$('len').classList.toggle('on',LANG=='en');
   if(!OVM)applyUI();
   if(!S){$('setup').classList.remove('hide');$('app').classList.add('hide');if(TAB=='score')setTab('setup');return}
   $('setup').classList.add('hide');$('app').classList.remove('hide');
   const tn=S.t[S.inn],rr=S.balls?(S.runs*6/S.balls).toFixed(2):'0.00',b=B(),st=S.st,ns=st^1;
   $('mT').textContent=tn;$('mS').textContent=S.runs+'/'+S.w;
-  $('mO').textContent=L('ওভার','Overs')+' '+ovs(S.balls)+'/'+S.ov+' • '+L('সিআরআর','CRR')+' '+rr+(S.inn==1?' • '+L('টার্গেট','Target')+' '+(S.first.runs+1):'');
+  $('mO').textContent=L('ওভার','Overs')+' '+ovs(S.balls)+'/'+S.ov+(S.inn==1?' • '+L('টার্গেট','Target')+' '+(S.first.runs+1):'');
+  $('mTb').innerHTML=S.tb.length?S.tb.map(x=>'<div class="c '+esc(x.c||'')+'">'+(x.l==='0'?'&bull;':esc(x.l))+'</div>').join(''):'<span class="dim">'+L('এই ওভারে এখনো বল হয়নি','No balls yet this over')+'</span>';
   $('sw').textContent='⇄ '+L('স্ট্রাইক বদলান','Swap strike');
   [0,1].forEach(i=>{$('rl'+i).textContent=L('ব্যাটার ','Batter ')+(i+1);$('rn'+i).innerHTML=(S.st==i?'<i class="sd">●</i> ':'')+esc(S.bat[i].n);$('rs'+i).textContent=S.bat[i].r+' ('+S.bat[i].b+')'});
   $('rlb').textContent=L('বোলার','Bowler');$('rnb').textContent=S.bn;$('rsb').textContent=b.w+'/'+b.r+' ('+ovs(b.b)+')';
@@ -872,7 +919,7 @@ function render(){
   $('oBw').textContent=S.bn;
   $('oCl').textContent=S.inn==1?L('টার্গেট','Target'):'CRR';$('oCr').textContent=(S.inn==1&&S.first)?S.first.runs+1:rr;
   {const ls=$('lsc');const scl0=OVM?SCL:scPick(inns(S)),want=!!S.showSC&&scl0.length>0&&!(OVM?(CBd||PCd||FXd):(CB.on||pcOn()||FXSHOW));if(want&&!scWas)scStart=Date.now();scWas=want;scIx=scl0.length>1?Math.floor((Date.now()-scStart)/5000)%scl0.length:0;const scl=scl0.length>1?[scl0[scIx]]:scl0;setPanel(ls,want);
-   if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');{const h=sumHTML(scl,r),k=h+innerHeight+'|'+(ls.classList.contains('on')?1:0);if(ls._k!==k){ls.innerHTML=h;ls._k=k;fitSum(ls)}}}}
+   if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');{const h=sumHTML(scl,r),k=h+innerHeight+'|'+(ls.classList.contains('on')?1:0)+'|'+PZ.sc;if(ls._k!==k){ls.innerHTML=h;ls._k=k;fitSum(ls)}}}}
   tileTxt($('lsb'),!!S.showSC);$('oPs').textContent=(S.pr||S.pb)?L('পার্টনারশিপ ','Partnership ')+(S.pr||0)+' ('+(S.pb||0)+')':'';
   $('oCh').innerHTML=S.tb.slice(-16).map(x=>'<div class="c">'+(x.l==='0'?'&bull;':esc(x.l))+'</div>').join('');
   let r='';
@@ -907,11 +954,12 @@ function toggleFH(){if(!S)return;snap();S.fh=!S.fh;if(S.fh)emit('FH');save();ren
 function dlg(msg,o){return new Promise(res=>{
   o=o||{};const d=$('dlg'),inp=$('din');$('dch').innerHTML='';$('dok').style.display='';
   $('dmsg').textContent=msg;inp.style.display=o.input?'block':'none';inp.value=o.def||'';
+  const inp2=$('din2');inp.placeholder=o.ph1||'';inp2.placeholder=o.ph2||'';inp2.style.display=o.two?'block':'none';inp2.value=o.def2||'';
   $('dno').style.display=o.alert?'none':'';
   $('dno').textContent=o.skip?L('বাদ দিন','Skip'):L('বাতিল','Cancel');$('dok').textContent=L('ঠিক আছে','OK');
   d.style.display='flex';if(o.input)setTimeout(()=>inp.focus(),60);
   const done=v=>{d.style.display='none';$('dok').onclick=$('dno').onclick=null;res(v)};
-  $('dok').onclick=()=>done(o.input?inp.value:true);
+  $('dok').onclick=()=>done(o.two?[inp.value,inp2.value]:(o.input?inp.value:true));
   $('dno').onclick=()=>done(o.input?null:false);
 })}
 function playEv(e){
@@ -1000,6 +1048,29 @@ function scPick(l){
   if(SCM=='2')return l.length>1?[l[l.length-1]]:[];
   return [l[0]];
 }
+const cleanPZ=p=>{const f=k=>{const v=Number(p&&p[k])||0;return v>=30&&v<=100?v:100};return{sc:f('sc'),fx:f('fx'),pc:f('pc'),cb:f('cb')}};
+let PZ=cleanPZ(null);try{PZ=cleanPZ(JSON.parse(localStorage.getItem('pz')))}catch(e){}
+function setPz(k,v){PZ[k]=Math.max(30,Math.min(100,Number(v)||100));try{localStorage.setItem('pz',JSON.stringify(PZ))}catch(e){}const t=$('pzv_'+k);if(t)t.textContent=PZ[k]+'%';if(S)save();else push();render()}
+/* auto-hide (controller only): seconds, 0 = off */
+let AHS={fx:0,pc:0,cb:0};try{const a=JSON.parse(localStorage.getItem('ah'));if(a)AHS={fx:Number(a.fx)||0,pc:Number(a.pc)||0,cb:Number(a.cb)||0}}catch(e){}
+const AHT={fx:0,pc:0,cb:0};
+function setAh(k,v){AHS[k]=Number(v)||0;AHT[k]=0;try{localStorage.setItem('ah',JSON.stringify(AHS))}catch(e){}}
+setInterval(()=>{try{
+  if(OVM)return;
+  const now=Date.now(),st={fx:FXSHOW,pc:!!PC.on,cb:!!CB.on};
+  const off={fx:()=>{FXSHOW=false;try{localStorage.setItem('fxs','0')}catch(e){}},pc:()=>{PC.on=false;storePC()},cb:()=>{CB.on=false;storeCB()}};
+  let ch=false;
+  ['fx','pc','cb'].forEach(k=>{
+    if(!st[k]){AHT[k]=0;return}
+    if(!AHT[k])AHT[k]=now;
+    if(AHS[k]>0&&now-AHT[k]>=AHS[k]*1000){AHT[k]=0;off[k]();ch=true}
+  });
+  if(ch){if(S)save();else push();render()}
+}catch(x){}},500);
+function syncPanelUI(){
+  ['sc','fx','pc','cb'].forEach(k=>{const e=$('pz_'+k);if(e&&document.activeElement!==e)e.value=PZ[k];const t=$('pzv_'+k);if(t)t.textContent=PZ[k]+'%'});
+  ['fx','pc','cb'].forEach(k=>{const e=$('ah_'+k);if(e&&document.activeElement!==e)e.value=String(AHS[k])});
+}
 let scStart=0,scWas=false,scIx=0;
 /* when the summary has 2+ teams to show (Both / tie) it shows one team at a time, 5 sec each */
 setInterval(()=>{try{
@@ -1036,16 +1107,16 @@ function fitPanel(el){
     }
   }catch(e){}
 }
-function fitBoard(el,wf,hf,cache,top){
+function fitBoard(el,wf,hf,cache,top,z){
   try{
     if(!el||!el.classList.contains('on'))return;
     if(!el.offsetWidth){el.style.fontSize='';el._bk=null;return}
     const bh=parseFloat($('ov').style.getPropertyValue('--bh'))||104;
-    if(cache){const k=innerWidth+'x'+innerHeight+'|'+bh;if(el._bk===k&&el.style.fontSize)return;el._bk=k}
+    if(cache){const k=innerWidth+'x'+innerHeight+'|'+bh+'|'+(z||100);if(el._bk===k&&el.style.fontSize)return;el._bk=k}
     const B=20;el.style.fontSize=B+'px';
     const aw=innerWidth*wf,ah=(innerHeight-bh-16)*hf;
     const w=el.offsetWidth||1,h=(el.offsetHeight||1)+B*(top||0);
-    el.style.fontSize=Math.max(3,Math.min(300,B*Math.min(aw/w,ah/h)))+'px';
+    el.style.fontSize=Math.max(3,Math.min(300,B*Math.min(aw/w,ah/h)*(z||100)/100))+'px';
   }catch(e){}
 }
 function fitSum(el){
@@ -1056,7 +1127,7 @@ function fitSum(el){
     const bh=parseFloat($('ov').style.getPropertyValue('--bh'))||104;
     const aw=innerWidth*.97,ah=innerHeight-bh-16;
     const w=el.offsetWidth||1,h=(el.offsetHeight||1)+B*2.5;
-    el.style.fontSize=Math.max(6,Math.min(80,B*Math.min(aw/w,ah/h)*.98))+'px';
+    el.style.fontSize=Math.max(6,Math.min(80,B*Math.min(aw/w,ah/h)*.98*PZ.sc/100))+'px';
   }catch(e){}
 }
 function ordBats(c){return (c.outs||[]).concat((c.bat||[]).map(x=>Object.assign({},x,{no:1}))).map((x,i)=>Object.assign({},x,{_o:x.ord||i+1})).sort((a,b)=>a._o-b._o)}
@@ -1073,7 +1144,7 @@ function sumHTML(list,res){
 }
 
 const anyBoard=()=>!!(S&&(S.showSC||S.pa))||CB.on||FXSHOW||PC.on;
-function renderKill(){const b=$('killb');if(!b)return;const on=anyBoard();b.textContent='📺 '+L('বোর্ড ওভারলে','Board overlay')+': '+(on?'ON':'OFF');b.classList.toggle('on',on);b.disabled=!on}
+function renderKill(){const b=$('killb');if(!b)return;const on=anyBoard();b.textContent='📺 '+(on?'ON':'OFF');b.classList.toggle('on',on);b.disabled=!on}
 function killBoards(){
   if(S){S.showSC=false;S.pa=null;clearTimeout(scT);clearTimeout(paT)}
   CB.on=false;PC.on=false;FXSHOW=false;storeCB();storePC();try{localStorage.setItem('fxs','0')}catch(e){}
@@ -1220,7 +1291,7 @@ function renderCB(){
   if(c){$('cbt').textContent=c.t||'';$('cbt').style.display=c.t?'':'none';$('cbx').textContent=c.x||'';
     const ci=$('cbi'),cu=imgUrl(c.i);
     if(cu){if(ci.getAttribute('data-s')!==cu){ci.setAttribute('data-s',cu);ci.src=cu}ci.classList.add('has');ci.onerror=()=>ci.classList.remove('has')}else ci.classList.remove('has')}
-  if(c)fitBoard(d,.9,1);
+  if(c)fitBoard(d,.9,1,0,0,PZ.cb);
   if(!OVM){setv('cb_t',CB.t);setv('cb_x',CB.x);setv('cb_i',CB.i||'');$('cbb').textContent='📺 '+L('লাইভে দেখান','Show on live')+': '+(CB.on?'ON':'OFF');$('cbb').classList.toggle('on',CB.on);tileTxt($('cbb2'),CB.on)}
 }
 
@@ -1330,7 +1401,7 @@ function renderPC(){
   const pt=$('pct');pt.textContent=tt.length?'🏆 '+tt.join(' · '):lab;pt.classList.add('has');
   const po=$('pco');po.textContent=c.out?'OUT':'';d.classList.toggle('isout',!!c.out);po.classList.toggle('has',!!c.out);
   $('pcc').innerHTML=h;$('pcp').innerHTML='';
-  fitBoard(d,.9,1,1);
+  fitBoard(d,.9,1,1,0,PZ.pc);
 }
 let TN=[];try{TN=JSON.parse(localStorage.getItem('tn'))||[]}catch(e){}
 function storeTN(){try{localStorage.setItem('tn',JSON.stringify(TN))}catch(e){}tnUI()}
@@ -1439,8 +1510,8 @@ function renderFx(){
   const W='<i class="fxw">W</i>';
   const t1='<span>'+esc(c.t)+'</span>'+(c.s?'<small>'+esc(c.s)+'</small>':'');
   const t2=c.r.length?c.r.map(x=>'<div class="fxd-row'+(x.h?' hl':'')+'"><div class="fxd-n"><b>'+x.n+'</b></div><div class="fxd-x'+((x.p||x.wn=='t')?' hasp':'')+'"><div class="tA">'+(x.wn=='a'?W:'')+'<span class="tm">'+esc(x.a)+'</span></div><i class="vs">VS</i><div class="tB"><span class="tm">'+esc(x.b)+'</span>'+(x.wn=='b'?W:'')+'</div>'+(x.p?'<em class="fxd-p live">'+esc(x.p)+'</em>':'')+(x.wn=='t'?'<em class="fxd-p win">'+L('টাই','Tie')+'</em>':'')+'</div></div>').join(''):'<div class="fxd-row"><div class="fxd-x" style="display:flex;justify-content:center"><span class="tm">'+L('কোনো ম্যাচ নেই','No matches')+'</span></div></div>';
-  const key=t1+t2+innerHeight+'|'+(d.classList.contains('on')?1:0);
-  if(d._k!==key){$('fxdt').innerHTML=t1;$('fxdr').innerHTML=t2;d._k=key;fitBoard(d,.94,1,0,2.4);fitRows(d)}
+  const key=t1+t2+innerHeight+'|'+(d.classList.contains('on')?1:0)+'|'+PZ.fx;
+  if(d._k!==key){$('fxdt').innerHTML=t1;$('fxdr').innerHTML=t2;d._k=key;fitBoard(d,.94,1,0,2.4,PZ.fx);fitRows(d)}
 }
 function toggleFX(){
   FXSHOW=!FXSHOW;try{localStorage.setItem('fxs',FXSHOW?'1':'0')}catch(e){}
@@ -1449,10 +1520,13 @@ function toggleFX(){
 }
 async function fxAdd(){
   const d1=((S?S.t[0]:$('t1').value)||'').trim();
-  const t1=await dlg(L('টিম ১ এর নাম','Team 1 name'),{input:1,def:d1});if(t1===null)return;
-  const t2=await dlg(L('টিম ২ এর নাম','Team 2 name'),{input:1});if(!t2||!t2.trim())return;
-  FX.push({id:'f'+Date.now(),tn:curTn(),t1:(t1.trim()||d1||L('টিম ১','Team 1')).slice(0,40),t2:t2.trim().slice(0,40),sw:false});storeFX();
-  toast('📅 '+L('পরের ম্যাচ যোগ হয়েছে','Next match added'));
+  const r=await dlg(L('পরের ম্যাচ: দুই টিমের নাম দিন','Next match: enter both team names'),{input:1,two:1,def:d1,ph1:L('টিম ১ এর নাম','Team 1 name'),ph2:L('টিম ২ এর নাম','Team 2 name')});
+  if(!r)return;
+  const t1=(r[0]||'').trim(),t2=(r[1]||'').trim();
+  if(!t2){await dlg('⚠️ '+L('টিম ২ এর নাম দিন','Please enter the Team 2 name'),{alert:1});return}
+  const n1=(t1||d1||L('টিম ১','Team 1')).slice(0,40),n2=t2.slice(0,40);
+  FX.push({id:'f'+Date.now(),tn:curTn(),t1:n1,t2:n2,sw:false});storeFX();
+  await dlg('✅ '+L('সেভ হয়েছে!','Saved!')+'\n'+n1+'  vs  '+n2,{alert:1});
 }
 function fxGo(id){
   const f=FX.find(x=>x.id==id);if(!f)return;
@@ -1472,7 +1546,7 @@ function swapTeams(){
 const Q=new URLSearchParams(location.search),OVM=Q.get('view')==='overlay';
 let CFG={db:'',m:'match1'};try{CFG=Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')))}catch(e){}
 let pt=null;
-function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,spl:S.spl||'',cb:cbp(),pc:pcp(),fx:fxp(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,lang:LANG,ts:Date.now()}}
+function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,spl:S.spl||'',cb:cbp(),pc:pcp(),fx:fxp(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,pz:PZ,lang:LANG,ts:Date.now()}}
 const N=v=>Number(v)||0,Sx=v=>String(v==null?'':v);
 function unpack(o){
   const bs=o.bs||{},t=o.t||[];
@@ -1493,11 +1567,12 @@ function push(){
   if(OVM||!CFG.db)return;clearTimeout(pt);
   pt=setTimeout(async()=>{
     const t=await token();
-    fetch(furl()+(t?'?auth='+encodeURIComponent(t):''),{method:'PUT',body:JSON.stringify(S?pack():{lang:LANG,ts:Date.now(),cb:cbp(),pc:pcp(),fx:fxp()})}).then(r=>{if(!r.ok)throw 0;syn(true)}).catch(()=>syn(false))},300);
+    fetch(furl()+(t?'?auth='+encodeURIComponent(t):''),{method:'PUT',body:JSON.stringify(S?pack():{lang:LANG,ts:Date.now(),pz:PZ,cb:cbp(),pc:pcp(),fx:fxp()})}).then(r=>{if(!r.ok)throw 0;syn(true)}).catch(()=>syn(false))},300);
 }
 let lastEv=null;
 function poll(){
   fetch(Q.get('db')+'/matches/'+Q.get('m')+'.json?t='+Date.now()).then(r=>r.json()).then(o=>{
+    PZ=cleanPZ(o&&o.pz);
     CBd=o&&o.cb?{t:Sx(o.cb.t).slice(0,80),x:Sx(o.cb.x).slice(0,1500),i:Sx(o.cb.i).slice(0,300)}:null;
     PCd=o&&o.pc?cleanPC(o.pc):null;
     FXd=o&&o.fx?cleanFX(o.fx):null;
