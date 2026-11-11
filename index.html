@@ -796,8 +796,9 @@ document.addEventListener('change',e=>{
   if(e.target.id=='ib')renameBowler(e.target.value);
   save();render();
 });
-function showOv(){bgi=0;$('ov').className='';$('ov').classList.remove('hide');fit();}
-function hideOv(e){e.stopPropagation();$('ov').className='inline';fit()}
+function refitAll(){['lsc','fxd','pcd','cbd'].forEach(id=>{const e=$(id);if(e){e._k=null;e._bk=null;e.style.fontSize=''}});try{render()}catch(x){}}
+function showOv(){bgi=0;$('ov').className='';$('ov').classList.remove('hide');fit();refitAll();}
+function hideOv(e){e.stopPropagation();$('ov').className='inline';fit();refitAll()}
 function bgNext(e){if(OVM||e.target.id=='exit'||$('ov').classList.contains('inline'))return;bgi=(bgi+1)%bgs.length;$('ov').className=bgs[bgi]}
 
 let LANG='bn';try{LANG=localStorage.getItem('lg')=='en'?'en':'bn'}catch(e){}
@@ -923,8 +924,8 @@ function playEv(e){
   else if(e.k=='D'){t=L('ডট বল','DOT BALL');c='ev-d'}
   else{const v=e.v;c=v==6?'ev-s':v==4?'ev-f':'ev-r';
     t=v==6?L('ছক্কা!','SIX!'):v==4?L('চার!','FOUR!'):L(v+' রান',v+(v==1?' RUN':' RUNS'))}
-  a.className='';void a.offsetWidth;a.firstChild.textContent=t;a.className='show '+c;
-  if(e.k=='W'){const b=$('bc');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
+  a.className='';void a.offsetWidth;a.firstChild.textContent=t;a.className='show '+c;clearTimeout(a._t);a._t=setTimeout(()=>{a.className=''},2100);
+  if(e.k=='W'){const b=$('bc');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');clearTimeout(b._t);b._t=setTimeout(()=>b.classList.remove('shake'),800)}
 }
 
 function fit(){
@@ -1038,6 +1039,7 @@ function fitPanel(el){
 function fitBoard(el,wf,hf,cache,top){
   try{
     if(!el||!el.classList.contains('on'))return;
+    if(!el.offsetWidth){el.style.fontSize='';el._bk=null;return}
     const bh=parseFloat($('ov').style.getPropertyValue('--bh'))||104;
     if(cache){const k=innerWidth+'x'+innerHeight+'|'+bh;if(el._bk===k&&el.style.fontSize)return;el._bk=k}
     const B=20;el.style.fontSize=B+'px';
@@ -1049,6 +1051,7 @@ function fitBoard(el,wf,hf,cache,top){
 function fitSum(el){
   try{
     if(!el||!el.classList.contains('on'))return;
+    if(!el.offsetWidth){el.style.fontSize='';el._k=null;return}
     const B=20;el.style.fontSize=B+'px';
     const bh=parseFloat($('ov').style.getPropertyValue('--bh'))||104;
     const aw=innerWidth*.97,ah=innerHeight-bh-16;
