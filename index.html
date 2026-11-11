@@ -467,20 +467,21 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 .mlr select{flex:0 0 auto;padding:8px;font-size:13px}
 .mlr button{padding:6px 12px;min-height:0;font-size:14px}
 /* ===== fixed-size overlay bar: long text wraps to 2 lines, never pushes the other sections ===== */
-#ov:not(.inline) .g1{flex:0 0 330px;width:330px}
+#ov:not(.inline) .g1{flex:0 0 420px;width:420px}
 #ov:not(.inline) .g1t{flex:1 1 0;min-width:0}
-#ov:not(.inline) .tn{max-width:100%;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.1;font-size:21px}
+#ov:not(.inline) .tn{max-width:100%;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.08;font-size:23px}
 #ov:not(.inline) .g2{flex:0 0 175px;width:175px;min-width:0;padding:0 8px}
 #ov:not(.inline) .g3{flex:1 1 0;min-width:0}
-#ov:not(.inline) .bb{flex:1 1 0;min-width:0;max-width:none;padding:0 12px;height:90%;overflow:hidden}
-#ov:not(.inline) .bn{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:center;line-height:1.1;font-size:17px;max-width:100%}
-#ov:not(.inline) .bs{font-size:28px;line-height:1.05}
+#ov:not(.inline) .bb{flex:1 1 0;min-width:0;max-width:none;padding:0 10px;height:94%;overflow:hidden}
+#ov:not(.inline) .bn{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:center;line-height:1.05;font-size:20px;max-width:100%}
+#ov:not(.inline) .bs{font-size:23px;line-height:1.05}
+#ov:not(.inline) .bs small{font-size:13px}
 #ov:not(.inline) .g5{flex:0 0 135px;width:135px;min-width:0;padding:0 8px}
 #ov:not(.inline) .g6{flex:0 0 310px;width:310px;padding:0 14px 0 44px;gap:2px;overflow:hidden}
 #ov:not(.inline) .g6a{max-width:100%;min-width:0;font-size:15px}
 #ov:not(.inline) .g6a #oBw{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#ov:not(.inline) .g6 .ch{flex-wrap:wrap;justify-content:center;gap:0 9px;max-width:100%;max-height:50px;overflow:hidden}
-#ov:not(.inline) .g6 .c{height:24px;min-width:0;font-size:19px;line-height:24px;padding:0 2px}
+#ov:not(.inline) .g6 .ch{flex-wrap:wrap;justify-content:center;gap:0 9px;max-width:100%;max-height:46px;overflow:hidden}
+#ov:not(.inline) .g6 .c{height:22px;min-width:0;font-size:15px;line-height:22px;padding:0 2px}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -858,7 +859,7 @@ function render(){
   {const ls=$('lsc');setPanel(ls,!!S.showSC&&!(OVM?(CBd||PCd||FXd):(CB.on||pcOn()||FXSHOW)));
    if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');{const h=sumHTML(OVM?SCL:inns(S),r),k=h+innerHeight+'|'+(ls.classList.contains('on')?1:0);if(ls._k!==k){ls.innerHTML=h;ls._k=k;fitPanel(ls)}}}}
   tileTxt($('lsb'),!!S.showSC);$('oPs').textContent=(S.pr||S.pb)?L('পার্টনারশিপ ','Partnership ')+(S.pr||0)+' ('+(S.pb||0)+')':'';
-  $('oCh').innerHTML=S.tb.slice(-16).map(x=>'<div class="c">'+esc(x.l)+'</div>').join('');
+  $('oCh').innerHTML=S.tb.slice(-16).map(x=>'<div class="c">'+(x.l==='0'?'&bull;':esc(x.l))+'</div>').join('');
   let r='';
   if(S.inn==1){
     const T=S.first.runs+1,need=T-S.runs,left=S.ov*6-S.balls;
