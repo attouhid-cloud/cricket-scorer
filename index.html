@@ -539,6 +539,32 @@ body:not(.ovm) #scv{overflow-x:hidden;max-width:100vw}
 /* ===== v5: current over ball-by-ball on score page ===== */
 .tbr{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px;min-height:38px;align-items:center}
 .tbr .c{min-width:38px;height:38px;font-size:19px;border-radius:50%;padding:0 6px}
+
+/* ===== winner alert on the overlay + scoring lock after the match ===== */
+#sbox.lock button:not([onclick^="undo"]){opacity:.35;pointer-events:none}
+#wbar{display:none;position:absolute;inset:0;z-index:4;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px;border-radius:inherit;background:linear-gradient(90deg,#0b7a07,#22d612 50%,#0b7a07);border-top:2px solid #b6ff1a;box-shadow:inset 0 0 28px rgba(255,255,255,.18);color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.55)}
+#wbar.on{display:flex;animation:wbIn .6s cubic-bezier(.2,.9,.3,1) both}
+.wb-m{font-size:34px;font-weight:900;line-height:1.1;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wb-m b{color:#ffe14d}
+.wb-s{font-size:15px;font-weight:700;color:#eaffd9;margin-top:2px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@keyframes wbIn{from{opacity:0;transform:scaleY(.4)}to{opacity:1;transform:scaleY(1)}}
+
+/* ===== custom board: landscape photo = wider panel, bigger picture ===== */
+#ov:not(.inline) #cbd.on.land{width:62em}
+#ov:not(.inline) #cbd.land #cbi{width:100%;max-height:34em;object-fit:contain;margin:.3em auto .5em}
+
+/* ===== no running match (new match setup): Overlay & More tabs stay usable ===== */
+body.nomatch #app .t-score,body.nomatch #app .t-setup,body.nomatch #madj,body.nomatch #ov.inline,body.nomatch #bcw,body.nomatch .bgrid .btile:first-child,body.nomatch button[onclick^="showCard"]{display:none}
+body.nomatch #bcw{visibility:hidden}
+
+/* ===== custom board: 2 portrait photos side by side ===== */
+#cbm{display:block}
+#cbi2{display:none;max-width:100%;max-height:42vh;margin:.4em auto;border-radius:10px;object-fit:contain}
+#cbi2.has{display:block}
+#ov:not(.inline) #cbi2{max-height:18em}
+#cbm.two{display:flex;gap:.5em;align-items:center;justify-content:center}
+#ov:not(.inline) #cbd.on.two{width:54em}
+#ov:not(.inline) #cbd.two #cbm img{flex:1 1 0;min-width:0;max-width:50%;width:50%;height:auto;max-height:32em;object-fit:contain;margin:.3em 0}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -563,6 +589,7 @@ body:not(.ovm) #scv{overflow-x:hidden;max-width:100vw}
   <div><label>ব্যাটসম্যান ২ / Batter 2</label><input id="b2" list="ros" placeholder="Batsman 2"></div>
   <div><label>বোলার / Bowler</label><input id="bn" list="ros" placeholder="Bowler 1"></div></div>
   <label>ফ্রি হিট (নো বলের পর অটো) / Free Hit (auto after no ball)</label><select id="fhr" style="margin-bottom:8px"><option value="1">ON</option><option value="0">OFF</option></select>
+  <label>সুপার ওভার (টাই হলে) / Super Over (if tied)</label><select id="sor" style="margin-bottom:8px"><option value="1">হ্যাঁ / YES</option><option value="0">না / NO</option></select>
   <label>টুর্নামেন্ট (ঐচ্ছিক) / Tournament (optional)</label><select id="tnsel" onchange="tnPick()" style="width:100%;padding:10px;border-radius:10px;background:#0f1220;color:#fff;border:1px solid #333a5e;margin-bottom:8px"></select><datalist id="tms"></datalist>
   <div class="row"><button class="sm" style="flex:1" onclick="showTn()">🏆 টুর্নামেন্ট / Tournaments</button><button class="sm" style="flex:1" onclick="showPlayers()">👥 প্লেয়ার / Players</button></div>
   <button class="g" style="width:100%" onclick="start()">ম্যাচ শুরু / Start Match</button>
@@ -603,7 +630,7 @@ body:not(.ovm) #scv{overflow-x:hidden;max-width:100vw}
   <!-- OVERLAY -->
 <div id="ov" class="inline" onclick="bgNext(event)">
   <button id="exit" onclick="hideOv(event)">✕</button>
-  <div id="lsc"></div><div id="cbd"><div id="cbt"></div><img id="cbi" alt=""><div id="cbx"></div></div><div id="pcd"><svg id="pcf" viewBox="0 0 1060 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <div id="lsc"></div><div id="cbd"><div id="cbt"></div><div id="cbm"><img id="cbi" alt=""><img id="cbi2" alt=""></div><div id="cbx"></div></div><div id="pcd"><svg id="pcf" viewBox="0 0 1060 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
 <linearGradient id="pcy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFDB3A"/><stop offset=".55" stop-color="#FFD21F"/><stop offset="1" stop-color="#F2B90A"/></linearGradient>
 <linearGradient id="pgp" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#132f82"/><stop offset=".5" stop-color="#0f2670"/><stop offset="1" stop-color="#0a1b57"/></linearGradient><linearGradient id="pgl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".5" stop-color="#fff" stop-opacity=".03"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></linearGradient>
 <linearGradient id="pyb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFE777"/><stop offset=".45" stop-color="#FFD21F"/><stop offset="1" stop-color="#D99A00"/></linearGradient></defs>
@@ -623,7 +650,7 @@ body:not(.ovm) #scv{overflow-x:hidden;max-width:100vw}
 <polygon points="506,466 1033,466 1021,534 488,534" transform="translate(0,12)" fill="#030a22" opacity=".8"/>
 <polygon points="506,466 1033,466 1021,534 488,534" transform="translate(0,9)" fill="#a87500" stroke="#0a1a48" stroke-width="8" stroke-linejoin="miter"/>
 <polygon points="506,466 1033,466 1021,534 488,534" fill="#0a1a48" stroke="#0a1a48" stroke-width="8"/><polygon points="506,466 1033,466 1021,534 488,534" fill="url(#pcy)" stroke="#0a1a48" stroke-width="5" stroke-linejoin="miter"/><polygon points="509,471 1030,471 1028,479 507,479" fill="#fff" opacity=".55"/><polygon points="490,526 1022,526 1021,533 489,533" fill="#b57f00" opacity=".55"/></svg><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="fxd"><div class="fxd-t"><span class="fx-st fx-l"></span><div class="fx-tab" id="fxdt"></div><span class="fx-st fx-r"></span></div><div class="fxd-b"><div id="fxdr"></div></div></div><div id="bcw"><div id="stg">
-  <div id="bc"><div id="anim"><span></span></div>
+  <div id="bc"><div id="anim"><span></span></div><div id="wbar"></div>
    <div id="top">
     <div class="tab1"><span class="trophy">🏆</span><span class="v" id="oVe"></span><span class="sep">|</span><span class="t" id="oTt"></span><span class="lv">● LIVE</span><span class="fh" id="oFH"></span></div>
     <span class="rs" id="res"></span>
@@ -661,6 +688,7 @@ body:not(.ovm) #scv{overflow-x:hidden;max-width:100vw}
     <label>স্পনসর / Sponsor</label><input id="e_sp" style="margin-bottom:8px">
     <label>স্পনসর লেবেল / Sponsor label</label><input id="e_spl" placeholder="SPONSOR" style="margin-bottom:8px">
     <label>ফ্রি হিট (নো বলের পর অটো) / Free Hit (auto after no ball)</label><select id="e_fhr" style="margin-bottom:8px"><option value="1">ON</option><option value="0">OFF</option></select>
+    <label>সুপার ওভার (টাই হলে) / Super Over (if tied)</label><select id="e_sor" style="margin-bottom:8px"><option value="1">হ্যাঁ / YES</option><option value="0">না / NO</option></select>
     <div class="row"><div><label>রান / Runs</label><input id="e_ru" type="number"></div><div><label>উইকেট / Wkts</label><input id="e_wk" type="number"></div><div><label>ওভার (1.2) / Overs (1.2)</label><input id="e_ba"></div></div>
     <div class="row"><div><label>১ম ইনিংস রান / 1st inn.</label><input id="e_fr" type="number"></div></div>
     <div class="row"><div><label>ব্যাট ১ রান / Bat 1 runs</label><input id="e_r0" type="number"></div><div><label>ব্যাট ১ বল / Bat 1 balls</label><input id="e_b0" type="number"></div><div><label>ব্যাট ২ রান / Bat 2 runs</label><input id="e_r1" type="number"></div><div><label>ব্যাট ২ বল / Bat 2 balls</label><input id="e_b1" type="number"></div></div>
@@ -674,7 +702,7 @@ body:not(.ovm) #scv{overflow-x:hidden;max-width:100vw}
   <details class="sec" open><summary>🧰 টুলস / Tools</summary><div class="sb">
 <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:10px"><button class="sm" onclick="showCard()">📊 স্কোরকার্ড / Scorecard</button><button class="sm" onclick="showHist()">🗂️ হিস্টোরি / History</button><button class="sm" onclick="showPlayers()">👥 প্লেয়ার / Players</button></div>
   </div></details>
-  <details class="sec"><summary>⚙️ ম্যানুয়াল অ্যাডজাস্ট / Manual adjust</summary><div class="sb">
+  <details class="sec" id="madj"><summary>⚙️ ম্যানুয়াল অ্যাডজাস্ট / Manual adjust</summary><div class="sb">
     <div style="grid-column:span 4;display:flex;gap:8px"><button class="sm" style="flex:1;padding:9px 0;font-size:13px" onclick="minus('r')">−1 রান / −1 Run</button><button class="sm" style="flex:1;padding:9px 0;font-size:13px" onclick="minus('w')">−1 উইকেট / −1 Wkt</button><button class="sm" style="flex:1;padding:9px 0;font-size:13px" onclick="minus('b')">−1 বল / −1 Ball</button></div>
     <div style="grid-column:span 4;display:flex;gap:8px"><button class="g sm" style="flex:1;padding:9px 0;font-size:13px" onclick="plus()">+1 রান / +1 Run</button><button class="g sm" style="flex:1;padding:9px 0;font-size:13px" onclick="plusx('w')">+1 উইকেট / +1 Wkt</button><button class="g sm" style="flex:1;padding:9px 0;font-size:13px" onclick="plusx('b')">+1 বল / +1 Ball</button></div>
   </div></details>
@@ -697,6 +725,12 @@ body:not(.ovm) #scv{overflow-x:hidden;max-width:100vw}
 <div id="cbcard" class="card" style="margin-top:10px"><h3>🧾 কাস্টম বোর্ড / Custom Board</h3>
   <label>শিরোনাম / Title</label><input id="cb_t" oninput="liveCB()" placeholder="Upcoming Matches" style="margin-bottom:8px">
   <label>ছবির লিংক (Google Drive) / Image link (Google Drive)</label><input id="cb_i" oninput="liveCB()" placeholder="https://drive.google.com/file/d/..." style="margin-bottom:8px">
+  <label>অথবা ফোন/ফাইল থেকে ছবি আপলোড / Or upload a photo</label>
+  <div class="row" style="margin:0 0 8px"><label class="photobtn" style="flex:1">📷 ছবি ১ / Photo 1<input type="file" accept="image/*" hidden onchange="cbPhoto(this,1)"></label><button class="sm" onclick="cbClr(1)">🧹</button></div>
+  <img id="cb_th" alt="" style="display:none;max-width:100%;max-height:140px;border-radius:10px;margin-bottom:8px">
+  <div class="row" style="margin:0 0 8px"><label class="photobtn" style="flex:1">📷 ছবি ২ (পাশাপাশি) / Photo 2 (side by side)<input type="file" accept="image/*" hidden onchange="cbPhoto(this,2)"></label><button class="sm" onclick="cbClr(2)">🧹</button></div>
+  <img id="cb_th2" alt="" style="display:none;max-width:100%;max-height:140px;border-radius:10px;margin-bottom:8px">
+  <div class="dim" style="font-size:12px;margin-bottom:8px">১টা ছবি: ল্যান্ডস্কেপ হলে অটো বড় করে দেখাবে। পোর্ট্রেট হলে ২টা ছবি দিলে পাশাপাশি দেখাবে / 1 photo: landscape is shown bigger automatically. Portrait: add 2 photos to show them side by side</div>
   <label>লেখা (ছবির নিচে) / Text (below the image)</label><textarea id="cb_x" oninput="liveCB()" rows="6" placeholder="Tigers vs Eagles - 3:00 PM"></textarea>
   <div class="row" style="margin:8px 0 0"><button class="g" style="flex:1;font-size:15px;padding:12px" onclick="saveCB()">💾 সেভ / Save</button><button id="cbb" style="flex:1;font-size:15px;padding:12px" onclick="toggleCB()"></button></div></div>
 </div></details>
@@ -720,7 +754,7 @@ const bgs=['','green','black','clear'];let bgi=0;
 function save(){try{localStorage.setItem('cs2',JSON.stringify({S,H}))}catch(e){}push()}
 function load(){try{const d=JSON.parse(localStorage.getItem('cs2'));if(d&&d.S){S=d.S;H=d.H||[];return true}}catch(e){}return false}
 function start(){
-  S={fhr:$('fhr').value!='0',tn:$('tnsel').value||'',spl:($('spl').value||'').trim().slice(0,30),id:Date.now(),t:[$('t1').value,$('t2').value],ve:$('ve').value,tt:$('tt').value,sp:$('sp').value,ov:+$('ovn').value||20,
+  S={fhr:$('fhr').value!='0',sor:$('sor').value!='0',so:0,tn:$('tnsel').value||'',spl:($('spl').value||'').trim().slice(0,30),id:Date.now(),t:[$('t1').value,$('t2').value],ve:$('ve').value,tt:$('tt').value,sp:$('sp').value,ov:+$('ovn').value||20,
    inn:0,runs:0,w:0,balls:0,tb:[],first:null,
    bat:[{n:$('b1').value.trim()||L('ব্যাটসম্যান ১','Batsman 1'),r:0,b:0,ord:1},{n:$('b2').value.trim()||L('ব্যাটসম্যান ২','Batsman 2'),r:0,b:0,ord:2}],
    st:0,bn:$('bn').value.trim()||L('বোলার ১','Bowler 1'),bw:{},orun:0};
@@ -728,6 +762,10 @@ function start(){
   save();render();setTab('score');
 }
 const B=()=>S.bw[S.bn]||(S.bw[S.bn]={r:0,w:0,b:0,m:0});
+/* wickets that end an innings: 10 normally, 2 in a Super Over */
+const WK=M=>M&&M.so?2:10;
+/* match is over -> scoring is switched off (Undo still works) */
+function FIN(){if(S&&S.fin){toast('🏁 '+L('ম্যাচ শেষ, স্কোরিং বন্ধ','Match over — scoring is off'));return true}return false}
 function snap(){H.push(JSON.stringify(S));if(H.length>300)H.shift()}
 function undo(){if(!H.length)return;S=JSON.parse(H.pop());S.pa=null;save();render()}
 function add(l,c){if(S.ovEnd){S.tb=[];S.ovEnd=false}S.tb.push({l:l,c:c||''});if(S.tb.length>24)S.tb.shift()}
@@ -735,10 +773,11 @@ function swap(){snap();S.st^=1;save();render()}
 function legal(){
   S.balls++;
   if(S.balls%6==0){if(S.orun==0)B().m++;S.orun=0;S.st^=1;S.needBowl=true;S.ovEnd=true}
-  if(S.balls>=S.ov*6||S.w>=10||(S.inn==1&&S.runs>S.first.runs))S.done=true;
+  if(S.balls>=S.ov*6||S.w>=WK(S)||(S.inn==1&&S.runs>S.first.runs))S.done=true;
 }
-function emit(k,v){if(!(k=='W'||(k=='R'&&(v==4||v==6))))return;S.ev={k:k,v:v||0,id:Date.now()};playEv(S.ev)}
+function emit(k,v){if(!(k=='W'||k=='SO'||(k=='R'&&(v==4||v==6))))return;S.ev={k:k,v:v||0,id:Date.now()};playEv(S.ev)}
 function ball(r){
+  if(FIN())return;
   vib(r>=4?[35,25,35]:20);snap();const s=S.bat[S.st],b=B();
   const o=s.r;s.r+=r;S.runs+=r;b.r+=r;S.orun+=r;if(r==4)s.f=(s.f||0)+1;if(r==6)s.s=(s.s||0)+1;S.pr=(S.pr||0)+r;if(!S.fh)S.pb=(S.pb||0)+1;
   if(S.fh){
@@ -751,6 +790,7 @@ function ball(r){
 }
 function extra(t){extraRuns(t,t=='B'||t=='LB'?1:0)}
 function extraRuns(t,n){
+  if(FIN())return;
   vib(30);snap();const b=B();
   if(t=='Wd'||t=='NB'){
     const tot=1+n;S.pr=(S.pr||0)+tot;S.runs+=tot;b.r+=tot;S.orun+=tot;
@@ -768,7 +808,7 @@ function extraRuns(t,n){
   fin();
 }
 async function extraSheet(){
-  if(!S)return;
+  if(!S||FIN())return;
   const t=await pick(L('এক্সট্রার ধরন বাছুন','Choose the extra type'),[['Wd',L('ওয়াইড','Wide'),'ex'],['NB',L('নো বল','No Ball'),'ex'],['B',L('বাই','Bye'),'ex'],['LB',L('লেগ বাই','Leg Bye'),'ex']],2);
   if(!t)return;
   const wn=(t=='Wd'||t=='NB'),nums=wn?[0,1,2,3,4,5,6]:[1,2,3,4,5,6];
@@ -786,6 +826,7 @@ function pick(msg,ch,cols){return new Promise(res=>{
   $('dno').onclick=()=>done(null);d.style.display='flex';
 })}
 async function wicket(){
+  if(FIN())return;
   const fh=!!S.fh;
   const types=fh?[['run',L('রান আউট','Run Out'),'w']]:[['bowled',L('বোল্ড','Bowled'),'w'],['run',L('রান আউট','Run Out'),'w'],['catch',L('ক্যাচ আউট','Catch Out'),'w'],['out',L('আউট','Out'),'w']];
   const t=await pick(L('আউটের ধরন','Dismissal type')+(fh?' ('+L('ফ্রি হিট','Free Hit')+')':''),types);
@@ -799,14 +840,16 @@ async function wicket(){
   S.w++;if(t!='run')b.w++;
   add('W','x');
   S.outIdx=idx;S.needBat=true;
-  if(fh){S.fh=false;if(S.w>=10)S.done=true}
+  if(fh){S.fh=false;if(S.w>=WK(S))S.done=true}
   else{s.b++;b.b++;legal()}
   {const x=S.bat[idx];(S.outs=S.outs||[]).push({n:x.n,r:x.r,b:x.b,f:x.f||0,s:x.s||0,ord:x.ord||0,how:t,bw:t=='run'?'':S.bn});x.out=1;S.pr=0;S.pb=0;S.pa={n:x.n,role:'bat'};clearTimeout(paT);paT=setTimeout(()=>{if(S){S.pa=null;save();render()}},5000)}emit('W');fin();
 }
 async function fin(){
   save();render();
   if(S.done){S.done=false;S.needBat=false;S.needBowl=false;
-    if(S.inn==0)setTimeout(()=>endInn(true),150);else{saveHist(true);dlg(result(),{alert:1}).then(()=>showCard())}return}
+    if(S.inn==0)setTimeout(()=>endInn(true),150);
+    else if(S.sor&&S.runs==S.first.runs)soAsk();
+    else{saveHist(true);dlg(result(),{alert:1}).then(()=>showCard())}return}
   if(S.needBat){S.needBat=false;
     const n=await dlg(L('নতুন ব্যাটসম্যানের নাম (না দিলে অটো নম্বর)','New batsman name (skip = auto number)'),{input:1,skip:1});
     S.bat[S.outIdx]={n:(n&&n.trim())||autoBat(),r:0,b:0,ord:(S.outs||[]).length+2}}
@@ -824,13 +867,43 @@ function renameBowler(v){
   if(ex){ex.r+=cur.r;ex.w+=cur.w;ex.b+=cur.b;ex.m+=cur.m}else S.bw[v]=cur;
   delete S.bw[o];S.bn=v;(S.outs||[]).forEach(x=>{if(x.bw==o)x.bw=v});
 }
+/* ===== SUPER OVER ===== */
+async function soAsk(){
+  const go=await dlg('🤝 '+L('ম্যাচ টাই! সুপার ওভার শুরু করবেন?','Match tied! Start a Super Over?'));
+  if(go){startSO();return}
+  saveHist(true);dlg(result(),{alert:1}).then(()=>showCard());
+}
+function startSO(){
+  snap();
+  /* keep every innings played so far (regular match + earlier super overs) for the scorecard */
+  const cur=JSON.parse(JSON.stringify(inns(S).slice((S.arch||[]).length)));
+  S.arch=(S.arch||[]).concat(cur);
+  S.so=(S.so||0)+1;
+  /* the team that batted 2nd bats 1st in the Super Over */
+  S.t=[S.t[1],S.t[0]];
+  if(!S.ov0)S.ov0=S.ov;
+  S.ov=1;S.first=null;S.card1=null;S.inn=0;S.fh=false;S.runs=0;S.w=0;S.balls=0;S.tb=[];S.ovEnd=false;S.bw={};S.orun=0;S.st=0;
+  S.outs=[];S.pr=0;S.pb=0;S.pa=null;S.done=false;S.needBat=false;S.needBowl=false;S.fin=0;S.showSC=false;clearTimeout(scT);
+  S.bat=[{n:L('ব্যাটসম্যান ১','Batsman 1'),r:0,b:0,ord:1},{n:L('ব্যাটসম্যান ২','Batsman 2'),r:0,b:0,ord:2}];S.bn=L('বোলার ১','Bowler 1');
+  emit('SO');save();render();setTab('score');soNames();
+}
+/* ask for the 2 batters and the bowler of the Super Over innings (all optional) */
+async function soNames(){
+  if(!S)return;
+  const r=await dlg('⚡ '+L('সুপার ওভার — '+S.t[S.inn]+' এর দুই ব্যাটসম্যান','Super Over — 2 batters of '+S.t[S.inn]),{input:1,two:1,skip:1,ph1:L('ব্যাটসম্যান ১','Batter 1'),ph2:L('ব্যাটসম্যান ২','Batter 2')});
+  if(r){const a=(r[0]||'').trim().slice(0,40),b=(r[1]||'').trim().slice(0,40);if(a)renameBat(0,a);if(b)renameBat(1,b)}
+  const bw=await dlg('⚡ '+L('বোলারের নাম ('+S.t[1-S.inn]+')','Bowler name ('+S.t[1-S.inn]+')'),{input:1,skip:1,ph1:L('বোলার','Bowler')});
+  if(bw&&bw.trim())renameBowler(bw.trim().slice(0,40));
+  save();render();
+}
 async function endInn(auto){
-  if(S.inn==1){saveHist(true);dlg(result(),{alert:1}).then(()=>showCard());return}
+  if(S.inn==1){if(S.sor&&S.runs==S.first.runs){await soAsk();return}saveHist(true);dlg(result(),{alert:1}).then(()=>showCard());return}
   if(!auto&&!(await dlg(L('প্রথম ইনিংস শেষ?','End 1st innings?'))))return;
   snap();S.first={runs:S.runs,w:S.w,balls:S.balls};S.card1={team:S.t[S.inn],runs:S.runs,w:S.w,balls:S.balls,outs:S.outs||[],bat:S.bat.filter(x=>!x.out),bw:S.bw};S.outs=[];S.pr=0;S.pb=0;S.showSC=true;clearTimeout(scT);scT=setTimeout(()=>{if(S){S.showSC=false;save();render()}},15000);
   S.inn=1;S.fh=false;S.runs=0;S.w=0;S.balls=0;S.tb=[];S.ovEnd=false;S.bw={};S.orun=0;S.st=0;
   S.bat=[{n:L('ব্যাটসম্যান ১','Batsman 1'),r:0,b:0,ord:1},{n:L('ব্যাটসম্যান ২','Batsman 2'),r:0,b:0,ord:2}];S.bn=L('বোলার ১','Bowler 1');
   save();render();
+  if(S.so)soNames();
 }
 const ovs=b=>Math.floor(b/6)+'.'+(b%6);
 function setv(id,v){const e=$(id);if(e&&document.activeElement!==e)e.value=v}
@@ -856,7 +929,7 @@ function storePL(){ROS=PL.map(p=>p.n).filter(Boolean);try{localStorage.setItem('
 function rosUI(){$('ros').innerHTML=ROS.map(n=>'<option value="'+n.replace(/"/g,'&quot;')+'">').join('')}
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800)}
 const po=v=>{const a=String(v).split('.');return (+a[0]||0)*6+(+a[1]||0)};
-function plus(){snap();S.pr=(S.pr||0)+1;S.runs++;add('+1','');if(S.inn==1&&S.runs>S.first.runs)S.done=true;emit('R',1);fin()}
+function plus(){if(FIN())return;snap();S.pr=(S.pr||0)+1;S.runs++;add('+1','');if(S.inn==1&&S.runs>S.first.runs)S.done=true;emit('R',1);fin()}
 function saveName(id){
   const v=$(id).value.trim();if(!v||!S)return;
   if(id=='i0')renameBat(0,v);
@@ -867,8 +940,8 @@ function saveName(id){
 }
 function saveEdit(){
   snap();const g=id=>$(id).value,n=id=>+$(id).value||0;
-  S.t=[g('e_t0')||S.t[0],g('e_t1')||S.t[1]];S.ve=g('e_ve');S.tt=g('e_tt');S.sp=g('e_sp');S.spl=g('e_spl').trim().slice(0,30);S.fhr=g('e_fhr')!='0';if(!S.fhr)S.fh=false;S.ov=n('e_ov')||S.ov;
-  S.runs=n('e_ru');S.w=Math.min(10,n('e_wk'));S.balls=po(g('e_ba'));
+  S.t=[g('e_t0')||S.t[0],g('e_t1')||S.t[1]];S.ve=g('e_ve');S.tt=g('e_tt');S.sp=g('e_sp');S.spl=g('e_spl').trim().slice(0,30);S.fhr=g('e_fhr')!='0';S.sor=g('e_sor')!='0';if(!S.fhr)S.fh=false;S.ov=n('e_ov')||S.ov;
+  S.runs=n('e_ru');S.w=Math.min(WK(S),n('e_wk'));S.balls=po(g('e_ba'));
   if(S.first)S.first.runs=n('e_fr');
   S.bat[0].r=n('e_r0');S.bat[0].b=n('e_b0');S.bat[1].r=n('e_r1');S.bat[1].b=n('e_b1');
   const b=B();b.w=n('e_bw');b.r=n('e_br');b.b=po(g('e_bo'));b.m=n('e_bm');
@@ -884,9 +957,32 @@ async function newMatch(){
 function result(M){
   M=M||S;if(M.inn==0)return'';
   const w=10-M.w;
+  if(M.so){
+    if(M.runs>M.first.runs)return L('ম্যাচ টাই • '+M.t[1]+' সুপার ওভারে জিতেছে','Match Tied • '+M.t[1]+' won the Super Over');
+    if(M.runs<M.first.runs)return L('ম্যাচ টাই • '+M.t[0]+' সুপার ওভারে জিতেছে','Match Tied • '+M.t[0]+' won the Super Over');
+    return L('ম্যাচ টাই (সুপার ওভারও টাই)','Match Tied (Super Over also tied)');
+  }
   if(M.runs>M.first.runs)return L(M.t[1]+' '+w+' উইকেটে জিতেছে',M.t[1]+' won by '+w+' wkts');
   if(M.runs==M.first.runs)return L('ম্যাচ টাই','Match Tied');
   const d=M.first.runs-M.runs;return L(M.t[0]+' '+d+' রানে জিতেছে',M.t[0]+' won by '+d+' runs');
+}
+function winInfo(M){
+  M=M||S;if(M.runs==M.first.runs)return{tie:1};
+  const w=M.runs>M.first.runs?1:0,team=M.t[w];
+  if(M.so)return{team:team,m:L('সুপার ওভারে জিতেছে','won the Super Over')};
+  if(w){const k=10-M.w;return{team:team,m:L(k+' উইকেটে জিতেছে','won by '+k+(k==1?' wicket':' wickets'))}}
+  const d=M.first.runs-M.runs;return{team:team,m:L(d+' রানে জিতেছে','won by '+d+(d==1?' run':' runs'))};
+}
+function winHTML(M){
+  const i=winInfo(M);
+  return '<div class="wb-m">'+(i.tie?'🤝 '+esc(L('ম্যাচ টাই','MATCH TIED')):'🏆 <b>'+esc(i.team)+'</b> '+esc(i.m))+'</div>'
+   +'<div class="wb-s">'+esc(M.t[0])+' '+M.first.runs+' • '+esc(M.t[1])+' '+M.runs+'/'+M.w+'</div>';
+}
+/* team order as entered at match setup (a Super Over swaps S.t each time) and winner in that order */
+const origT=M=>(M.so||0)%2?[M.t[1],M.t[0]]:M.t;
+function winOf(M){
+  let w;if(M.runs>M.first.runs)w=1;else if(M.runs<M.first.runs)w=0;else return 't';
+  const oi=(M.so||0)%2?1-w:w;return oi?'b':'a';
 }
 function render(){
   renderCB();renderPC();renderFx();renderVib();renderTop();renderKill();fxUI();try{const _a=$('sPC'),_b=$('sMS'),_c=$('sML');if(_a)_a.classList.toggle('on',!!PC.on);if(_b)_b.classList.toggle('on',!!(S&&S.showSC));if(_c)_c.classList.toggle('on',!!FXSHOW)}catch(e){}
@@ -894,24 +990,25 @@ function render(){
   if(!OVM)syncPanelUI();
   $('lbn').classList.toggle('on',LANG=='bn');$('len').classList.toggle('on',LANG=='en');
   if(!OVM)applyUI();
-  if(!S){$('setup').classList.remove('hide');$('app').classList.add('hide');if(TAB=='score')setTab('setup');return}
-  $('setup').classList.add('hide');$('app').classList.remove('hide');
+  if(!S){$('wbar').classList.remove('on');document.body.classList.add('nomatch');$('setup').classList.remove('hide');$('app').classList.remove('hide');if(TAB=='score')setTab('setup');return}
+  document.body.classList.remove('nomatch');$('setup').classList.add('hide');$('app').classList.remove('hide');
   const tn=S.t[S.inn],rr=S.balls?(S.runs*6/S.balls).toFixed(2):'0.00',b=B(),st=S.st,ns=st^1;
   $('mT').textContent=tn;$('mS').textContent=S.runs+'/'+S.w;
   $('mO').textContent=L('ওভার','Overs')+' '+ovs(S.balls)+'/'+S.ov+(S.inn==1?' • '+L('টার্গেট','Target')+' '+(S.first.runs+1):'');
   $('mTb').innerHTML=S.tb.length?S.tb.map(x=>'<div class="c '+esc(x.c||'')+'">'+(x.l==='0'?'&bull;':esc(x.l))+'</div>').join(''):'<span class="dim">'+L('এই ওভারে এখনো বল হয়নি','No balls yet this over')+'</span>';
-  $('sw').textContent='⇄ '+L('স্ট্রাইক বদলান','Swap strike');
+  $('sw').textContent='⇄ '+L('স্ট্রাইক বদলান','Swap strike');$('sbox').classList.toggle('lock',!!S.fin);
+  {const wb=$('wbar');if(S.fin&&S.first){const h=winHTML(S);if(wb._h!==h){wb.innerHTML=h;wb._h=h}wb.classList.add('on')}else wb.classList.remove('on')}
   [0,1].forEach(i=>{$('rl'+i).textContent=L('ব্যাটার ','Batter ')+(i+1);$('rn'+i).innerHTML=(S.st==i?'<i class="sd">●</i> ':'')+esc(S.bat[i].n);$('rs'+i).textContent=S.bat[i].r+' ('+S.bat[i].b+')'});
   $('rlb').textContent=L('বোলার','Bowler');$('rnb').textContent=S.bn;$('rsb').textContent=b.w+'/'+b.r+' ('+ovs(b.b)+')';
   $('fhb').textContent='🎯 '+L('ফ্রি হিট','Free Hit')+': '+(S.fh?'ON':'OFF');$('fhb').classList.toggle('on',!!S.fh);
   $('oFH').style.display=S.fh?'inline-block':'none';$('oFH').textContent=L('ফ্রি হিট','FREE HIT');
   setv('i0',S.bat[0].n);setv('i1',S.bat[1].n);setv('ib',S.bn);
-  setv('e_t0',S.t[0]);setv('e_t1',S.t[1]);setv('e_ve',S.ve);setv('e_ov',S.ov);setv('e_tt',S.tt);setv('e_sp',S.sp);setv('e_spl',S.spl||'');setv('e_fhr',S.fhr===false?'0':'1');$('fhb').style.display=S.fhr===false?'none':'';
+  setv('e_t0',S.t[0]);setv('e_t1',S.t[1]);setv('e_ve',S.ve);setv('e_ov',S.ov);setv('e_tt',S.tt);setv('e_sp',S.sp);setv('e_spl',S.spl||'');setv('e_fhr',S.fhr===false?'0':'1');setv('e_sor',S.sor?'1':'0');$('fhb').style.display=S.fhr===false?'none':'';
   setv('e_ru',S.runs);setv('e_wk',S.w);setv('e_ba',ovs(S.balls));setv('e_fr',S.first?S.first.runs:'');
   setv('e_r0',S.bat[0].r);setv('e_b0',S.bat[0].b);setv('e_r1',S.bat[1].r);setv('e_b1',S.bat[1].b);
   setv('e_bw',b.w);setv('e_br',b.r);setv('e_bo',ovs(b.b));setv('e_bm',b.m);
   $('oSp').textContent=S.sp;document.querySelector('#spon i').textContent=S.spl||L('পরিবেশনায়','Powered by');$('spon').style.display=(S.sp||'').trim()?'':'none';document.querySelector('#top .lv').textContent='● '+L('লাইভ','LIVE');$('oVe').textContent=S.ve;$('oTt').textContent=S.tt;
-  $('oTn').textContent=tn;$('oEm').textContent=Array.from(tn.trim())[0]||'';fitIf($('oTn'),tn,.6,false);$('oBt').textContent=L('বোলিং','Bowling')+': '+S.t[1-S.inn];$('oIn').textContent='INN '+(S.inn+1);
+  $('oTn').textContent=tn;$('oEm').textContent=Array.from(tn.trim())[0]||'';fitIf($('oTn'),tn,.6,false);$('oBt').textContent=L('বোলিং','Bowling')+': '+S.t[1-S.inn];$('oIn').textContent=S.so?L('সুপার ওভার','SUPER OVER'):'INN '+(S.inn+1);
   {const sc=S.runs+'/'+S.w,el=$('oSc');if(lastSc&&sc!==lastSc){el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop')}lastSc=sc}
   $('oSc').textContent=S.runs+'/'+S.w;$('oOv').textContent='('+ovs(S.balls)+'/'+S.ov+' '+L('ওভার','ov')+')';
   {const od=[0,1].sort((i,j)=>(S.bat[i].ord||i+1)-(S.bat[j].ord||j+1));
@@ -925,7 +1022,7 @@ function render(){
   let r='';
   if(S.inn==1){
     const T=S.first.runs+1,need=T-S.runs,left=S.ov*6-S.balls;
-    r=(S.runs>S.first.runs||S.balls>=S.ov*6||S.w>=10)?result():L('টার্গেট '+T+' • দরকার '+need+' রান ('+left+' বল)','Target '+T+' • Need '+need+' runs ('+left+' balls)');
+    r=(S.runs>S.first.runs||S.balls>=S.ov*6||S.w>=WK(S))?result():L('টার্গেট '+T+' • দরকার '+need+' রান ('+left+' বল)','Target '+T+' • Need '+need+' runs ('+left+' balls)');
   }else r='';
   $('res').textContent=r;
   fit();
@@ -950,7 +1047,7 @@ function applyUI(){
   });
 }
 
-function toggleFH(){if(!S)return;snap();S.fh=!S.fh;if(S.fh)emit('FH');save();render()}
+function toggleFH(){if(!S||FIN())return;snap();S.fh=!S.fh;if(S.fh)emit('FH');save();render()}
 function dlg(msg,o){return new Promise(res=>{
   o=o||{};const d=$('dlg'),inp=$('din');$('dch').innerHTML='';$('dok').style.display='';
   $('dmsg').textContent=msg;inp.style.display=o.input?'block':'none';inp.value=o.def||'';
@@ -969,6 +1066,7 @@ function playEv(e){
   else if(e.k=='WD'){t=L('ওয়াইড','WIDE');c='ev-wd'}
   else if(e.k=='M'){t=L(e.v==100?'সেঞ্চুরি!':'হাফ সেঞ্চুরি!',e.v==100?'CENTURY!':'FIFTY!');c='ev-m'}
   else if(e.k=='FH'){t=L('ফ্রি হিট','FREE HIT');c='ev-wd'}
+  else if(e.k=='SO'){t=L('সুপার ওভার!','SUPER OVER!');c='ev-s'}
   else if(e.k=='D'){t=L('ডট বল','DOT BALL');c='ev-d'}
   else{const v=e.v;c=v==6?'ev-s':v==4?'ev-f':'ev-r';
     t=v==6?L('ছক্কা!','SIX!'):v==4?L('চার!','FOUR!'):L(v+' রান',v+(v==1?' RUN':' RUNS'))}
@@ -987,16 +1085,16 @@ function fit(){
 
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function hw(x){if(x.how=='bowled')return L('বোল্ড','b')+' '+(x.bw||'');const m={catch:L('ক্যাচ','caught'),run:L('রান আউট','run out'),out:L('আউট','out')};return (m[x.how]||'')+(x.bw?' b '+x.bw:'')}
-function inns(M){return (M.card1?[M.card1]:[]).concat([{team:M.t[M.inn],runs:M.runs,w:M.w,balls:M.balls,outs:M.outs||[],bat:M.bat.filter(x=>!x.out),bw:M.bw||{}}])}
+function inns(M){const so=M.so||0;return (M.arch||[]).concat(M.card1?[Object.assign({so:so},M.card1)]:[]).concat([{so:so,team:M.t[M.inn],runs:M.runs,w:M.w,balls:M.balls,outs:M.outs||[],bat:M.bat.filter(x=>!x.out),bw:M.bw||{}}])}
 function cardHTML(M,list){
   let top=null,bb=null;
-  const L2=list||inns(M);const html='<div class="cols" style="grid-template-columns:repeat('+L2.length+',1fr)">'+L2.map(c=>{
+  const L2=list||inns(M);const html='<div class="cols" style="grid-template-columns:repeat('+Math.min(L2.length,2)+',1fr)">'+L2.map(c=>{
     const bats=ordBats(c).map(x=>x.no?Object.assign({},x,{how:'no'}):x);
-    bats.forEach(x=>{if(!top||x.r>top.r)top=x});
+    if(!c.so)bats.forEach(x=>{if(!top||x.r>top.r)top=x});
     const br=bats.map(x=>'<tr><td>'+esc(x.n)+'<small>'+(x.how=='no'?L('আউট নয়','not out'):hw(x))+'</small></td><td>'+x.r+'</td><td>'+x.b+'</td><td>'+(x.f||0)+'</td><td>'+(x.s||0)+'</td><td>'+(x.b?Math.round(x.r*100/x.b):'-')+'</td></tr>').join('');
     const ex=c.runs-bats.reduce((a,x)=>a+x.r,0);
-    const bw=Object.keys(c.bw).map(n=>{const b=c.bw[n];if(!bb||b.w>bb.w||(b.w==bb.w&&b.r<bb.r))bb={n:n,w:b.w,r:b.r};return '<tr><td>'+esc(n)+'</td><td>'+ovs(b.b)+'</td><td>'+b.m+'</td><td>'+b.r+'</td><td>'+b.w+'</td><td>'+(b.b?(b.r*6/b.b).toFixed(1):'-')+'</td></tr>'}).join('');
-    return '<h3>'+esc(c.team)+' '+c.runs+'/'+c.w+' ('+ovs(c.balls)+' '+L('ওভার','ov')+')</h3><table><tr><th>'+L('ব্যাটসম্যান','Batter')+'</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr>'+br+'<tr><td>'+L('এক্সট্রা','Extras')+'</td><td>'+ex+'</td><td colspan="4"></td></tr></table><table><tr><th>'+L('বোলার','Bowler')+'</th><th>O</th><th>M</th><th>R</th><th>W</th><th>Eco</th></tr>'+bw+'</table>';
+    const bw=Object.keys(c.bw).map(n=>{const b=c.bw[n];if(!c.so&&(!bb||b.w>bb.w||(b.w==bb.w&&b.r<bb.r)))bb={n:n,w:b.w,r:b.r};return '<tr><td>'+esc(n)+'</td><td>'+ovs(b.b)+'</td><td>'+b.m+'</td><td>'+b.r+'</td><td>'+b.w+'</td><td>'+(b.b?(b.r*6/b.b).toFixed(1):'-')+'</td></tr>'}).join('');
+    return '<h3>'+(c.so?'⚡ '+L('সুপার ওভার','Super Over')+(c.so>1?' '+c.so:'')+' • ':'')+esc(c.team)+' '+c.runs+'/'+c.w+' ('+ovs(c.balls)+' '+L('ওভার','ov')+')</h3><table><tr><th>'+L('ব্যাটসম্যান','Batter')+'</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr>'+br+'<tr><td>'+L('এক্সট্রা','Extras')+'</td><td>'+ex+'</td><td colspan="4"></td></tr></table><table><tr><th>'+L('বোলার','Bowler')+'</th><th>O</th><th>M</th><th>R</th><th>W</th><th>Eco</th></tr>'+bw+'</table>';
   }).map(h=>'<div>'+h+'</div>').join('')+'</div>';
   return (top?'<p class="tp">⭐ '+esc(top.n)+' '+top.r+'('+top.b+')'+(bb?' &nbsp; 🎯 '+esc(bb.n)+' '+bb.w+'-'+bb.r:'')+'</p>':'')+html;
 }
@@ -1039,6 +1137,7 @@ let scT=null,SCL=[],SCRES='';
 let SCM='auto';try{SCM=localStorage.getItem('scm')||'auto'}catch(e){}
 if(!/^(auto|1|2|both)$/.test(SCM))SCM='auto';
 function scPick(l){
+  if(S&&S.so){const k=l.length-(S.card1?2:1);if(k>0)l=l.slice(k)}
   if(SCM=='both'||!S)return l;
   if(SCM=='auto'&&S.fin&&S.first&&l.length>1){
     if(S.runs>S.first.runs)return [l[l.length-1]];
@@ -1224,7 +1323,7 @@ function toggleSC(){if(!S)return;clearTimeout(scT);S.showSC=!S.showSC;if(S.showS
 function scPack(){
   const f=bw=>Object.keys(bw||{}).map(n=>Object.assign({n:n},bw[n]));
   const one=(c,bw)=>({team:c.team,runs:c.runs,w:c.w,balls:c.balls,outs:c.outs||[],bat:c.bat||[],bws:f(bw)});
-  const l=[];if(S.card1)l.push(one(S.card1,S.card1.bw));
+  const l=[];(S.arch||[]).forEach(c=>l.push(one(c,c.bw)));if(S.card1)l.push(one(S.card1,S.card1.bw));
   l.push(one({team:S.t[S.inn],runs:S.runs,w:S.w,balls:S.balls,outs:S.outs,bat:S.bat.filter(x=>!x.out)},S.bw));
   return{inns:scPick(l),res:S.fin?result():''};
 }
@@ -1272,10 +1371,32 @@ async function tryLogin(){
 }
 
 let CB={on:false,t:'',x:''},CBd=null;try{CB=Object.assign(CB,JSON.parse(localStorage.getItem('cb')))}catch(e){}
-const cbp=()=>CB.on?{t:CB.t,x:CB.x,i:CB.i||''}:null;
+const cbp=()=>CB.on?{t:CB.t,x:CB.x,i:CB.i||'',p:CB.p||'',p2:CB.p2||''}:null;
 function storeCB(){try{localStorage.setItem('cb',JSON.stringify(CB))}catch(e){}}
 function liveCB(){CB.i=$('cb_i').value.trim().slice(0,300);CB.t=$('cb_t').value.slice(0,80);CB.x=$('cb_x').value.slice(0,1500);storeCB()}
 function readCB(){CB.i=$('cb_i').value.trim().slice(0,300);CB.t=$('cb_t').value.trim().slice(0,80);CB.x=$('cb_x').value.slice(0,1500)}
+/* ---- Custom board photo upload: keeps the real shape, shrinks until it is light enough to sync ---- */
+function photoFit(f,cb,max){max=max||55000;
+  const fr=new FileReader();
+  fr.onload=()=>{const im=new Image();
+    im.onload=()=>{
+      let mw=900,q=.82,out='';
+      for(let k=0;k<14;k++){
+        const s=Math.min(1,mw/Math.max(im.width,im.height)),w=Math.max(1,Math.round(im.width*s)),h=Math.max(1,Math.round(im.height*s));
+        const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.fillStyle='#000';x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);
+        out=c.toDataURL('image/jpeg',q);
+        if(out.length<max)break;
+        if(q>.5)q-=.1;else mw=Math.round(mw*.8);
+      }
+      if(out.length>=59000){toast('⚠️ '+L('ছবিটা অনেক বড়, ছোট ছবি দিন','Photo is too big, try a smaller one'));return}
+      cb(out)
+    };
+    im.onerror=()=>toast('⚠️ '+L('ছবি পড়া যায়নি','Could not read the image'));im.src=fr.result};
+  fr.readAsDataURL(f);
+}
+function cbSync(){if(CB.on){if(S)save();else push()}render()}
+function cbPhoto(inp,n){const f=inp.files&&inp.files[0];if(!f)return;n=n==2?2:1;const key=n==2?'p2':'p',other=n==2?CB.p:CB.p2;photoFit(f,d=>{CB[key]=d;storeCB();cbSync();toast('📷 '+L('ছবি সেভ হয়েছে','Photo saved'))},other||n==2?40000:55000);setTimeout(()=>{try{inp.value=''}catch(e){}},0)}
+function cbClr(n){if(n==2)CB.p2='';else CB.p='';storeCB();cbSync()}
 function saveCB(){readCB();storeCB();push();render();toast('💾 '+L('সেভ হয়েছে','Saved'))}
 function toggleCB(){readCB();CB.on=!CB.on;if(CB.on){PC.on=false;storePC();FXSHOW=false;try{localStorage.setItem('fxs','0')}catch(e){}}if(CB.on&&S)S.showSC=false;storeCB();if(S)save();else push();render()}
 let lastSc='';
@@ -1289,10 +1410,14 @@ function renderCB(){
   const d=$('cbd'),c=OVM?CBd:(CB.on?CB:null);
   setPanel(d,!!c&&!(OVM?(PCd||FXd):(pcOn()||FXSHOW)));
   if(c){$('cbt').textContent=c.t||'';$('cbt').style.display=c.t?'':'none';$('cbx').textContent=c.x||'';
-    const ci=$('cbi'),cu=imgUrl(c.i);
-    if(cu){if(ci.getAttribute('data-s')!==cu){ci.setAttribute('data-s',cu);ci.src=cu}ci.classList.add('has');ci.onerror=()=>ci.classList.remove('has')}else ci.classList.remove('has')}
+    const ci=$('cbi'),ci2=$('cbi2'),cm=$('cbm'),pu=v=>(v&&String(v).startsWith('data:'))?imgUrl(v):'',ph=[pu(c.p)||imgUrl(c.i),pu(c.p2)].filter(Boolean),ims=[ci,ci2];
+    const lay=()=>{const n=ims.filter(x=>x.classList.contains('has')).length;cm.classList.toggle('two',n==2);d.classList.toggle('two',n==2);d.classList.toggle('land',n==1&&ci.naturalWidth>ci.naturalHeight*1.15)};
+    ims.forEach((im,k)=>{const u=ph[k];
+      if(u){if(im.getAttribute('data-s')!==u){im.setAttribute('data-s',u);im.src=u}im.classList.add('has');im.onerror=()=>{im.classList.remove('has');lay()};im.onload=()=>{lay();fitBoard(d,.9,1,0,0,PZ.cb)}}
+      else im.classList.remove('has')});
+    lay()}
   if(c)fitBoard(d,.9,1,0,0,PZ.cb);
-  if(!OVM){setv('cb_t',CB.t);setv('cb_x',CB.x);setv('cb_i',CB.i||'');$('cbb').textContent='📺 '+L('লাইভে দেখান','Show on live')+': '+(CB.on?'ON':'OFF');$('cbb').classList.toggle('on',CB.on);tileTxt($('cbb2'),CB.on)}
+  if(!OVM){setv('cb_t',CB.t);setv('cb_x',CB.x);setv('cb_i',CB.i||'');[['cb_th',CB.p],['cb_th2',CB.p2]].forEach(a=>{const th=$(a[0]),u=a[1]?imgUrl(a[1]):'';if(th){th.style.display=u?'block':'none';if(u&&th.getAttribute('data-s')!==u){th.setAttribute('data-s',u);th.src=u}}});$('cbb').textContent='📺 '+L('লাইভে দেখান','Show on live')+': '+(CB.on?'ON':'OFF');$('cbb').classList.toggle('on',CB.on);tileTxt($('cbb2'),CB.on)}
 }
 
 function imgUrl(l){
@@ -1446,7 +1571,7 @@ function tnToBoard(id){
   const d=tnTable(id);if(!d)return;
   CB.t=d.t.name+' – '+L('পয়েন্ট টেবিল','Points Table');
   CB.x=d.rows.map((r,i)=>(i+1)+'. '+r.n+'   P '+r.p+'  W '+r.w+'  L '+r.l+'  Pts '+r.pt).join('\n');
-  CB.i='';CB.on=true;PC.on=false;storePC();storeCB();hideCard();
+  CB.i='';CB.p='';CB.p2='';CB.on=true;PC.on=false;storePC();storeCB();hideCard();
   if(S)save();else push();render();toast('📺 '+L('কাস্টম বোর্ডে দেওয়া হয়েছে','Sent to custom board'));
 }
 async function tnDel(id){
@@ -1487,8 +1612,8 @@ function fxAuto(){
   const today=new Date().toDateString();
   const fin=hist.filter(e=>e&&e.m&&e.m.fin&&e.m.first&&(e.m.tn||'')==tn&&!(S&&e.id==S.id)&&(tn||new Date(e.ts).toDateString()==today)).reverse().map(e=>e.m);
   if(S&&S.fin&&S.first)fin.push(S);
-  const win=m=>m.runs>m.first.runs?'b':m.runs<m.first.runs?'a':'t';
-  const finRows=fin.map((m,i)=>({n:i+1,a:m.t[0],b:m.t[1],h:0,wn:win(m),p:''}));
+  const win=winOf;
+  const finRows=fin.map((m,i)=>({n:i+1,a:origT(m)[0],b:origT(m)[1],h:0,wn:win(m),p:''}));
   let n=fin.length+1;const running=!!(S&&!S.fin),up=[];
   if(running)up.push({n:n++,a:S.t[0],b:S.t[1],h:1,wn:'',p:S.runs+'/'+S.w});
   FX.filter(f=>(f.tn||'')==tn).forEach(f=>up.push({n:n++,a:f.sw?f.t2:f.t1,b:f.sw?f.t1:f.t2,h:0,wn:'',p:''}));
@@ -1540,13 +1665,13 @@ function fxDel(id){FX=FX.filter(x=>x.id!=id);if(FXLOAD==id)FXLOAD=null;storeFX()
 function swapSetupTeams(){const a=$('t1').value;$('t1').value=$('t2').value;$('t2').value=a}
 function swapTeams(){
   if(!S)return;
-  if(S.inn!==0){toast('⚠️ '+L('প্রথম ইনিংসের পর টিম বদল করা যায় না','Teams cannot be swapped after the 1st innings'));return}
+  if(S.inn!==0||S.so){toast('⚠️ '+L('প্রথম ইনিংসের পর টিম বদল করা যায় না','Teams cannot be swapped after the 1st innings'));return}
   snap();const a=S.t[0];S.t[0]=S.t[1];S.t[1]=a;save();render();toast('⇄ '+L('ব্যাটিং ও বোলিং টিম বদল হয়েছে','Batting & bowling teams swapped'));
 }
 const Q=new URLSearchParams(location.search),OVM=Q.get('view')==='overlay';
 let CFG={db:'',m:'match1'};try{CFG=Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')))}catch(e){}
 let pt=null;
-function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,spl:S.spl||'',cb:cbp(),pc:pcp(),fx:fxp(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,pz:PZ,lang:LANG,ts:Date.now()}}
+function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,so:S.so||0,fin:S.fin?1:0,spl:S.spl||'',cb:cbp(),pc:pcp(),fx:fxp(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,pz:PZ,lang:LANG,ts:Date.now()}}
 const N=v=>Number(v)||0,Sx=v=>String(v==null?'':v);
 function unpack(o){
   const bs=o.bs||{},t=o.t||[];
@@ -1554,7 +1679,7 @@ function unpack(o){
    tb:(o.tb||[]).slice(-24).map(x=>({l:Sx(x.l).slice(0,6),c:/^[a-z]?$/.test(Sx(x.c))?Sx(x.c):''})),
    first:o.fr>=0?{runs:N(o.fr)}:null,
    bat:[0,1].map(i=>{const x=(o.bat||[])[i]||{};return{n:Sx(x.n),r:N(x.r),b:N(x.b),ord:N(x.ord)}}),st:N(o.st)?1:0,bn:Sx(o.bn),
-   fh:!!o.fh,spl:Sx(o.spl).slice(0,30),showSC:!!o.sc,pr:N(o.pr),pb:N(o.pb),ev:o.ev||null,
+   fh:!!o.fh,so:N(o.so)>0?1:0,fin:N(o.fin)>0?1:0,spl:Sx(o.spl).slice(0,30),showSC:!!o.sc,pr:N(o.pr),pb:N(o.pb),ev:o.ev||null,
    bw:{[Sx(o.bn)]:{r:N(bs.r),w:N(bs.w),b:N(bs.b),m:N(bs.m)}}};
 }
 const furl=()=>CFG.db+'/matches/'+CFG.m+'.json';
@@ -1567,13 +1692,16 @@ function push(){
   if(OVM||!CFG.db)return;clearTimeout(pt);
   pt=setTimeout(async()=>{
     const t=await token();
-    fetch(furl()+(t?'?auth='+encodeURIComponent(t):''),{method:'PUT',body:JSON.stringify(S?pack():{lang:LANG,ts:Date.now(),pz:PZ,cb:cbp(),pc:pcp(),fx:fxp()})}).then(r=>{if(!r.ok)throw 0;syn(true)}).catch(()=>syn(false))},300);
+    const au=t?'?auth='+encodeURIComponent(t):'';
+    /* no running match on THIS device: only write the board keys one by one, so the live match data (team names, score) saved by the scorer's phone is never wiped */
+    const job=S?fetch(furl()+au,{method:'PUT',body:JSON.stringify(pack())}).then(r=>{if(!r.ok)throw 0}):Promise.all(Object.entries({lang:LANG,ts:Date.now(),pz:PZ,cb:cbp(),pc:pcp(),fx:fxp()}).map(([k,v])=>fetch(CFG.db+'/matches/'+CFG.m+'/'+k+'.json'+au,{method:'PUT',body:JSON.stringify(v==null?null:v)}).then(r=>{if(!r.ok)throw 0})));
+    job.then(()=>syn(true)).catch(()=>syn(false))},300);
 }
 let lastEv=null;
 function poll(){
   fetch(Q.get('db')+'/matches/'+Q.get('m')+'.json?t='+Date.now()).then(r=>r.json()).then(o=>{
     PZ=cleanPZ(o&&o.pz);
-    CBd=o&&o.cb?{t:Sx(o.cb.t).slice(0,80),x:Sx(o.cb.x).slice(0,1500),i:Sx(o.cb.i).slice(0,300)}:null;
+    CBd=o&&o.cb?{t:Sx(o.cb.t).slice(0,80),x:Sx(o.cb.x).slice(0,1500),i:Sx(o.cb.i).slice(0,300),p:Sx(o.cb.p).slice(0,59999),p2:Sx(o.cb.p2).slice(0,59999)}:null;
     PCd=o&&o.pc?cleanPC(o.pc):null;
     FXd=o&&o.fx?cleanFX(o.fx):null;
     $('bcw').style.visibility=(o&&o.t)?'visible':'hidden';
@@ -1602,13 +1730,13 @@ async function copyLink(){
   else dlg(L('কপি করুন','Copy:'),{input:1,def:u});
 }
 function plusx(k){
-  if(!S)return;snap();
-  if(k=='w')S.w=Math.min(10,S.w+1);
+  if(!S||FIN())return;snap();
+  if(k=='w')S.w=Math.min(WK(S),S.w+1);
   if(k=='b')S.balls++;
   save();render();
 }
 function minus(k){
-  if(!S)return;snap();
+  if(!S||FIN())return;snap();
   if(k=='r')S.runs=Math.max(0,S.runs-1);
   if(k=='w')S.w=Math.max(0,S.w-1);
   if(k=='b')S.balls=Math.max(0,S.balls-1);
