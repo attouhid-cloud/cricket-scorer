@@ -283,6 +283,34 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 #ov.inline .ch{margin-left:0;border-left:0;flex-wrap:wrap}
 .fxr.run{background:rgba(255,204,0,.08);border-radius:10px;padding:10px 8px}.fxr.run small{color:#ffcc00;font-weight:700}.fxs{color:#ffcc00;font-weight:800;margin-left:6px}.fxn b{margin-right:4px}
 /* ===== neon match list board ===== */
+
+/* ===== knockout banners on the overlay: Day winner (above score bar) + Champion / Runner-up (replaces score bar) ===== */
+#kod{display:none}
+#ov:not(.inline) #kod.on{display:block;position:absolute;left:50%;bottom:calc(var(--bh,104px) + var(--u,1px)*12);width:calc(var(--u,1px)*820);max-width:96vw;color:#fff;z-index:3;transform:translateX(-50%);animation:koUp .7s cubic-bezier(.2,.9,.3,1) both}
+#ov:not(.inline) #kod.on.out{animation:koDn .4s ease-in both}
+#ov:not(.inline) #kod.on.ch{bottom:calc(var(--u,1px)*18);width:calc(var(--u,1px)*980)}
+#kod .kob{position:relative;display:flex;align-items:stretch;height:calc(var(--u,1px)*64);border-radius:calc(var(--u,1px)*26) calc(var(--u,1px)*12) calc(var(--u,1px)*12) calc(var(--u,1px)*26);overflow:hidden;background:linear-gradient(90deg,#08174a 0%,#0a2266 48%,#061136 100%);border-top:2px solid #f5c518;border-bottom:2px solid rgba(245,197,24,.55);box-shadow:0 0 26px rgba(40,90,255,.35),0 10px 26px rgba(0,0,0,.5)}
+#kod .kob::after{content:"";position:absolute;top:0;bottom:0;width:22%;left:-30%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);animation:koShine 3.2s ease-in-out 1s infinite}
+#kod .kb-k{flex:0 0 auto;display:flex;align-items:center;gap:.35em;padding:0 calc(var(--u,1px)*38) 0 calc(var(--u,1px)*24);background:linear-gradient(180deg,#ffe066,#f5c518 55%,#b57f00);color:#0a1a48;font-weight:900;font-size:calc(var(--u,1px)*22);letter-spacing:.05em;white-space:nowrap;clip-path:polygon(0 0,calc(100% - var(--u,1px)*22) 0,100% 100%,0 100%);margin-right:calc(var(--u,1px)*-10)}
+#kod .kb-k.sv{background:linear-gradient(180deg,#f7f9ff,#c3cde4 55%,#8593b2)}
+#kod .kb-n{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;padding:0 calc(var(--u,1px)*22) 0 calc(var(--u,1px)*26);font-weight:900;font-size:calc(var(--u,1px)*38);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+#kod .kc-t{display:inline-flex;align-items:center;height:calc(var(--u,1px)*30);padding:0 calc(var(--u,1px)*38) 0 calc(var(--u,1px)*18);background:linear-gradient(90deg,#0a1a52,#0d2468);border-radius:calc(var(--u,1px)*15) 0 0 0;clip-path:polygon(0 0,calc(100% - var(--u,1px)*22) 0,100% 100%,0 100%);font-size:calc(var(--u,1px)*15);font-weight:800;box-shadow:inset 3px 0 0 #f5c518;animation:koPop .6s cubic-bezier(.2,.9,.3,1) both}
+#kod .kc1{height:calc(var(--u,1px)*90);box-shadow:0 0 38px rgba(245,197,24,.55),0 10px 26px rgba(0,0,0,.5);animation:koPop .8s cubic-bezier(.2,.9,.3,1) .1s both}
+#kod .kc1 .kb-k{font-size:calc(var(--u,1px)*26)}
+#kod .kc2{height:calc(var(--u,1px)*66);margin-top:calc(var(--u,1px)*8);animation:koSlide .7s cubic-bezier(.2,.9,.3,1) 1.4s both}
+#kod .kb-k.kb2{flex-direction:column;align-items:flex-start;justify-content:center;gap:0;line-height:1.15;font-size:calc(var(--u,1px)*20)}
+#kod .kb-k.kb2 small{font-size:calc(var(--u,1px)*15);font-weight:800;letter-spacing:.1em;opacity:1;line-height:1.2}
+#kod .kb-nn{flex:1;min-width:0;display:flex}
+#kod .kb-c{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;padding:0 calc(var(--u,1px)*10);font-weight:900;font-size:calc(var(--u,1px)*28);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:1px solid rgba(245,197,24,.35);text-shadow:0 2px 8px rgba(0,0,0,.6)}
+#kod .kb-nn .kb-c:first-child{border-left:0}
+#ov:not(.inline) #kod.on.w4,#ov:not(.inline) #kod.on.w2{width:calc(var(--u,1px)*680)}
+#kod .kr{height:calc(var(--u,1px)*52);margin-top:calc(var(--u,1px)*6);animation:koSlide .6s cubic-bezier(.2,.9,.3,1) both}
+#kod .kr .kb-k{font-size:calc(var(--u,1px)*19);min-width:calc(var(--u,1px)*250)}
+@keyframes koUp{from{opacity:0;transform:translate(-50%,40%)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes koDn{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,40%)}}
+@keyframes koPop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+@keyframes koSlide{from{opacity:0;transform:translateX(-8%)}to{opacity:1;transform:translateX(0)}}
+@keyframes koShine{0%{left:-30%}60%,100%{left:130%}}
 #fxd{display:none}
 #ov:not(.inline) #fxd.on{display:block;position:absolute;left:50%;top:calc((100% - var(--bh,104px))/2 + .8em);transform:translate(-50%,-50%);width:min(1000px,94vw);font-size:clamp(11px,2vw,28px);color:#fff;animation:cbIn .5s cubic-bezier(.2,.9,.3,1) both}
 #ov:not(.inline) #fxd.on.out{animation:cbOut .4s ease-in both}
@@ -670,7 +698,7 @@ body.nomatch #bcw{visibility:hidden}
 <polygon points="600,80 978,80 950,128 588,128" fill="#0a1a48" stroke="#0a1a48" stroke-width="12" stroke-linejoin="miter"/><polygon points="600,80 978,80 950,128 588,128" fill="url(#pcy)"/><polygon points="602,84 975,84 972,90 600,90" fill="#fff" opacity=".45"/><polygon points="590,122 949,122 950,128 588,128" fill="#b57f00" opacity=".6"/>
 <polygon points="506,466 1033,466 1021,534 488,534" transform="translate(0,12)" fill="#030a22" opacity=".8"/>
 <polygon points="506,466 1033,466 1021,534 488,534" transform="translate(0,9)" fill="#a87500" stroke="#0a1a48" stroke-width="8" stroke-linejoin="miter"/>
-<polygon points="506,466 1033,466 1021,534 488,534" fill="#0a1a48" stroke="#0a1a48" stroke-width="8"/><polygon points="506,466 1033,466 1021,534 488,534" fill="url(#pcy)" stroke="#0a1a48" stroke-width="5" stroke-linejoin="miter"/><polygon points="509,471 1030,471 1028,479 507,479" fill="#fff" opacity=".55"/><polygon points="490,526 1022,526 1021,533 489,533" fill="#b57f00" opacity=".55"/></svg><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="fxd"><div class="fxd-t"><span class="fx-st fx-l"></span><div class="fx-tab" id="fxdt"></div><span class="fx-st fx-r"></span></div><div class="fxd-b"><div id="fxdr"></div></div></div><div id="bcw"><div id="stg">
+<polygon points="506,466 1033,466 1021,534 488,534" fill="#0a1a48" stroke="#0a1a48" stroke-width="8"/><polygon points="506,466 1033,466 1021,534 488,534" fill="url(#pcy)" stroke="#0a1a48" stroke-width="5" stroke-linejoin="miter"/><polygon points="509,471 1030,471 1028,479 507,479" fill="#fff" opacity=".55"/><polygon points="490,526 1022,526 1021,533 489,533" fill="#b57f00" opacity=".55"/></svg><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="fxd"><div class="fxd-t"><span class="fx-st fx-l"></span><div class="fx-tab" id="fxdt"></div><span class="fx-st fx-r"></span></div><div class="fxd-b"><div id="fxdr"></div></div></div><div id="kod"></div><div id="bcw"><div id="stg">
   <div id="bc"><div id="anim"><span></span></div><div id="wbar"></div>
    <div id="top">
     <div class="tab1"><span class="trophy">🏆</span><span class="v" id="oVe"></span><span class="sep">|</span><span class="t" id="oTt"></span><span class="lv">● LIVE</span><span class="fh" id="oFH"></span></div>
@@ -691,6 +719,10 @@ body.nomatch #bcw{visibility:hidden}
    <div class="btile"><div class="bth">📅 ম্যাচ তালিকা / Match List</div><button id="fxb2" onclick="toggleFX()"></button><button class="ed" onclick="editList()">✏️ এডিট / Edit</button></div>
    <div class="btile"><div class="bth">🧾 কাস্টম বোর্ড / Custom Board</div><button id="cbb2" onclick="toggleCB()"></button><button class="ed" onclick="openEd('cbcard')">✏️ এডিট / Edit</button></div>
    <div class="btile"><div class="bth">⭐ প্লেয়ার কার্ড / Player Card</div><button id="pcb2" onclick="togglePC()"></button><button class="ed" onclick="editPC()">✏️ এডিট / Edit</button></div>
+   <div class="btile" style="grid-column:1/-1"><div class="bth">🏅 নকআউট বিজয়ী ব্যানার / Knockout Winner Banners</div>
+    <div class="dim" style="font-size:13px;font-weight:700">কোন দিনের বিজয়ী দেখাবে / Which day to show</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><button id="kdy_x" onclick="koDay('')"></button><button id="kdy_A" onclick="koDay('A')"></button><button id="kdy_B" onclick="koDay('B')"></button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button id="kos_qf" onclick="koTog('qf')"></button><button id="kos_sf" onclick="koTog('sf')"></button><button id="kos_dw" onclick="koTog('dw')"></button><button id="kos_ch" onclick="koTog('ch')"></button></div>
+    <div class="dim" style="font-size:12px;line-height:1.35">আগে দিন বেছে নিন (অটো = সর্বশেষ দিন), তারপর বাটন চাপলে ওই দিনের এখন পর্যন্ত শেষ হওয়া ম্যাচের বিজয়ীদের নাম ওভারলেতে দেখায়, আবার চাপলে সরে যায়। রাউন্ড শেষ হলে নিজে নিজেও দেখায়, পরের ম্যাচ শুরু হলে চলে যায় / Pick the day first (Auto = latest day), then press a button to show that day's winners so far; press again to hide. Banners also appear by themselves when a round ends and go away when the next match starts</div></div>
   </div>
   <details class="sec"><summary>📐 প্যানেল সাইজ ও অটো-হাইড / Panel size & auto-hide</summary><div class="sb"><div class="dim" style="font-size:12px;line-height:1.3;margin-bottom:8px">১০০% = পুরো স্ক্রিন ভরে সবচেয়ে বড় / 100% = biggest, fills the screen</div><div style="margin-bottom:8px"><label>ম্যাচ সামারি সাইজ / Match Summary size: <b id="pzv_sc"></b></label><input type="range" id="pz_sc" min="30" max="100" step="5" value="100" style="padding:0" oninput="setPz('sc',this.value)"></div><div style="margin-bottom:8px"><label>ম্যাচ লিস্ট সাইজ / Match List size: <b id="pzv_fx"></b></label><input type="range" id="pz_fx" min="30" max="100" step="5" value="100" style="padding:0" oninput="setPz('fx',this.value)"></div><div style="margin-bottom:8px"><label>প্লেয়ার কার্ড সাইজ / Player Card size: <b id="pzv_pc"></b></label><input type="range" id="pz_pc" min="30" max="100" step="5" value="100" style="padding:0" oninput="setPz('pc',this.value)"></div><div style="margin-bottom:8px"><label>কাস্টম বোর্ড সাইজ / Custom Board size: <b id="pzv_cb"></b></label><input type="range" id="pz_cb" min="30" max="100" step="5" value="100" style="padding:0" oninput="setPz('cb',this.value)"></div><div style="margin-bottom:8px"><label>ম্যাচ লিস্ট অটো-হাইড / Match List auto-hide</label><select id="ah_fx" onchange="setAh('fx',this.value)"><option value="0">বন্ধ / Off</option><option value="5">৫ সেকেন্ড / 5 sec</option><option value="8">৮ সেকেন্ড / 8 sec</option><option value="10">১০ সেকেন্ড / 10 sec</option><option value="15">১৫ সেকেন্ড / 15 sec</option><option value="20">২০ সেকেন্ড / 20 sec</option><option value="30">৩০ সেকেন্ড / 30 sec</option></select></div><div style="margin-bottom:8px"><label>প্লেয়ার কার্ড অটো-হাইড / Player Card auto-hide</label><select id="ah_pc" onchange="setAh('pc',this.value)"><option value="0">বন্ধ / Off</option><option value="5">৫ সেকেন্ড / 5 sec</option><option value="8">৮ সেকেন্ড / 8 sec</option><option value="10">১০ সেকেন্ড / 10 sec</option><option value="15">১৫ সেকেন্ড / 15 sec</option><option value="20">২০ সেকেন্ড / 20 sec</option><option value="30">৩০ সেকেন্ড / 30 sec</option></select></div><div style="margin-bottom:8px"><label>কাস্টম বোর্ড অটো-হাইড / Custom Board auto-hide</label><select id="ah_cb" onchange="setAh('cb',this.value)"><option value="0">বন্ধ / Off</option><option value="5">৫ সেকেন্ড / 5 sec</option><option value="8">৮ সেকেন্ড / 8 sec</option><option value="10">১০ সেকেন্ড / 10 sec</option><option value="15">১৫ সেকেন্ড / 15 sec</option><option value="20">২০ সেকেন্ড / 20 sec</option><option value="30">৩০ সেকেন্ড / 30 sec</option></select></div></div></details>
   <details class="sec"><summary>🔗 লিংক ও ভাষা / Link & language</summary><div class="sb">
@@ -1007,7 +1039,7 @@ function winOf(M){
   const oi=(M.so||0)%2?1-w:w;return oi?'b':'a';
 }
 function render(){
-  koUI();renderCB();renderPC();renderFx();renderVib();renderTop();renderKill();fxUI();try{const _a=$('sPC'),_b=$('sMS'),_c=$('sML');if(_a)_a.classList.toggle('on',!!PC.on);if(_b)_b.classList.toggle('on',!!(S&&S.showSC));if(_c)_c.classList.toggle('on',!!FXSHOW)}catch(e){}
+  koUI();renderKO();if(!OVM)koTogUI();renderCB();renderPC();renderFx();renderVib();renderTop();renderKill();fxUI();try{const _a=$('sPC'),_b=$('sMS'),_c=$('sML');if(_a)_a.classList.toggle('on',!!PC.on);if(_b)_b.classList.toggle('on',!!(S&&S.showSC));if(_c)_c.classList.toggle('on',!!FXSHOW)}catch(e){}
   {const e=$('scm');if(e&&e.value!==SCM&&document.activeElement!==e)e.value=SCM}
   if(!OVM)syncPanelUI();
   $('lbn').classList.toggle('on',LANG=='bn');$('len').classList.toggle('on',LANG=='en');
@@ -1037,7 +1069,7 @@ function render(){
    [0,1].forEach(k=>{const i=od[k],x=S.bat[i],on=(i==st);$('oB'+k).textContent=x.n+(on?'*':'');$('oR'+k).innerHTML=x.r+' <small>('+x.b+')</small>';$('bb'+k).classList.toggle('s',on)})}
   $('oBw').textContent=S.bn;
   $('oCl').textContent=S.inn==1?L('টার্গেট','Target'):'CRR';$('oCr').textContent=(S.inn==1&&S.first)?S.first.runs+1:rr;
-  {const ls=$('lsc');const scl0=OVM?SCL:scPick(inns(S)),want=!!S.showSC&&scl0.length>0&&!(OVM?(CBd||PCd||FXd):(CB.on||pcOn()||FXSHOW));if(want&&!scWas)scStart=Date.now();scWas=want;scIx=scl0.length>1?Math.floor((Date.now()-scStart)/5000)%scl0.length:0;const scl=scl0.length>1?[scl0[scIx]]:scl0;setPanel(ls,want);
+  {const ls=$('lsc');const scl0=OVM?SCL:scPick(inns(S)),want=!!S.showSC&&scl0.length>0&&!koCh()&&!(OVM?(CBd||PCd||FXd):(CB.on||pcOn()||FXSHOW));if(want&&!scWas)scStart=Date.now();scWas=want;scIx=scl0.length>1?Math.floor((Date.now()-scStart)/5000)%scl0.length:0;const scl=scl0.length>1?[scl0[scIx]]:scl0;setPanel(ls,want);
    if(S.showSC){const r=OVM?SCRES:(S.fin?result():'');{const h=sumHTML(scl,r),k=h+innerHeight+'|'+(ls.classList.contains('on')?1:0)+'|'+PZ.sc;if(ls._k!==k){ls.innerHTML=h;ls._k=k;fitSum(ls)}}}}
   tileTxt($('lsb'),!!S.showSC);$('oPs').textContent=(S.pr||S.pb)?L('পার্টনারশিপ ','Partnership ')+(S.pr||0)+' ('+(S.pb||0)+')':'';
   $('oCh').innerHTML=S.tb.slice(-16).map(x=>'<div class="c">'+(x.l==='0'?'&bull;':esc(x.l))+'</div>').join('');
@@ -1102,7 +1134,7 @@ function fit(){
   const vw=innerWidth,DW=vw>=900?1400:800,k=vw/DW;
   g.classList.toggle('cmp',vw<900);
   g.style.width=DW+'px';g.style.transform='scale('+k+')';
-  w.style.height=(104*k)+'px';ov.style.setProperty('--bh',(104*k)+'px');
+  w.style.height=(104*k)+'px';ov.style.setProperty('--bh',(104*k)+'px');ov.style.setProperty('--u',k+'px');
 }
 
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1551,7 +1583,7 @@ function renderPC(){
   fitBoard(d,.9,1,1,0,PZ.pc);
 }
 let TN=[];try{TN=JSON.parse(localStorage.getItem('tn'))||[]}catch(e){}
-function storeTN(){try{localStorage.setItem('tn',JSON.stringify(TN))}catch(e){}tnUI();koUI(true);fxUI();if(typeof FXSHOW!=='undefined'&&FXSHOW){if(S)save();else push()}}
+function storeTN(){try{localStorage.setItem('tn',JSON.stringify(TN))}catch(e){}tnUI();koUI(true);fxUI();if(S)save();else push()}
 function tnUI(){
   const sel=$('tnsel'),cur=sel.value;
   sel.innerHTML='<option value="">— '+L('কোনো টুর্নামেন্ট নয়','No tournament')+' —</option>'+TN.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.name)+'</option>').join('');
@@ -1779,6 +1811,89 @@ async function koSfSave(tid){
   a.fa=k.s[0];a.fb=k.s[1];b.fa=k.s[2];b.fb=k.s[3];
   koSync(t);KOSF=null;storeTN();toast('💾 '+L('সেমি ফাইনাল জোড়া সেভ হয়েছে','Semi-final pairs saved'));
 }
+/* ---- overlay banners ----
+   t.last = id of the knockout match that was started most recently. While that match is a finished Day-final the Day winner shows above the score bar;
+   while it is the finished Grand Final the Champion / Runner-up board shows and the score bar is hidden. Starting any new match clears it. */
+var KOd=null;
+/* KOM  = banner kind the operator pressed to show by hand (winners so far); KOHIDE = key of the automatic banner the operator hid */
+var KOM=null,KOHIDE='',KOD='';try{KOD=localStorage.getItem('kod')||''}catch(e){}
+if(KOD!='A'&&KOD!='B')KOD='';
+function koDay(g){KOD=g;try{localStorage.setItem('kod',g)}catch(e){}if(S)save();else push();render()}
+const koKey=c=>c?c.k+'|'+c.t+'|'+c.d+'|'+c.a+'|'+c.b+'|'+(c.n||[]).join(','):'';
+function koFocus(){
+  const tag=S&&S.ko?S.ko.split(':')[0]:null;
+  for(const id of [tag,fxTn()]){if(!id)continue;const t=TN.find(x=>x.id==id&&x.ko);if(t)return t}
+  return TN.find(x=>x.ko&&x.last)||TN.find(x=>x.ko&&x.ko.some(m=>m.w))||TN.find(x=>x.ko)||null;
+}
+/* winners so far of the latest day that has any (a button press) */
+function koManual(k){
+  const t=koFocus();if(!t)return null;
+  if(k=='ch'){const m=t.ko.find(x=>x.id=='GF');return m&&m.w?{k:'ch',t:t.name,d:0,a:m.w,b:m.w==m.a?m.b:m.a,n:[]}:null}
+  const r={qf:1,sf:2,dw:3}[k],st=koStage(t);
+  for(const g of (KOD=='A'||KOD=='B'?[KOD]:(st.g=='A'?['A']:['B','A']))){
+    const ns=t.ko.filter(x=>x.g==g&&x.r==r).map(x=>x.w||'');if(!ns.some(Boolean))continue;
+    const d=g=='A'?1:2;
+    return k=='dw'?{k:'dw',t:t.name,d:d,a:ns[0],b:'',n:[]}:{k:k,t:t.name,d:d,a:'',b:'',n:ns};
+  }
+  return null;
+}
+/* banner for the stage that just finished (qf / sf / dw / ch): shows by itself, no button needed */
+function koAuto(){
+  for(const t of TN){
+    if(!t.ko||!t.last)continue;
+    const m=t.ko.find(x=>x.id==t.last);if(!m)continue;
+    if(m.id=='GF'){if(m.w)return{k:'ch',t:t.name,d:0,a:m.w,b:m.w==m.a?m.b:m.a,n:[]};continue}
+    if(m.r==3){if(m.w)return{k:'dw',t:t.name,d:m.g=='A'?1:2,a:m.w,b:'',n:[]};continue}
+    const ms=t.ko.filter(x=>x.g==m.g&&x.r==m.r);
+    if(ms.every(x=>x.w))return{k:m.r==1?'qf':'sf',t:t.name,d:m.g=='A'?1:2,a:'',b:'',n:ms.map(x=>x.w)};
+  }
+  return null;
+}
+function kop(){
+  const c=(KOM&&koManual(KOM))||koAuto();
+  return c&&koKey(c)==KOHIDE?null:c;
+}
+/* Overlay-tab buttons: press = show the winners so far, press again = hide */
+function koTog(k){
+  const cur=kop();
+  if(cur&&cur.k==k){KOM=null;const a=koAuto();KOHIDE=a?koKey(a):''}
+  else{
+    if(!koManual(k)){toast(KOD?L('দিন '+(KOD=='A'?'১':'২')+'-এ এখনো এই রাউন্ডের কোনো বিজয়ী নেই','No winners in this round yet for Day '+(KOD=='A'?1:2)):L('এখনো এই রাউন্ডের কোনো বিজয়ী নেই','No winners in this round yet'));return}
+    KOM=k;KOHIDE='';
+  }
+  if(S)save();else push();render();
+}
+function koTogUI(){
+  [['',L('অটো','Auto')],['A',L('দিন ১','Day 1')],['B',L('দিন ২','Day 2')]].forEach(([g,n])=>{const b=$('kdy_'+(g||'x'));if(b){b.textContent=n;b.classList.toggle('on',KOD==g)}});
+  const cur=kop();
+  [['qf',L('কোয়ার্টার বিজয়ী','QF winners')],['sf',L('সেমি বিজয়ী','SF winners')],['dw',L('দিন ফাইনাল বিজয়ী','Day winner')],['ch',L('চ্যাম্পিয়ন','Champion')]].forEach(([k,n])=>{const b=$('kos_'+k),on=!!(cur&&cur.k==k);if(b){b.textContent=n+': '+(on?'● ON':'○ OFF');b.classList.toggle('on',on)}});
+}
+function cleanKO(o){return{k:['qf','sf','dw','ch'].includes(o.k)?o.k:'',t:Sx(o.t).slice(0,60),d:N(o.d)==2?2:1,a:Sx(o.a).slice(0,40),b:Sx(o.b).slice(0,40),n:(Array.isArray(o.n)?o.n:[]).slice(0,4).map(x=>Sx(x).slice(0,40))}}
+function koBannerHTML(c){
+  const fs=(n,base,lim)=>'font-size:calc(var(--u,1px)*'+Math.max(16,Math.round(base*Math.min(1,(lim||16)/Math.max(1,Array.from(n).length))))+')';
+  if(c.k=='ch')
+    return '<div class="kc-t">🏆 '+esc(c.t)+' · '+L('ফাইনাল ফলাফল','FINAL RESULT')+'</div>'
+      +'<div class="kob kc1"><div class="kb-k">👑 '+L('চ্যাম্পিয়ন','CHAMPION')+'</div><div class="kb-n" style="'+fs(c.a,54)+'">'+esc(c.a)+'</div></div>'
+      +'<div class="kob kc2"><div class="kb-k sv">🥈 '+L('রানার্স আপ','RUNNER-UP')+'</div><div class="kb-n" style="'+fs(c.b,40)+'">'+esc(c.b)+'</div></div>';
+  if(c.k=='qf'||c.k=='sf'){
+    const bd='১২৩৪',lab=c.k=='qf'?L('কোয়ার্টার বিজয়ী','QF WINNER'):L('সেমি বিজয়ী','SF WINNER'),day=L('দিন '+(c.d==2?'২':'১'),'DAY '+c.d);
+    return '<div class="kc-t">🏆 '+esc(c.t)+' · '+day+'</div>'
+      +c.n.map((n,i)=>n?'<div class="kob kr" style="animation-delay:'+(.05+i*.15)+'s"><div class="kb-k">🏅 '+lab+' '+L(bd[i],String(i+1))+'</div><div class="kb-n" style="'+fs(n,32)+'">'+esc(n)+'</div></div>':'').join('');
+  }
+  return '<div class="kob"><div class="kb-k">🏆 '+L('দিন '+(c.d==2?'২':'১')+' বিজয়ী','DAY '+c.d+' WINNER')+'</div><div class="kb-n" style="'+fs(c.a,40)+'">'+esc(c.a)+'</div></div>';
+}
+function koCh(){const c=OVM?KOd:kop();return !!(c&&c.k=='ch')}
+function renderKO(){
+  const d=$('kod');if(!d)return;
+  const c=OVM?KOd:kop(),on=!!(c&&c.k);
+  if(on){
+    const key=c.k+'|'+c.t+'|'+c.d+'|'+c.a+'|'+c.b+'|'+(c.n||[]).join(',')+'|'+LANG;
+    if(d._k!==key){d.innerHTML=koBannerHTML(c);d._k=key}
+    d.classList.toggle('ch',c.k=='ch');d.classList.toggle('w4',c.k=='qf');d.classList.toggle('w2',c.k=='sf');
+  }
+  setPanel(d,on);
+  const w=$('bcw');if(w){if(on&&c.k=='ch')w.style.visibility='hidden';else if(!OVM)w.style.visibility=''}
+}
 function koBuild(d1,d2){
   const m=[];
   [['A',d1],['B',d2]].forEach(([g,tm])=>{
@@ -1905,7 +2020,7 @@ async function koEditSave(tid){
     if(samePeople){
       /* same 16 teams, only moved to other slots = a re-draw of the pairs: results cannot be kept */
       if(t.ko.some(m=>m.w)&&!(await dlg(L('টিমগুলোর জায়গা/জোড়া বদলালে এখন পর্যন্ত সব ফলাফল মুছে যাবে। (শুধু নামের বানান ঠিক করলে ফলাফল থাকে।) চালিয়ে যাবেন?','Moving teams to different pairs clears all results so far. (Just fixing a name keeps every result.) Continue?'))))return;
-      t.teams=v.tm;t.ko=koBuild(v.tm.slice(0,8),v.tm.slice(8));
+      t.teams=v.tm;t.ko=koBuild(v.tm.slice(0,8),v.tm.slice(8));t.last='';
     }else{
       /* name changes only: keep all results */
       const map={};changed.forEach(i=>{map[old[i]]=v.tm[i]});
@@ -1931,6 +2046,7 @@ async function koPick(tid,mid,side){
     if(!(await dlg(L('এই ম্যাচের ফলাফল বদলাবেন?'+(later?' পরের রাউন্ডের ফলাফল মুছে যেতে পারে।':''),'Change this result?'+(later?' Results of later rounds may be cleared.':'')))))return;
   }else if(!(await dlg(L(nm+' কে বিজয়ী ঘোষণা করবেন?','Set '+nm+' as the winner?'))))return;
   m.w=nm;m.res=nm?L('হাতে দেওয়া ফলাফল','Result set manually'):'';
+  if(m.r>=3){if(nm)t.last=mid;else if(t.last==mid)t.last=''}
   koSync(t);storeTN();
 }
 function koGo(tid,mid){
@@ -1943,10 +2059,13 @@ function koGo(tid,mid){
 }
 /* called from start(): tag the match only if the team names still match the bracket slot */
 function koAttach(){
-  const k=KOLOAD;KOLOAD=null;if(!k||!S)return;
-  const t=TN.find(x=>x.id==k.tid),m=t&&t.ko&&t.ko.find(x=>x.id==k.mid);if(!m)return;
-  const a=S.t[0],b=S.t[1];
-  if((a==m.a&&b==m.b)||(a==m.b&&b==m.a))S.ko=k.tid+':'+k.mid;
+  const k=KOLOAD;KOLOAD=null;KOM=null;KOHIDE='';
+  TN.forEach(x=>{if(x.ko)x.last=''});   /* a new match was created: Day-winner / Champion banners go away */
+  try{
+    const t=k&&TN.find(x=>x.id==k.tid),m=t&&t.ko&&t.ko.find(x=>x.id==k.mid);
+    if(S&&m){const a=S.t[0],b=S.t[1];if((a==m.a&&b==m.b)||(a==m.b&&b==m.a)){S.ko=k.tid+':'+k.mid;t.last=k.mid}}
+  }catch(e){}
+  try{localStorage.setItem('tn',JSON.stringify(TN))}catch(e){}
 }
 /* called when a match finishes: winner moves on in the bracket */
 function koRecord(M){
@@ -1956,7 +2075,7 @@ function koRecord(M){
   if(w=='t'){toast('🤝 '+L('টাই — নকআউটে হাতে বিজয়ী ঠিক করুন','Tie — pick the winner by hand in the bracket'));return}
   const nm=origT(M)[w=='a'?0:1];
   if(nm!=m.a&&nm!=m.b)return;
-  m.w=nm;m.res=result(M);koSync(t);storeTN();
+  m.w=nm;m.res=result(M);if(m.r>=3)t.last=mid;koSync(t);storeTN();
   const nx=t.ko.find(x=>x.fa==mid||x.fb==mid);
   toast('🏆 '+nm+' '+(nx?L('পরের রাউন্ডে গেল','advances'):L('চ্যাম্পিয়ন!','are the champions!')));
 }
@@ -1973,7 +2092,7 @@ function swapTeams(){
 const Q=new URLSearchParams(location.search),OVM=Q.get('view')==='overlay';
 let CFG={db:'',m:'match1'};try{CFG=Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')))}catch(e){}
 let pt=null;
-function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,so:S.so||0,fin:S.fin?1:0,spl:S.spl||'',cb:cbp(),pc:pcp(),fx:fxp(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,pz:PZ,lang:LANG,ts:Date.now()}}
+function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,so:S.so||0,fin:S.fin?1:0,spl:S.spl||'',cb:cbp(),pc:pcp(),fx:fxp(),ko:kop(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,pz:PZ,lang:LANG,ts:Date.now()}}
 const N=v=>Number(v)||0,Sx=v=>String(v==null?'':v);
 function unpack(o){
   const bs=o.bs||{},t=o.t||[];
@@ -1996,7 +2115,7 @@ function push(){
     const t=await token();
     const au=t?'?auth='+encodeURIComponent(t):'';
     /* no running match on THIS device: only write the board keys one by one, so the live match data (team names, score) saved by the scorer's phone is never wiped */
-    const job=S?fetch(furl()+au,{method:'PUT',body:JSON.stringify(pack())}).then(r=>{if(!r.ok)throw 0}):Promise.all(Object.entries({lang:LANG,ts:Date.now(),pz:PZ,cb:cbp(),pc:pcp(),fx:fxp()}).map(([k,v])=>fetch(CFG.db+'/matches/'+CFG.m+'/'+k+'.json'+au,{method:'PUT',body:JSON.stringify(v==null?null:v)}).then(r=>{if(!r.ok)throw 0})));
+    const job=S?fetch(furl()+au,{method:'PUT',body:JSON.stringify(pack())}).then(r=>{if(!r.ok)throw 0}):Promise.all(Object.entries({lang:LANG,ts:Date.now(),pz:PZ,cb:cbp(),pc:pcp(),fx:fxp(),ko:kop()}).map(([k,v])=>fetch(CFG.db+'/matches/'+CFG.m+'/'+k+'.json'+au,{method:'PUT',body:JSON.stringify(v==null?null:v)}).then(r=>{if(!r.ok)throw 0})));
     job.then(()=>syn(true)).catch(()=>syn(false))},300);
 }
 let lastEv=null;
@@ -2006,8 +2125,9 @@ function poll(){
     CBd=o&&o.cb?{t:Sx(o.cb.t).slice(0,80),x:Sx(o.cb.x).slice(0,1500),i:Sx(o.cb.i).slice(0,300),p:Sx(o.cb.p).slice(0,59999),p2:Sx(o.cb.p2).slice(0,59999)}:null;
     PCd=o&&o.pc?cleanPC(o.pc):null;
     FXd=o&&o.fx?cleanFX(o.fx):null;
+    KOd=o&&o.ko?cleanKO(o.ko):null;
     $('bcw').style.visibility=(o&&o.t)?'visible':'hidden';
-    if(!(o&&o.t)){setPanel($('lsc'),false);if(o&&o.lang)LANG=o.lang=='en'?'en':'bn';renderCB();renderPC();renderFx()}
+    if(!(o&&o.t)){setPanel($('lsc'),false);if(o&&o.lang)LANG=o.lang=='en'?'en':'bn';renderCB();renderPC();renderFx();renderKO()}
     if(o&&o.t){LANG=o.lang=='en'?'en':'bn';S=unpack(o);SCL=o.sc?(o.sc.inns||[]).slice(0,2).map(c=>({team:Sx(c.team),runs:N(c.runs),w:N(c.w),balls:N(c.balls),outs:(c.outs||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),ord:N(x.ord),how:Sx(x.how),bw:Sx(x.bw)})),bat:(c.bat||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),ord:N(x.ord)})),bw:(c.bws||[]).reduce((a,b)=>{a[Sx(b.n)]={r:N(b.r),w:N(b.w),b:N(b.b),m:N(b.m)};return a},{})})):[];SCRES=Sx(o.sc&&o.sc.res);render();
       if(o.ev){if(lastEv===null)lastEv=o.ev.id;else if(o.ev.id>lastEv){lastEv=o.ev.id;playEv(o.ev)}}else if(lastEv===null)lastEv=0}}).catch(()=>{});
 }
