@@ -33,7 +33,7 @@ summary{cursor:pointer}
 #toast.on{opacity:1}
 button.on{background:var(--grn)}
 body.ovm{background:transparent;padding:0}
-body.ovm #setup,body.ovm #app,body.ovm #cbcard,body.ovm #pccard,body.ovm #livebox,body.ovm #topbar,body.ovm #tabbar,body.ovm #fxbox{display:none!important}
+body.ovm #setup,body.ovm #app,body.ovm #cbcard,body.ovm #pccard,body.ovm #livebox,body.ovm #topbar,body.ovm #tabbar,body.ovm #fxbox,body.ovm #kobox{display:none!important}
 #dlg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .dbox{background:#1a1e33;border-radius:16px;padding:18px;width:100%;max-width:380px}
 #dmsg{font-size:16px;margin-bottom:12px;line-height:1.4}
@@ -455,6 +455,26 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 #pcd.isout .pcr{top:17.7em}
 #pcv.cu{left:16em;top:8em;width:33em;height:46em}
 #pcv.cu img{object-fit:cover;object-position:center top;clip-path:polygon(14% 0,100% 0,100% 100%,0 100%);filter:none}
+
+/* ===== knockout tournament (setup tab) ===== */
+.koh{margin:14px 0 2px;font-weight:800;color:var(--ac);font-size:15px}
+.kom{padding:10px 0;border-bottom:1px solid #2d3355}
+.kom small{display:block;color:var(--mut);margin-bottom:5px;font-size:12px}
+.kom .kor{margin:5px 0 0;font-size:12px;color:var(--mut)}
+.kot{display:flex;align-items:center;gap:6px}
+.kot i{font-style:normal;font-size:12px;opacity:.6}
+.kot input{flex:1;min-width:0;margin:0}
+.kot .kt{flex:1;min-width:0;padding:10px 6px;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:#0f1220;border:1px solid #333a5e}
+.kot .kt.win{background:var(--grn);border-color:var(--grn)}
+.kot .kt.lose{opacity:.45}
+.kot .kt:disabled{opacity:.5;font-weight:400;font-size:12px}
+.kot .kt.dr:disabled{opacity:1;font-weight:700;font-size:14px}
+.kosf{background:#0f1220;border:1px solid #333a5e;border-radius:12px;padding:10px;margin:8px 0}
+.kosf small{display:block;color:var(--mut);margin-bottom:4px;font-size:12px}
+.kosel{flex:1;min-width:0;padding:10px 6px;border-radius:10px;background:#171b30;color:#fff;border:1px solid #333a5e;font-size:14px}
+.kot .kb{flex:0 0 auto;padding:10px 12px;font-size:15px;min-height:40px}
+.kochamp{text-align:center;font-size:17px;font-weight:800;padding:12px;margin:10px 0 0;border-radius:12px;background:linear-gradient(180deg,#ffe066,#f2b705);color:#0b1a4a}
+.kogrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
 /* ===== overlay tab: board tiles + editors ===== */
 .bgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
 .btile{background:var(--card);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px}
@@ -596,8 +616,9 @@ body.nomatch #bcw{visibility:hidden}
 </div>
 
 <div id="fxbox" class="card t-setup"><h3>📅 পরের ম্যাচ / Next matches</h3>
-  <p class="dim">🏆 <b id="fxtn"></b></p><div id="fxl"></div>
-  <button class="g" style="width:100%;margin-top:10px" onclick="fxAdd()">＋ নেক্সট ম্যাচ যোগ করুন / Add next match</button></div>
+  <select id="fxsel" onchange="fxSel(this.value)" style="width:100%;padding:10px;border-radius:10px;background:#0f1220;color:#fff;border:1px solid #333a5e;margin-bottom:8px"></select><div id="fxl"></div>
+  <button id="fxadd" class="g" style="width:100%;margin-top:10px" onclick="fxAdd()">＋ নেক্সট ম্যাচ যোগ করুন / Add next match</button></div>
+<div id="kobox" class="card t-setup"></div>
 <!-- SCORER -->
 <div id="app" class="hide">
 <div class="t-score">
@@ -759,6 +780,7 @@ function start(){
    bat:[{n:$('b1').value.trim()||L('ব্যাটসম্যান ১','Batsman 1'),r:0,b:0,ord:1},{n:$('b2').value.trim()||L('ব্যাটসম্যান ২','Batsman 2'),r:0,b:0,ord:2}],
    st:0,bn:$('bn').value.trim()||L('বোলার ১','Bowler 1'),bw:{},orun:0};
   H=[];if(FXLOAD){FX=FX.filter(x=>x.id!=FXLOAD);FXLOAD=null;storeFX()}
+  koAttach();
   save();render();setTab('score');
 }
 const B=()=>S.bw[S.bn]||(S.bw[S.bn]={r:0,w:0,b:0,m:0});
@@ -985,7 +1007,7 @@ function winOf(M){
   const oi=(M.so||0)%2?1-w:w;return oi?'b':'a';
 }
 function render(){
-  renderCB();renderPC();renderFx();renderVib();renderTop();renderKill();fxUI();try{const _a=$('sPC'),_b=$('sMS'),_c=$('sML');if(_a)_a.classList.toggle('on',!!PC.on);if(_b)_b.classList.toggle('on',!!(S&&S.showSC));if(_c)_c.classList.toggle('on',!!FXSHOW)}catch(e){}
+  koUI();renderCB();renderPC();renderFx();renderVib();renderTop();renderKill();fxUI();try{const _a=$('sPC'),_b=$('sMS'),_c=$('sML');if(_a)_a.classList.toggle('on',!!PC.on);if(_b)_b.classList.toggle('on',!!(S&&S.showSC));if(_c)_c.classList.toggle('on',!!FXSHOW)}catch(e){}
   {const e=$('scm');if(e&&e.value!==SCM&&document.activeElement!==e)e.value=SCM}
   if(!OVM)syncPanelUI();
   $('lbn').classList.toggle('on',LANG=='bn');$('len').classList.toggle('on',LANG=='en');
@@ -1123,7 +1145,7 @@ async function histClear(){
 }
 function histOpen(i){const h=HL[i];showCard(h.m,h.res)}
 function saveHist(fin){
-  if(fin){S.fin=1;S.showSC=true;save();render()}
+  if(fin){S.fin=1;S.showSC=true;save();render();try{koRecord(S)}catch(e){}}
   try{
     const h=JSON.parse(localStorage.getItem('hist')||'[]');
     const m=JSON.parse(JSON.stringify(S));delete m.ev;
@@ -1529,7 +1551,7 @@ function renderPC(){
   fitBoard(d,.9,1,1,0,PZ.pc);
 }
 let TN=[];try{TN=JSON.parse(localStorage.getItem('tn'))||[]}catch(e){}
-function storeTN(){try{localStorage.setItem('tn',JSON.stringify(TN))}catch(e){}tnUI()}
+function storeTN(){try{localStorage.setItem('tn',JSON.stringify(TN))}catch(e){}tnUI();koUI(true);fxUI();if(typeof FXSHOW!=='undefined'&&FXSHOW){if(S)save();else push()}}
 function tnUI(){
   const sel=$('tnsel'),cur=sel.value;
   sel.innerHTML='<option value="">— '+L('কোনো টুর্নামেন্ট নয়','No tournament')+' —</option>'+TN.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.name)+'</option>').join('');
@@ -1539,7 +1561,7 @@ function tnPick(){
   const t=TN.find(x=>x.id==$('tnsel').value);
   $('tms').innerHTML=t?t.teams.map(n=>'<option value="'+esc(n)+'">').join(''):'';
   if(t)$('tt').value=t.name;
-  fxUI();
+  FXV=null;fxUI();
 }
 async function tnNew(){
   const n=await dlg(L('টুর্নামেন্টের নাম','Tournament name'),{input:1});if(!n||!n.trim())return;
@@ -1596,18 +1618,55 @@ function renderTop(){
 }
 function storeFX(){try{localStorage.setItem('fx',JSON.stringify(FX))}catch(e){}fxUI();if(FXSHOW){if(S)save();else push()}}
 const curTn=()=>S?(S.tn||''):($('tnsel')?$('tnsel').value:'');
+var FXV=null;
+const fxTn=()=>FXV==null?curTn():FXV;
+function fxSel(v){
+  FXV=v;KOLOAD=null;
+  if(!S){$('tnsel').value=v;tnPick()}else fxUI();
+  if(FXSHOW){if(S)save();else push()}
+}
 function fxUI(){
-  const box=$('fxl');if(!box)return;const tn=curTn(),t=TN.find(x=>x.id==tn);
-  $('fxtn').textContent=t?t.name:L('কোনো টুর্নামেন্ট নির্বাচিত নয়','No tournament selected');
-  const l=FX.filter(f=>(f.tn||'')==tn),off=S?2:1;let h='';
-  if(S)h+='<div class="fxr run"><div class="fxn"><small>▶ '+L('চলমান','Running')+'</small><b>'+esc(S.t[0])+'</b> vs <b>'+esc(S.t[1])+'</b> <span class="fxs">'+S.runs+'/'+S.w+'</span></div></div>';
-  h+=l.map((f,i)=>{const a=f.sw?f.t2:f.t1,b=f.sw?f.t1:f.t2;return '<div class="fxr"><div class="fxn"><small>'+L('পরের ','Next ')+(i+off)+'</small><b>'+esc(a)+'</b><i>'+L('আগে ব্যাট','bats first')+'</i> vs '+esc(b)+'</div><button class="sm" onclick="fxGo(\''+f.id+'\')">▶</button><button class="sm" onclick="fxSw(\''+f.id+'\')">⇄</button><button class="w sm" onclick="fxDel(\''+f.id+'\')">✕</button></div>'}).join('');
-  if(!h)h='<p class="dim">'+L('এখনো কোনো ম্যাচ নেই','No matches yet')+'</p>';
+  const box=$('fxl');if(!box)return;
+  let tn=fxTn();
+  if(tn&&!TN.find(x=>x.id==tn)){tn='';FXV=null}
+  const t=TN.find(x=>x.id==tn),ko=!!(t&&t.ko);
+  const sel=$('fxsel');
+  if(sel){
+    const key=LANG+'|'+TN.map(x=>x.id+':'+x.name).join('|');
+    if(sel._k!==key){sel.innerHTML='<option value="">— '+L('টুর্নামেন্ট ছাড়া চালিয়ে যান','Continue without tournament')+' —</option>'+TN.map(x=>'<option value="'+esc(x.id)+'">🏆 '+esc(x.name)+'</option>').join('');sel._k=key}
+    if(sel.value!==tn)sel.value=tn;
+  }
+  const add=$('fxadd');if(add)add.style.display=ko?'none':'';
+  const runHere=!!(S&&(S.tn||'')==tn&&!(ko&&S.ko&&S.ko.split(':')[0]==t.id));let h='';
+  if(runHere)h+='<div class="fxr run"><div class="fxn"><small>'+(S.fin?'✔ '+L('শেষ','Finished'):'▶ '+L('চলমান','Running'))+'</small><b>'+esc(S.t[0])+'</b> vs <b>'+esc(S.t[1])+'</b> <span class="fxs">'+S.runs+'/'+S.w+'</span></div></div>';
+  if(ko){
+    const id=esc(t.id),st=koStage(t),started=koStarted(t),gf=t.ko.find(m=>m.id=='GF');
+    h+='<div class="koh" style="margin:2px 0 4px">'+(koDayName(st)?'📅 '+koDayName(st)+' · ':'🏆 ')+koStageName(st)+'</div>';
+    if(st.r==2)h+=koSfBlock(t,st.g);
+    if(!started)h+='<button class="g" style="width:100%;margin-bottom:6px" onclick="koStart(\''+id+'\')">▶ '+L('এই টুর্নামেন্ট শুরু করুন','Start this tournament')+'</button><p class="dim" style="font-size:12px;margin:0 0 6px">'+L('শুরু না করলে ▶ কাজ করবে না।','▶ works after the tournament is started.')+'</p>';
+    h+=st.ms.map(m=>{
+      const n=t.ko.indexOf(m)+1,run=!!(S&&!S.fin&&S.ko==t.id+':'+m.id);
+      const nm=(x,side)=>m.w?(m.w==x?'<b style="color:var(--grn)">✔ '+esc(x)+'</b>':'<span style="opacity:.5">'+esc(x)+'</span>'):'<b>'+(x?esc(x):'—')+'</b>';
+      return '<div class="fxr"><div class="fxn"><small>#'+n+(run?' · ▶ '+L('চলমান','Running'):'')+'</small>'+nm(m.a)+' vs '+nm(m.b)+(run?' <span class="fxs">'+S.runs+'/'+S.w+'</span>':'')+'</div>'
+        +((started&&m.a&&m.b&&!m.w&&!run)?'<button class="g sm" onclick="koGo(\''+id+'\',\''+m.id+'\')">▶</button>':'')+'</div>';
+    }).join('');
+    if(gf.w)h+='<div class="kochamp">👑 '+L('চ্যাম্পিয়ন: ','Champion: ')+esc(gf.w)+'</div>';
+  }else{
+    const l=FX.filter(f=>(f.tn||'')==tn),off=runHere?2:1;
+    h+=l.map((f,i)=>{const a=f.sw?f.t2:f.t1,b=f.sw?f.t1:f.t2;return '<div class="fxr"><div class="fxn"><small>'+L('পরের ','Next ')+(i+off)+'</small><b>'+esc(a)+'</b><i>'+L('আগে ব্যাট','bats first')+'</i> vs '+esc(b)+'</div><button class="sm" onclick="fxGo(\''+f.id+'\')">▶</button><button class="sm" onclick="fxSw(\''+f.id+'\')">⇄</button><button class="w sm" onclick="fxDel(\''+f.id+'\')">✕</button></div>'}).join('');
+    if(!h)h='<p class="dim">'+L('এখনো কোনো ম্যাচ নেই','No matches yet')+(tn?'':' — '+L('নিচে যেকোনো দুই টিম দিয়ে ম্যাচ শুরু করুন','start any match with the teams below'))+'</p>';
+  }
   box.innerHTML=h;renderFxBtn();
 }
 function renderFxBtn(){tileTxt($('fxb2'),FXSHOW)}
 function fxAuto(){
-  const tn=curTn(),t=TN.find(x=>x.id==tn);
+  const tn=fxTn(),t=TN.find(x=>x.id==tn);
+  if(t&&t.ko){
+    const st=koStage(t),rid=(S&&!S.fin&&S.ko&&S.ko.split(':')[0]==t.id)?S.ko.split(':')[1]:'';
+    const rows=st.ms.map(m=>{const run=rid==m.id;return{n:t.ko.indexOf(m)+1,a:m.a||'—',b:m.b||'—',h:run?1:0,wn:m.w?(m.w==m.a?'a':'b'):'',p:run?S.runs+'/'+S.w:''}});
+    if(!rid){const nx=rows.find(x=>!x.wn);if(nx)nx.h=1}
+    return{t:koStageName(st),s:t.name+(koDayName(st)?' · '+koDayName(st):''),r:rows};
+  }
   let hist=[];try{hist=JSON.parse(localStorage.getItem('hist')||'[]')}catch(e){}
   const today=new Date().toDateString();
   const fin=hist.filter(e=>e&&e.m&&e.m.fin&&e.m.first&&(e.m.tn||'')==tn&&!(S&&e.id==S.id)&&(tn||new Date(e.ts).toDateString()==today)).reverse().map(e=>e.m);
@@ -1662,6 +1721,249 @@ function fxGo(id){
 }
 function fxSw(id){const f=FX.find(x=>x.id==id);if(f){f.sw=!f.sw;if(FXLOAD==id&&!S){const a=$('t1').value;$('t1').value=$('t2').value;$('t2').value=a}storeFX()}}
 function fxDel(id){FX=FX.filter(x=>x.id!=id);if(FXLOAD==id)FXLOAD=null;storeFX()}
+
+/* ===================== KNOCKOUT TOURNAMENT (16 teams, 2 days) =====================
+   Day 1 : 8 teams -> 4 QF -> 2 SF -> Day-1 final -> winner goes straight to the Grand Final
+   Day 2 : other 8 teams -> same -> winner goes to the Grand Final
+   Grand Final : Day-1 winner vs Day-2 winner. Stored inside TN[].ko so it also shows in the Tournament dropdown. */
+let KOF=[],KONAME='',KOOPEN={},KOFORM=false,KOLOAD=null,KOEDIT=null,KOEF=[],KOEN='';
+function koStarted(t){return !!(t.started||t.ko.some(m=>m.w))}
+/* Stage order: Day1 QF -> Day1 SF -> Day1 Final -> Day2 QF -> Day2 SF -> Day2 Final -> Grand Final.
+   The "current stage" is the first one that still has an unplayed match (the Grand Final once everything is done). */
+function koStage(t){
+  const ord=[['A',1],['A',2],['A',3],['B',1],['B',2],['B',3],['F',4]];
+  for(const [g,r] of ord){const ms=t.ko.filter(m=>m.g==g&&m.r==r);if(g=='F'||ms.some(m=>!m.w))return{g:g,r:r,ms:ms}}
+}
+function koStageName(st){
+  if(st.g=='F')return L('গ্র্যান্ড ফাইনাল','Grand Final');
+  if(st.r==1)return L('কোয়ার্টার ফাইনাল','Quarter-finals');
+  if(st.r==2)return L('সেমি ফাইনাল','Semi-finals');
+  return L('দিন ','Day ')+(st.g=='A'?1:2)+L(' ফাইনাল',' Final');
+}
+const koDayName=st=>st.g=='F'?'':L('দিন ','Day ')+(st.g=='A'?1:2);
+/* ---- choose who plays whom in the semi-finals (per day) ---- */
+var KOSF=null;   /* {tid,g,s:[4 QF ids]} : s[0] v s[1] = Semi-final 1, s[2] v s[3] = Semi-final 2 */
+function koSfLbl(t,id){
+  const m=t.ko.find(x=>x.id==id);
+  return m&&m.w?m.w+' (QF'+id.slice(1)+')':L('QF'+id.slice(1)+' বিজয়ী','Winner of QF'+id.slice(1));
+}
+function koSfEditor(t){
+  const k=KOSF,g=k.g,ids=[1,2,3,4].map(i=>g+i),tid=esc(t.id);
+  const sel=i=>'<select class="kosel" onchange="koSfSet('+i+',this.value)">'+ids.map(id=>'<option value="'+id+'"'+(k.s[i]==id?' selected':'')+'>'+esc(koSfLbl(t,id))+'</option>').join('')+'</select>';
+  return '<div class="kosf"><div class="koh" style="margin:0 0 6px">✏️ '+L('সেমি ফাইনাল জোড়া বাছুন','Choose semi-final pairs')+'</div>'
+    +'<small>'+L('সেমি ফাইনাল ১','Semi-final 1')+'</small><div class="kot">'+sel(0)+'<i>vs</i>'+sel(1)+'</div>'
+    +'<small style="margin-top:8px">'+L('সেমি ফাইনাল ২','Semi-final 2')+'</small><div class="kot">'+sel(2)+'<i>vs</i>'+sel(3)+'</div>'
+    +'<div class="row" style="margin:10px 0 0"><button class="sm" style="flex:1" onclick="koSfCancel()">✖ '+L('বাতিল','Cancel')+'</button><button class="g" style="flex:2" onclick="koSfSave(\''+tid+'\')">💾 '+L('সেভ করুন','Save')+'</button></div></div>';
+}
+function koSfBlock(t,g){
+  if(KOSF&&KOSF.tid==t.id&&KOSF.g==g)return koSfEditor(t);
+  return '<button class="sm" style="width:100%;margin:8px 0 2px" onclick="koSfEdit(\''+esc(t.id)+'\',\''+g+'\')">✏️ '+L('সেমি ফাইনাল জোড়া বদলান','Edit semi-final pairing')+'</button>';
+}
+function koSfEdit(tid,g){
+  const t=TN.find(x=>x.id==tid);if(!t||!t.ko)return;
+  const a=t.ko.find(m=>m.id==g+'5'),b=t.ko.find(m=>m.id==g+'6');if(!a||!b)return;
+  KOSF={tid:tid,g:g,s:[a.fa,a.fb,b.fa,b.fb]};koUI(true);fxUI();
+}
+function koSfSet(i,v){
+  if(!KOSF)return;
+  const j=KOSF.s.indexOf(v);if(j>=0&&j!=i){const x=KOSF.s[i];KOSF.s[i]=KOSF.s[j];KOSF.s[j]=x}else KOSF.s[i]=v;
+  koUI(true);fxUI();
+}
+function koSfCancel(){KOSF=null;koUI(true);fxUI()}
+async function koSfSave(tid){
+  const k=KOSF,t=TN.find(x=>x.id==tid);if(!k||!t||!t.ko)return;
+  const a=t.ko.find(m=>m.id==k.g+'5'),b=t.ko.find(m=>m.id==k.g+'6'),fin=t.ko.find(m=>m.id==k.g+'7');
+  const same=a.fa==k.s[0]&&a.fb==k.s[1]&&b.fa==k.s[2]&&b.fb==k.s[3];
+  if(same){KOSF=null;koUI(true);fxUI();return}
+  if((a.w||b.w||fin.w)&&!(await dlg(L('জোড়া বদলালে এই সেমি ফাইনাল ও পরের ফাইনালের ফলাফল মুছে যাবে। চালিয়ে যাবেন?','Changing the pairs will clear the semi-final and later results for this day. Continue?'))))return;
+  a.fa=k.s[0];a.fb=k.s[1];b.fa=k.s[2];b.fb=k.s[3];
+  koSync(t);KOSF=null;storeTN();toast('💾 '+L('সেমি ফাইনাল জোড়া সেভ হয়েছে','Semi-final pairs saved'));
+}
+function koBuild(d1,d2){
+  const m=[];
+  [['A',d1],['B',d2]].forEach(([g,tm])=>{
+    for(let i=0;i<4;i++)m.push({id:g+(i+1),g:g,r:1,a:tm[2*i],b:tm[2*i+1],w:'',res:''});
+    m.push({id:g+'5',g:g,r:2,a:'',b:'',w:'',res:'',fa:g+'1',fb:g+'2'});
+    m.push({id:g+'6',g:g,r:2,a:'',b:'',w:'',res:'',fa:g+'3',fb:g+'4'});
+    m.push({id:g+'7',g:g,r:3,a:'',b:'',w:'',res:'',fa:g+'5',fb:g+'6'});
+  });
+  m.push({id:'GF',g:'F',r:4,a:'',b:'',w:'',res:'',fa:'A7',fb:'B7'});
+  return m;
+}
+/* fill later rounds from earlier winners; if a slot changed, the old result of that match is cleared */
+function koSync(t){
+  const by={};t.ko.forEach(m=>by[m.id]=m);
+  t.ko.forEach(m=>{if(m.fa){const a=by[m.fa].w||'',b=by[m.fb].w||'';
+    if(m.a!==a||m.b!==b){m.a=a;m.b=b;if(m.w){m.w='';m.res=''}}}});
+}
+function koLabel(m){
+  const n=+m.id.slice(1);
+  if(m.id=='GF')return '🏆 '+L('গ্র্যান্ড ফাইনাল','GRAND FINAL');
+  if(m.r==1)return L('কোয়ার্টার ফাইনাল ','Quarter-final ')+n;
+  if(m.r==2)return L('সেমি ফাইনাল ','Semi-final ')+(n-4);
+  return L('দিন ','Day ')+(m.g=='A'?1:2)+L(' ফাইনাল',' Final');
+}
+/* 8 "A vs B" pair inputs per day. nm = global array name used by the inline oninput, ref = that array */
+function koPairs(nm,ref){
+  const day=(g,n)=>{let h='<div class="koh" style="margin-top:'+(g?14:0)+'px">📅 '+L('দিন '+n+' — ৪টি ম্যাচ','Day '+n+' — 4 matches')+'</div>';
+    for(let i=0;i<4;i++){const k=g*8+i*2;
+      h+='<div class="kom" style="padding:6px 0;border:0"><small>'+L('ম্যাচ ','Match ')+(i+1)+'</small><div class="kot">'
+        +'<input value="'+esc(ref[k]||'')+'" oninput="'+nm+'['+k+']=this.value" placeholder="'+L('টিম ','Team ')+(k+1)+'"><i>vs</i>'
+        +'<input value="'+esc(ref[k+1]||'')+'" oninput="'+nm+'['+(k+1)+']=this.value" placeholder="'+L('টিম ','Team ')+(k+2)+'"></div></div>'}
+    return h};
+  return day(0,1)+day(1,2);
+}
+function koHTML(t){
+  const M=t.ko,by={};M.forEach(m=>by[m.id]=m);
+  const done=M.filter(m=>m.w).length,gf=by.GF,st=koStarted(t),tid=esc(t.id);
+  const head='<details class="sec"'+(KOOPEN[t.id]?' open':'')+' ontoggle="KOOPEN[\''+tid+'\']=this.open" style="margin-top:8px"><summary><span>'+esc(t.name)+' <small class="dim">'+(st?done+'/15':L('ড্রাফট','Draft'))+'</small></span></summary><div class="sb">';
+  if(KOEDIT==t.id){
+    return head+'<div class="koh" style="margin-top:0">✏️ '+L('এডিট করুন','Edit tournament')+'</div>'
+      +'<div class="row" style="margin-bottom:8px"><div><label>'+L('টুর্নামেন্টের নাম','Tournament name')+'</label><input value="'+esc(KOEN)+'" oninput="KOEN=this.value"></div></div>'
+      +koPairs('KOEF',KOEF)
+      +'<div class="row" style="margin:12px 0 0"><button class="sm" style="flex:1" onclick="koEditCancel()">✖ '+L('বাতিল','Cancel')+'</button><button class="g" style="flex:2" onclick="koEditSave(\''+tid+'\')">💾 '+L('সেভ করুন','Save')+'</button></div></div></details>';
+  }
+  const row=m=>{
+    const ready=m.a&&m.b&&st;
+    const tb=(nm,side,ph)=>'<button class="kt'+(m.w?(m.w==nm?' win':' lose'):'')+(nm&&!ready?' dr':'')+'"'+(ready?' onclick="koPick(\''+tid+'\',\''+m.id+'\','+side+')"':' disabled')+'>'+(nm?esc(nm):ph)+'</button>';
+    const ph=id=>L('— '+id+' বিজয়ী —','— W of '+id+' —');
+    return '<div class="kom"><small>'+koLabel(m)+' · #'+m.id+'</small><div class="kot">'
+      +tb(m.a,0,m.fa?ph(m.fa):'—')+'<i>vs</i>'+tb(m.b,1,m.fb?ph(m.fb):'—')
+      +(m.w?'<button class="sm kb" title="reset" onclick="koPick(\''+tid+'\',\''+m.id+'\',-1)">↺</button>'
+           :(ready?'<button class="g sm kb" onclick="koGo(\''+tid+'\',\''+m.id+'\')">▶</button>':''))
+      +'</div>'+(m.w&&m.res?'<div class="kor">'+esc(m.res)+'</div>':'')+'</div>';
+  };
+  const day=(g,n)=>'<div class="koh">📅 '+L('দিন '+n+' (৮টি দল)','Day '+n+' (8 teams)')+'</div>'+M.filter(m=>m.g==g).map(m=>row(m)+(m.id==g+'6'?koSfBlock(t,g):'')).join('');
+  return head
+    +(gf.w?'<div class="kochamp">👑 '+L('চ্যাম্পিয়ন: ','Champion: ')+esc(gf.w)+'</div>':'')
+    +(st?'':'<button class="g" style="width:100%;margin-bottom:4px" onclick="koStart(\''+tid+'\')">▶ '+L('এই টুর্নামেন্ট শুরু করুন','Start this tournament')+'</button><p class="dim" style="font-size:12px;margin:6px 0 0">'+L('শুরু করার আগে ✏️ এডিট করে টিম/জোড়া বদলানো যাবে।','You can still edit teams/pairs with ✏️ before starting.')+'</p>')
+    +day('A',1)+day('B',2)
+    +'<div class="koh">🏆 '+L('গ্র্যান্ড ফাইনাল','Grand Final')+'</div>'+row(gf)
+    +(st?'<p class="dim" style="font-size:12px;margin:10px 0">'+L('▶ = স্কোরারে ম্যাচ লোড করুন (ম্যাচ শেষ হলে বিজয়ী নিজে নিজে পরের রাউন্ডে যাবে)। দলের নামে চাপ দিলে হাতে বিজয়ী ঠিক করা যায়। ↺ = রিসেট।','▶ loads the match into the scorer (the winner advances automatically when the match ends). Tap a team name to set the winner by hand. ↺ = reset.')+'</p>':'')
+    +'<div class="row" style="margin:12px 0 0"><button class="sm" style="flex:1" onclick="koEdit(\''+tid+'\')">✏️ '+L('এডিট','Edit')+'</button><button class="w sm" style="flex:1" onclick="koDel(\''+tid+'\')">🗑 '+L('মুছুন','Delete')+'</button></div></div></details>';
+}
+function koUI(force){
+  const b=$('kobox');if(!b)return;
+  const ae=document.activeElement;
+  if(!force&&ae&&b.contains(ae)&&/^(INPUT|TEXTAREA)$/.test(ae.tagName))return;
+  const ks=TN.filter(t=>t.ko);
+  const f='<div class="row" style="margin-bottom:8px"><div><label>'+L('টুর্নামেন্টের নাম','Tournament name')+'</label><input id="ko_n" value="'+esc(KONAME)+'" oninput="KONAME=this.value" placeholder="'+L('যেমন: ১৬ টিম কাপ','e.g. 16-Team Cup')+'"></div></div>'
+   +koPairs('KOF',KOF)
+   +'<div class="row" style="margin:12px 0 0"><button class="g" style="flex:1" onclick="koCreate()">✅ '+L('টুর্নামেন্ট তৈরি করুন','Create tournament')+'</button></div>'
+   +'<p class="dim" style="font-size:12px;margin-top:8px">'+L('দিন ১: ৪টি ম্যাচ → ২টি সেমি → ফাইনাল। দিন ২: একই। দুই দিনের বিজয়ী গ্র্যান্ড ফাইনালে।','Day 1: 4 matches → 2 semis → final. Day 2: same. The two day-winners meet in the Grand Final.')+'</p>';
+  b.innerHTML='<h3>🏆 '+L('নকআউট টুর্নামেন্ট (১৬ টিম)','Knockout Tournament (16 teams)')+'</h3>'
+   +'<details class="sec" id="koform"'+(KOFORM?' open':'')+' ontoggle="KOFORM=this.open"><summary>＋ '+L('নতুন ১৬ টিমের টুর্নামেন্ট','New 16-team tournament')+'</summary><div class="sb">'+f+'</div></details>'
+   +(ks.length?ks.map(koHTML).join(''):'<p class="dim" style="margin-top:8px">'+L('এখনো কোনো নকআউট টুর্নামেন্ট নেই','No knockout tournaments yet')+'</p>');
+}
+/* shared check for create + edit: returns {nm,tm} or null after showing the problem */
+async function koValidate(name,arr){
+  const nm=(name||'').trim().slice(0,60);
+  if(!nm){await dlg('⚠️ '+L('টুর্নামেন্টের নাম দিন','Enter the tournament name'),{alert:1});return null}
+  const tm=[];for(let i=0;i<16;i++)tm.push(((arr[i]||'').trim()||(L('টিম ','Team ')+(i+1))).slice(0,40));
+  const seen={};for(const x of tm){const k=x.toLowerCase();if(seen[k]){await dlg('⚠️ '+L('একই নামের দুটি টিম: ','Duplicate team name: ')+x,{alert:1});return null}seen[k]=1}
+  return {nm,tm};
+}
+async function koCreate(){
+  const v=await koValidate(KONAME,KOF);if(!v)return;
+  const t={id:'t'+Date.now(),name:v.nm,teams:v.tm,started:false,ko:koBuild(v.tm.slice(0,8),v.tm.slice(8))};
+  TN.push(t);KOOPEN[t.id]=true;KOF=[];KONAME='';KOFORM=false;
+  storeTN();toast('🏆 '+L('টুর্নামেন্ট তৈরি হয়েছে','Tournament created'));
+}
+function koEdit(tid){
+  const t=TN.find(x=>x.id==tid);if(!t||!t.ko)return;
+  KOEDIT=tid;KOEF=t.teams.slice();KOEN=t.name;KOOPEN[tid]=true;koUI(true);
+}
+function koEditCancel(){KOEDIT=null;koUI(true)}
+/* Rename teams everywhere (bracket, finished results, saved match history, running match) WITHOUT touching any result. map = {oldName:newName} */
+function koRenameTeams(t,map){
+  const keys=Object.keys(map);if(!keys.length)return;
+  const rn=x=>Object.prototype.hasOwnProperty.call(map,x)?map[x]:x;
+  const re=new RegExp(keys.slice().sort((x,y)=>y.length-x.length).map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
+  const rt=x=>typeof x=='string'?x.replace(re,m=>map[m]):x;
+  t.teams=t.teams.map(rn);
+  t.ko.forEach(m=>{m.a=rn(m.a);m.b=rn(m.b);m.w=rn(m.w);m.res=rt(m.res)});
+  /* saved match history of this tournament */
+  try{
+    const h=JSON.parse(localStorage.getItem('hist')||'[]');let ch=false;
+    h.forEach(e=>{if(e&&e.m&&e.m.tn==t.id){e.m.t=(e.m.t||[]).map(rn);e.res=rt(e.res);ch=true}});
+    if(ch)localStorage.setItem('hist',JSON.stringify(h));
+  }catch(x){}
+  /* running / just-finished match of this tournament */
+  if(S&&(S.tn==t.id||(S.ko&&S.ko.split(':')[0]==t.id))){S.t=S.t.map(rn);try{save()}catch(x){}}
+  /* match loaded in the setup form but not started yet */
+  if(!S&&KOLOAD&&KOLOAD.tid==t.id){const i1=$('t1'),i2=$('t2');if(i1)i1.value=rn(i1.value);if(i2)i2.value=rn(i2.value)}
+  /* fixtures added to this tournament */
+  let fxc=false;FX.forEach(f=>{if(f.tn==t.id){f.t1=rn(f.t1);f.t2=rn(f.t2);fxc=true}});if(fxc)storeFX();
+}
+async function koEditSave(tid){
+  const t=TN.find(x=>x.id==tid);if(!t||!t.ko)return;
+  const v=await koValidate(KOEN,KOEF);if(!v)return;
+  const old=t.teams,changed=[];
+  v.tm.forEach((x,i)=>{if(x!==old[i])changed.push(i)});
+  if(changed.length){
+    const samePeople=v.tm.slice().sort().join('\n')==old.slice().sort().join('\n');
+    if(samePeople){
+      /* same 16 teams, only moved to other slots = a re-draw of the pairs: results cannot be kept */
+      if(t.ko.some(m=>m.w)&&!(await dlg(L('টিমগুলোর জায়গা/জোড়া বদলালে এখন পর্যন্ত সব ফলাফল মুছে যাবে। (শুধু নামের বানান ঠিক করলে ফলাফল থাকে।) চালিয়ে যাবেন?','Moving teams to different pairs clears all results so far. (Just fixing a name keeps every result.) Continue?'))))return;
+      t.teams=v.tm;t.ko=koBuild(v.tm.slice(0,8),v.tm.slice(8));
+    }else{
+      /* name changes only: keep all results */
+      const map={};changed.forEach(i=>{map[old[i]]=v.tm[i]});
+      koRenameTeams(t,map);
+    }
+  }
+  t.name=v.nm;
+  KOEDIT=null;storeTN();toast('💾 '+L('সেভ হয়েছে'+(changed.length?' — ফলাফল ঠিক আছে':''),'Saved'+(changed.length?' — results kept':'')));
+}
+function koStart(tid){
+  const t=TN.find(x=>x.id==tid);if(!t||!t.ko)return;
+  t.started=true;KOOPEN[tid]=true;storeTN();
+  toast('🏁 '+L('টুর্নামেন্ট শুরু হয়েছে','Tournament started'));
+  if(!S)koGo(tid,'A1');
+}
+async function koPick(tid,mid,side){
+  const t=TN.find(x=>x.id==tid);if(!t||!t.ko||!koStarted(t))return;const m=t.ko.find(x=>x.id==mid);if(!m)return;
+  const nm=side<0?'':(side?m.b:m.a);
+  if(side>=0&&(!m.a||!m.b))return;
+  if(m.w==nm)return;
+  if(m.w||side<0){
+    const later=t.ko.some(x=>(x.fa==mid||x.fb==mid)&&x.w);
+    if(!(await dlg(L('এই ম্যাচের ফলাফল বদলাবেন?'+(later?' পরের রাউন্ডের ফলাফল মুছে যেতে পারে।':''),'Change this result?'+(later?' Results of later rounds may be cleared.':'')))))return;
+  }else if(!(await dlg(L(nm+' কে বিজয়ী ঘোষণা করবেন?','Set '+nm+' as the winner?'))))return;
+  m.w=nm;m.res=nm?L('হাতে দেওয়া ফলাফল','Result set manually'):'';
+  koSync(t);storeTN();
+}
+function koGo(tid,mid){
+  const t=TN.find(x=>x.id==tid);if(!t||!t.ko||!koStarted(t))return;const m=t.ko.find(x=>x.id==mid);if(!m||!m.a||!m.b)return;
+  if(S){toast('⚠️ '+L('আগে চলমান ম্যাচ শেষ করুন বা নতুন ম্যাচ চাপুন','Finish the current match (or tap New Match) first'));return}
+  $('t1').value=m.a;$('t2').value=m.b;$('tnsel').value=tid;tnPick();
+  $('tt').value=t.name+' – '+koLabel(m).replace('🏆 ','');
+  KOLOAD={tid:tid,mid:mid};FXLOAD=null;
+  window.scrollTo(0,0);toast('▶ '+L('সেটআপে বসেছে, "ম্যাচ শুরু" চাপুন','Loaded — press Start Match'));
+}
+/* called from start(): tag the match only if the team names still match the bracket slot */
+function koAttach(){
+  const k=KOLOAD;KOLOAD=null;if(!k||!S)return;
+  const t=TN.find(x=>x.id==k.tid),m=t&&t.ko&&t.ko.find(x=>x.id==k.mid);if(!m)return;
+  const a=S.t[0],b=S.t[1];
+  if((a==m.a&&b==m.b)||(a==m.b&&b==m.a))S.ko=k.tid+':'+k.mid;
+}
+/* called when a match finishes: winner moves on in the bracket */
+function koRecord(M){
+  if(!M||!M.ko)return;
+  const [tid,mid]=M.ko.split(':'),t=TN.find(x=>x.id==tid),m=t&&t.ko&&t.ko.find(x=>x.id==mid);if(!m)return;
+  const w=winOf(M);
+  if(w=='t'){toast('🤝 '+L('টাই — নকআউটে হাতে বিজয়ী ঠিক করুন','Tie — pick the winner by hand in the bracket'));return}
+  const nm=origT(M)[w=='a'?0:1];
+  if(nm!=m.a&&nm!=m.b)return;
+  m.w=nm;m.res=result(M);koSync(t);storeTN();
+  const nx=t.ko.find(x=>x.fa==mid||x.fb==mid);
+  toast('🏆 '+nm+' '+(nx?L('পরের রাউন্ডে গেল','advances'):L('চ্যাম্পিয়ন!','are the champions!')));
+}
+async function koDel(tid){
+  if(!(await dlg(L('এই নকআউট টুর্নামেন্ট মুছবেন? (ম্যাচের হিস্টোরি থাকবে)','Delete this knockout tournament? (match history stays)'))))return;
+  TN=TN.filter(t=>t.id!=tid);delete KOOPEN[tid];storeTN();
+}
 function swapSetupTeams(){const a=$('t1').value;$('t1').value=$('t2').value;$('t2').value=a}
 function swapTeams(){
   if(!S)return;
@@ -1744,7 +2046,7 @@ function minus(k){
 }
 addEventListener('resize',fit);addEventListener('resize',()=>{['lsc','fxd'].forEach(id=>{const e=$(id);if(e)e._k=null});try{render()}catch(e){}});
 if(OVM){$('lock').style.display='none';document.body.classList.add('ovm');document.body.appendChild($('ov'));$('ov').className='clear';poll();setInterval(poll,1500)}
-else{load();if(S)S.pa=null;rosUI();tnUI();setTab(S?'score':'setup');$('fdb').value=CFG.db;$('fm').value=CFG.m;$('fk').value=CFG.key||'';$('fe').value=CFG.email||'';render();push();if(needLock())showLock();else $('lock').style.display='none'}
+else{load();if(S)S.pa=null;rosUI();tnUI();koUI(true);setTab(S?'score':'setup');$('fdb').value=CFG.db;$('fm').value=CFG.m;$('fk').value=CFG.key||'';$('fe').value=CFG.email||'';render();push();if(needLock())showLock();else $('lock').style.display='none'}
 if('serviceWorker' in navigator&&location.protocol.indexOf('http')==0)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
