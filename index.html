@@ -622,6 +622,23 @@ body.nomatch #bcw{visibility:hidden}
 #cbm.two{display:flex;gap:.5em;align-items:center;justify-content:center}
 #ov:not(.inline) #cbd.on.two{width:54em}
 #ov:not(.inline) #cbd.two #cbm img{flex:1 1 0;min-width:0;max-width:50%;width:50%;height:auto;max-height:32em;object-fit:contain;margin:.3em 0}
+/* ===== headline (শিরোনাম) ticker + score bar on/off ===== */
+#hld{--hu:var(--u,1px);display:none;z-index:5;font-weight:800}
+#ov.inline #hld{--hu:.7px}
+#hld.on{display:flex;align-items:stretch;height:calc(var(--hu)*54);border-radius:calc(var(--hu)*28) calc(var(--hu)*14) calc(var(--hu)*14) calc(var(--hu)*28);overflow:hidden;background:var(--hbg,#0a2266);border-top:2px solid #f5c518;border-bottom:2px solid rgba(245,197,24,.55);box-shadow:0 0 26px rgba(40,90,255,.35),0 10px 26px rgba(0,0,0,.5);animation:hlIn .6s cubic-bezier(.2,.9,.3,1) both}
+#ov:not(.inline) #hld.on{position:absolute;left:0;right:0;bottom:calc(var(--bh,104px) + var(--hu)*10)}
+body.nobar #ov:not(.inline) #hld.on{bottom:calc(var(--hu)*14)}
+#ov.inline #hld.on{margin-bottom:10px}
+.hl-l{flex:0 0 auto;display:flex;align-items:center;margin:2px 0 2px 2px;padding:0 calc(var(--hu)*46) 0 calc(var(--hu)*26);background:var(--hlb,#fff);color:var(--hlc,#0b1230);font-size:calc(var(--hu)*27);font-weight:900;white-space:nowrap;border-radius:calc(var(--hu)*24) 0 0 calc(var(--hu)*24);clip-path:polygon(0 0,calc(100% - var(--hu)*30) 0,100% 100%,0 100%)}
+.hl-w{flex:1 1 0;min-width:0;overflow:hidden;display:flex;align-items:center}
+.hl-t{flex:0 0 auto;display:flex;align-items:center;white-space:nowrap;color:var(--htc,#fff);font-size:calc(var(--hu)*28);font-weight:800;text-shadow:0 2px 6px rgba(0,0,0,.45);will-change:transform}
+.hl-t span{padding-right:calc(var(--hu)*40)}
+.hl-t span::after{content:"\25C6";margin-left:calc(var(--hu)*40);color:#f5c518;font-size:.55em;vertical-align:middle}
+@keyframes hlm{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes hlIn{from{opacity:0;transform:translateY(calc(var(--hu)*30))}to{opacity:1;transform:none}}
+body.nobar #bcw{visibility:hidden!important}
+body.nobar #ov.inline #bcw{display:none}
+body.hl-on #ov:not(.inline) #lsc.on{bottom:calc(var(--bh,64px) + 14px + var(--u,1px)*64)}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1220">
@@ -707,7 +724,7 @@ body.nomatch #bcw{visibility:hidden}
 <polygon points="600,80 978,80 950,128 588,128" fill="#0a1a48" stroke="#0a1a48" stroke-width="12" stroke-linejoin="miter"/><polygon points="600,80 978,80 950,128 588,128" fill="url(#pcy)"/><polygon points="602,84 975,84 972,90 600,90" fill="#fff" opacity=".45"/><polygon points="590,122 949,122 950,128 588,128" fill="#b57f00" opacity=".6"/>
 <polygon points="506,466 1033,466 1021,534 488,534" transform="translate(0,12)" fill="#030a22" opacity=".8"/>
 <polygon points="506,466 1033,466 1021,534 488,534" transform="translate(0,9)" fill="#a87500" stroke="#0a1a48" stroke-width="8" stroke-linejoin="miter"/>
-<polygon points="506,466 1033,466 1021,534 488,534" fill="#0a1a48" stroke="#0a1a48" stroke-width="8"/><polygon points="506,466 1033,466 1021,534 488,534" fill="url(#pcy)" stroke="#0a1a48" stroke-width="5" stroke-linejoin="miter"/><polygon points="509,471 1030,471 1028,479 507,479" fill="#fff" opacity=".55"/><polygon points="490,526 1022,526 1021,533 489,533" fill="#b57f00" opacity=".55"/></svg><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="fxd"><div class="fxd-t"><span class="fx-st fx-l"></span><div class="fx-tab" id="fxdt"></div><span class="fx-st fx-r"></span></div><div class="fxd-b"><div id="fxdr"></div></div></div><div id="kod"></div><div id="bcw"><div id="stg">
+<polygon points="506,466 1033,466 1021,534 488,534" fill="#0a1a48" stroke="#0a1a48" stroke-width="8"/><polygon points="506,466 1033,466 1021,534 488,534" fill="url(#pcy)" stroke="#0a1a48" stroke-width="5" stroke-linejoin="miter"/><polygon points="509,471 1030,471 1028,479 507,479" fill="#fff" opacity=".55"/><polygon points="490,526 1022,526 1021,533 489,533" fill="#b57f00" opacity=".55"/></svg><div class="pcr"><div id="pcc"></div><div id="pcp"></div></div></div><div id="fxd"><div class="fxd-t"><span class="fx-st fx-l"></span><div class="fx-tab" id="fxdt"></div><span class="fx-st fx-r"></span></div><div class="fxd-b"><div id="fxdr"></div></div></div><div id="kod"></div><div id="hld"><div class="hl-l"><span id="hll"></span></div><div class="hl-w"><div class="hl-t" id="hlt"></div></div></div><div id="bcw"><div id="stg">
   <div id="bc"><div id="anim"><span></span></div><div id="wbar"></div>
    <div id="top">
     <div class="tab1"><span class="trophy">🏆</span><span class="v" id="oVe"></span><span class="sep">|</span><span class="t" id="oTt"></span><span class="lv">● LIVE</span><span class="fh" id="oFH"></span></div>
@@ -761,6 +778,21 @@ body.nomatch #bcw{visibility:hidden}
    </div></details>
 </div>
 <div class="t-more">
+  <details class="sec" open><summary>📺 স্কোর বার ও শিরোনাম / Score bar &amp; Headline</summary><div class="sb">
+   <button id="barb" style="width:100%;font-size:15px;padding:12px;margin-bottom:10px" onclick="toggleBar()"></button>
+   <button id="hlb" style="width:100%;font-size:15px;padding:12px;margin-bottom:10px" onclick="toggleHL()"></button>
+   <label>শিরোনাম লিখুন (গোল গোল ঘুরবে) / Headline text (scrolls in a loop)</label>
+   <input id="hl_t" maxlength="300" placeholder="আজ ফাইনাল ম্যাচ বিকাল ৩টায়..." oninput="hlIn()" onchange="hlPush()" style="margin-bottom:8px">
+   <label>বাম পাশের লেখা / Left label</label>
+   <input id="hl_lb" maxlength="30" oninput="hlIn()" onchange="hlPush()" style="margin-bottom:8px">
+   <div class="row"><div><label>শিরোনাম লেখার রং / Label text</label><input type="color" id="hl_lc" style="padding:2px;height:42px" oninput="hlIn()" onchange="hlPush()"></div>
+   <div><label>শিরোনাম বক্সের রং / Label box</label><input type="color" id="hl_lbg" style="padding:2px;height:42px" oninput="hlIn()" onchange="hlPush()"></div></div>
+   <div class="row"><div><label>ঘোরা লেখার রং / Scrolling text</label><input type="color" id="hl_tc" style="padding:2px;height:42px" oninput="hlIn()" onchange="hlPush()"></div>
+   <div><label>ব্যাকগ্রাউন্ড রং / Background</label><input type="color" id="hl_bg" style="padding:2px;height:42px" oninput="hlIn()" onchange="hlPush()"></div></div>
+   <label>গতি / Speed</label><select id="hl_sp" onchange="hlIn();hlPush()" style="width:100%;padding:10px;border-radius:10px;background:#0f1220;color:#fff;border:1px solid #333a5e;margin-bottom:8px"><option value="1">ধীর / Slow</option><option value="2">মাঝারি / Medium</option><option value="3">দ্রুত / Fast</option></select>
+   <label>রেডি থিম / Quick themes</label>
+   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px"><button style="padding:10px 0;font-size:13px;background:#0a2266;color:#fff;border:1px solid rgba(255,255,255,.25)" onclick="hlPre('blue')">নীল</button><button style="padding:10px 0;font-size:13px;background:#b91c1c;color:#fff;border:1px solid rgba(255,255,255,.25)" onclick="hlPre('red')">লাল</button><button style="padding:10px 0;font-size:13px;background:#15803d;color:#fff;border:1px solid rgba(255,255,255,.25)" onclick="hlPre('green')">সবুজ</button><button style="padding:10px 0;font-size:13px;background:#0b0b0b;color:#ffd21f;border:1px solid rgba(255,255,255,.25)" onclick="hlPre('black')">কালো</button><button style="padding:10px 0;font-size:13px;background:#f5c518;color:#3b2300;border:1px solid rgba(255,255,255,.25)" onclick="hlPre('gold')">সোনালি</button></div>
+  </div></details>
   <details class="sec" open><summary>🧰 টুলস / Tools</summary><div class="sb">
 <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:10px"><button class="sm" onclick="showCard()">📊 স্কোরকার্ড / Scorecard</button><button class="sm" onclick="showHist()">🗂️ হিস্টোরি / History</button><button class="sm" onclick="showPlayers()">👥 প্লেয়ার / Players</button></div>
   </div></details>
@@ -1048,7 +1080,7 @@ function winOf(M){
   const oi=(M.so||0)%2?1-w:w;return oi?'b':'a';
 }
 function render(){
-  koUI();renderKO();if(!OVM)koTogUI();renderCB();renderPC();renderFx();renderVib();renderTop();renderKill();fxUI();try{const _a=$('sPC'),_b=$('sMS'),_c=$('sML');if(_a)_a.classList.toggle('on',!!PC.on);if(_b)_b.classList.toggle('on',!!(S&&S.showSC));if(_c)_c.classList.toggle('on',!!FXSHOW)}catch(e){}
+  koUI();renderKO();if(!OVM)koTogUI();renderCB();renderPC();renderHL();renderFx();renderVib();renderTop();renderKill();fxUI();try{const _a=$('sPC'),_b=$('sMS'),_c=$('sML');if(_a)_a.classList.toggle('on',!!PC.on);if(_b)_b.classList.toggle('on',!!(S&&S.showSC));if(_c)_c.classList.toggle('on',!!FXSHOW)}catch(e){}
   {const e=$('scm');if(e&&e.value!==SCM&&document.activeElement!==e)e.value=SCM}
   if(!OVM)syncPanelUI();
   $('lbn').classList.toggle('on',LANG=='bn');$('len').classList.toggle('on',LANG=='en');
@@ -2106,10 +2138,51 @@ function swapTeams(){
   if(S.inn!==0||S.so){toast('⚠️ '+L('প্রথম ইনিংসের পর টিম বদল করা যায় না','Teams cannot be swapped after the 1st innings'));return}
   snap();const a=S.t[0];S.t[0]=S.t[1];S.t[1]=a;save();render();toast('⇄ '+L('ব্যাটিং ও বোলিং টিম বদল হয়েছে','Batting & bowling teams swapped'));
 }
+/* ===== score bar ON/OFF + headline (শিরোনাম) ticker ===== */
+let SBAR=true,SBARd=true,HDL={on:false,t:'',lb:'শিরোনামঃ',lc:'#0b1230',lbg:'#ffffff',tc:'#ffffff',bg:'#0a2266',sp:2},HDLd=null;
+try{SBAR=localStorage.getItem('bar')!=='0'}catch(e){}
+try{HDL=Object.assign(HDL,JSON.parse(localStorage.getItem('hl')))}catch(e){}
+const hlc=v=>/^#[0-9a-fA-F]{6}$/.test(String(v))?String(v):null;
+const cleanHL=o=>({t:String(o.t==null?'':o.t).slice(0,300),lb:String(o.lb==null?'':o.lb).slice(0,30),lc:hlc(o.lc)||'#0b1230',lbg:hlc(o.lbg)||'#ffffff',tc:hlc(o.tc)||'#ffffff',bg:hlc(o.bg)||'#0a2266',sp:[1,2,3].indexOf(Number(o.sp))>=0?Number(o.sp):2});
+const hlp=()=>HDL.on&&String(HDL.t).trim()?cleanHL(HDL):null;
+const HDLP={blue:['#0b1230','#ffffff','#ffffff','#0a2266'],red:['#ffffff','#e11d1d','#ffffff','#5c0a0a'],green:['#ffffff','#16a34a','#ffffff','#064e2b'],black:['#111111','#ffd21f','#ffffff','#0b0b0b'],gold:['#3b2300','#ffffff','#3b2300','#f5c518']};
+function hlFill(){[['hl_t','t'],['hl_lb','lb'],['hl_lc','lc'],['hl_lbg','lbg'],['hl_tc','tc'],['hl_bg','bg'],['hl_sp','sp']].forEach(a=>{const e=$(a[0]);if(e)e.value=HDL[a[1]]})}
+function hlRead(){HDL.t=$('hl_t').value.slice(0,300);HDL.lb=$('hl_lb').value.slice(0,30);['lc','lbg','tc','bg'].forEach(k=>{const v=$('hl_'+k).value;if(hlc(v))HDL[k]=v});HDL.sp=[1,2,3].indexOf(Number($('hl_sp').value))>=0?Number($('hl_sp').value):2}
+function hlStore(){try{localStorage.setItem('hl',JSON.stringify(HDL))}catch(e){}}
+function hlSend(){if(S)save();else push()}
+function hlIn(){hlRead();hlStore();renderHL()}
+function hlPush(){hlRead();hlStore();if(HDL.on)hlSend();renderHL()}
+function toggleHL(){hlRead();HDL.on=!HDL.on;hlStore();if(HDL.on&&!HDL.t.trim())toast('✍️ '+L('আগে শিরোনাম লিখুন','Type a headline first'));hlSend();renderHL()}
+function hlPre(k){const p=HDLP[k];if(!p)return;HDL.lc=p[0];HDL.lbg=p[1];HDL.tc=p[2];HDL.bg=p[3];hlFill();hlStore();if(HDL.on)hlSend();renderHL()}
+function toggleBar(){SBAR=!SBAR;try{localStorage.setItem('bar',SBAR?'1':'0')}catch(e){}renderHL();hlSend();toast('📺 '+L('স্কোর বার ','Score bar ')+(SBAR?'ON':'OFF'))}
+function buildHL(c){
+  const d=$('hld'),tr=$('hlt'),w=tr.parentNode;
+  tr.style.animation='none';tr.textContent='';
+  const mk=()=>{const s=document.createElement('span');s.textContent=c.t;return s};
+  const pr=mk();tr.appendChild(pr);
+  const iw=pr.offsetWidth||1,bw=w.offsetWidth||800,n=Math.ceil(bw/iw)+1,k=(d.offsetHeight||54)/54;
+  for(let i=1;i<n*2;i++)tr.appendChild(mk());
+  const spd=[70,110,160][c.sp-1]||110;
+  tr.style.animation='hlm '+Math.max(6,(n*iw)/(spd*k))+'s linear infinite';
+}
+function renderHL(){
+  const d=$('hld');if(!d)return;
+  const c=OVM?HDLd:hlp(),bar=OVM?SBARd:SBAR;
+  document.body.classList.toggle('nobar',!bar);
+  document.body.classList.toggle('hl-on',!!c);
+  if(c){d.style.setProperty('--hbg',c.bg);d.style.setProperty('--hlb',c.lbg);d.style.setProperty('--hlc',c.lc);d.style.setProperty('--htc',c.tc);$('hll').textContent=c.lb}
+  d.classList.toggle('on',!!c);
+  const tr=$('hlt');
+  if(c){const key=c.t+'|'+c.sp+'|'+c.lb+'|'+innerWidth+'|'+$('ov').classList.contains('inline');if(tr._k!==key){tr._k=key;buildHL(c)}}else tr._k=null;
+  if(!OVM){const b=$('barb'),h=$('hlb');
+    if(b){b.textContent='📺 '+L('স্কোর বার','Score bar')+': '+(SBAR?'ON':'OFF');b.classList.toggle('on',SBAR)}
+    if(h){h.textContent='📰 '+L('শিরোনাম বার','Headline bar')+': '+(HDL.on?'ON':'OFF');h.classList.toggle('on',HDL.on)}}
+}
+hlFill();
 const Q=new URLSearchParams(location.search),OVM=Q.get('view')==='overlay';
 let CFG={db:'',m:'match1'};try{CFG=Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')))}catch(e){}
 let pt=null;
-function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,so:S.so||0,fin:S.fin?1:0,spl:S.spl||'',cb:cbp(),pc:pcp(),fx:fxp(),ko:kop(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,pz:PZ,lang:LANG,ts:Date.now()}}
+function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,so:S.so||0,fin:S.fin?1:0,spl:S.spl||'',cb:cbp(),pc:pcp(),fx:fxp(),ko:kop(),hl:hlp(),bar:SBAR?1:0,pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,pz:PZ,lang:LANG,ts:Date.now()}}
 const N=v=>Number(v)||0,Sx=v=>String(v==null?'':v);
 function unpack(o){
   const bs=o.bs||{},t=o.t||[];
@@ -2132,7 +2205,7 @@ function push(){
     const t=await token();
     const au=t?'?auth='+encodeURIComponent(t):'';
     /* no running match on THIS device: only write the board keys one by one, so the live match data (team names, score) saved by the scorer's phone is never wiped */
-    const job=S?fetch(furl()+au,{method:'PUT',body:JSON.stringify(pack())}).then(r=>{if(!r.ok)throw 0}):Promise.all(Object.entries({lang:LANG,ts:Date.now(),pz:PZ,cb:cbp(),pc:pcp(),fx:fxp(),ko:kop()}).map(([k,v])=>fetch(CFG.db+'/matches/'+CFG.m+'/'+k+'.json'+au,{method:'PUT',body:JSON.stringify(v==null?null:v)}).then(r=>{if(!r.ok)throw 0})));
+    const job=S?fetch(furl()+au,{method:'PUT',body:JSON.stringify(pack())}).then(r=>{if(!r.ok)throw 0}):Promise.all(Object.entries({lang:LANG,ts:Date.now(),pz:PZ,cb:cbp(),pc:pcp(),fx:fxp(),ko:kop(),hl:hlp(),bar:SBAR?1:0}).map(([k,v])=>fetch(CFG.db+'/matches/'+CFG.m+'/'+k+'.json'+au,{method:'PUT',body:JSON.stringify(v==null?null:v)}).then(r=>{if(!r.ok)throw 0})));
     job.then(()=>syn(true)).catch(()=>syn(false))},300);
 }
 let lastEv=null;
@@ -2142,9 +2215,9 @@ function poll(){
     CBd=o&&o.cb?{t:Sx(o.cb.t).slice(0,80),x:Sx(o.cb.x).slice(0,1500),i:Sx(o.cb.i).slice(0,300),p:Sx(o.cb.p).slice(0,59999),p2:Sx(o.cb.p2).slice(0,59999)}:null;
     PCd=o&&o.pc?cleanPC(o.pc):null;
     FXd=o&&o.fx?cleanFX(o.fx):null;
-    KOd=o&&o.ko?cleanKO(o.ko):null;
+    KOd=o&&o.ko?cleanKO(o.ko):null;HDLd=o&&o.hl?cleanHL(o.hl):null;SBARd=!(o&&(o.bar===0||o.bar===false));
     $('bcw').style.visibility=(o&&o.t)?'visible':'hidden';
-    if(!(o&&o.t)){setPanel($('lsc'),false);if(o&&o.lang)LANG=o.lang=='en'?'en':'bn';renderCB();renderPC();renderFx();renderKO()}
+    if(!(o&&o.t)){setPanel($('lsc'),false);if(o&&o.lang)LANG=o.lang=='en'?'en':'bn';renderCB();renderPC();renderFx();renderKO();renderHL()}
     if(o&&o.t){LANG=o.lang=='en'?'en':'bn';S=unpack(o);SCL=o.sc?(o.sc.inns||[]).slice(0,2).map(c=>({team:Sx(c.team),runs:N(c.runs),w:N(c.w),balls:N(c.balls),outs:(c.outs||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),ord:N(x.ord),how:Sx(x.how),bw:Sx(x.bw)})),bat:(c.bat||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),ord:N(x.ord)})),bw:(c.bws||[]).reduce((a,b)=>{a[Sx(b.n)]={r:N(b.r),w:N(b.w),b:N(b.b),m:N(b.m)};return a},{})})):[];SCRES=Sx(o.sc&&o.sc.res);render();
       if(o.ev){if(lastEv===null)lastEv=o.ev.id;else if(o.ev.id>lastEv){lastEv=o.ev.id;playEv(o.ev)}}else if(lastEv===null)lastEv=0}}).catch(()=>{});
 }
