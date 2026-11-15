@@ -248,6 +248,14 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 .g2{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 22px;min-width:150px}
 .big{font-size:42px;font-weight:800;color:#ffd21f;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,.4)}
 .g2 small{font-size:15px;color:#fff;font-weight:700;margin-top:2px}
+/* overs BESIDE the score, big: 10.3 = 10 overs 3 balls */
+#oOv{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;margin:0;line-height:1;white-space:nowrap}
+#ov:not(.inline) .g5.need b{font-size:26px}
+#ov:not(.inline) .g5.need .d{font-size:12px;color:#fff;font-weight:700}
+#ov:not(.inline) #oOv{align-self:center;height:76%;padding-left:12px;border-left:2px solid #fff}
+#oOv b{font-size:30px;font-weight:900;color:#fff;letter-spacing:.01em;text-shadow:0 2px 6px rgba(0,0,0,.45)}
+#oOv span{font-size:14px;font-weight:800;color:#bcd2ff}
+#ov:not(.inline) .g2{flex-direction:row;gap:12px}
 .g3,.g4,.g5{display:flex;flex-direction:column;justify-content:center;padding:0 18px;border-left:1px solid rgba(255,255,255,.3);min-width:0;white-space:nowrap;overflow:hidden}
 .g3,.g4{font-size:16px;line-height:1.3}
 .ic{display:inline-flex;vertical-align:middle;margin-right:6px}
@@ -268,6 +276,7 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 #top .fh{display:none;background:#f59e0b;color:#111;padding:2px 12px;border-radius:999px;font-weight:800;font-size:13px}
 #top .rs{flex:1;text-align:center;font-size:17px;font-weight:800;color:#fff;min-width:0;overflow:hidden;text-overflow:ellipsis;padding-bottom:3px}
 #top .rs:empty{display:none}
+
 #spon{margin-left:auto;display:flex;align-items:center;gap:8px;height:30px;padding:0 24px 0 32px;background:linear-gradient(90deg,#fff,#dfe6f6);color:#0b1230;border-radius:0 15px 0 0;clip-path:polygon(22px 0,100% 0,100% 100%,0 100%);font-weight:700;box-shadow:inset -3px 0 0 #f5c518}
 #spon i{font-style:normal;font-size:13px;color:#33406b;letter-spacing:0;font-weight:700}
 #oSp{color:#ea580c;font-weight:900;font-size:17px}
@@ -523,17 +532,17 @@ body[data-tab=score] #sbox{position:fixed;left:0;right:0;bottom:calc(58px + env(
 .mlr select{flex:0 0 auto;padding:8px;font-size:13px}
 .mlr button{padding:6px 12px;min-height:0;font-size:14px}
 /* ===== fixed-size overlay bar: long text wraps to 2 lines, never pushes the other sections ===== */
-#ov:not(.inline) .g1{flex:0 0 420px;width:420px}
+#ov:not(.inline) .g1{flex:0 0 395px;width:395px}
 #ov:not(.inline) .g1t{flex:1 1 0;min-width:0}
 #ov:not(.inline) .tn{max-width:100%;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.08;font-size:23px}
-#ov:not(.inline) .g2{flex:0 0 175px;width:175px;min-width:0;padding:0 8px}
+#ov:not(.inline) .g2{flex:0 0 270px;width:270px;min-width:0;padding:0 8px}
 #ov:not(.inline) .g3{flex:1 1 0;min-width:0}
 #ov:not(.inline) .bb{flex:1 1 0;min-width:0;max-width:none;padding:0 10px;height:94%;overflow:hidden}
 #ov:not(.inline) .bn{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:center;line-height:1.05;font-size:20px;max-width:100%}
 #ov:not(.inline) .bs{font-size:23px;line-height:1.05}
 #ov:not(.inline) .bs small{font-size:13px}
 #ov:not(.inline) .g5{flex:0 0 135px;width:135px;min-width:0;padding:0 8px}
-#ov:not(.inline) .g6{flex:0 0 310px;width:310px;padding:0 14px 0 44px;gap:2px;overflow:hidden}
+#ov:not(.inline) .g6{flex:0 0 285px;width:285px;padding:0 14px 0 44px;gap:2px;overflow:hidden}
 #ov:not(.inline) .g6a{max-width:100%;min-width:0;font-size:15px}
 #ov:not(.inline) .g6a #oBw{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #ov:not(.inline) .g6 .ch{flex-wrap:wrap;justify-content:center;gap:0 9px;max-width:100%;max-height:46px;overflow:hidden}
@@ -1064,7 +1073,7 @@ function render(){
   $('oSp').textContent=S.sp;document.querySelector('#spon i').textContent=S.spl||L('পরিবেশনায়','Powered by');$('spon').style.display=(S.sp||'').trim()?'':'none';document.querySelector('#top .lv').textContent='● '+L('লাইভ','LIVE');$('oVe').textContent=S.ve;$('oTt').textContent=S.tt;
   $('oTn').textContent=tn;$('oEm').textContent=Array.from(tn.trim())[0]||'';fitIf($('oTn'),tn,.6,false);$('oBt').textContent=L('বোলিং','Bowling')+': '+S.t[1-S.inn];$('oIn').textContent=S.so?L('সুপার ওভার','SUPER OVER'):'INN '+(S.inn+1);
   {const sc=S.runs+'/'+S.w,el=$('oSc');if(lastSc&&sc!==lastSc){el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop')}lastSc=sc}
-  $('oSc').textContent=S.runs+'/'+S.w;$('oOv').textContent='('+ovs(S.balls)+'/'+S.ov+' '+L('ওভার','ov')+')';
+  $('oSc').textContent=S.runs+'/'+S.w;$('oOv').innerHTML='<b>'+ovs(S.balls)+'</b><span>/'+S.ov+' '+L('ওভার','OV')+'</span>';
   {const od=[0,1].sort((i,j)=>(S.bat[i].ord||i+1)-(S.bat[j].ord||j+1));
    [0,1].forEach(k=>{const i=od[k],x=S.bat[i],on=(i==st);$('oB'+k).textContent=x.n+(on?'*':'');$('oR'+k).innerHTML=x.r+' <small>('+x.b+')</small>';$('bb'+k).classList.toggle('s',on)})}
   $('oBw').textContent=S.bn;
@@ -1079,6 +1088,14 @@ function render(){
     r=(S.runs>S.first.runs||S.balls>=S.ov*6||S.w>=WK(S))?result():L('টার্গেট '+T+' • দরকার '+need+' রান ('+left+' বল)','Target '+T+' • Need '+need+' runs ('+left+' balls)');
   }else r='';
   $('res').textContent=r;
+  /* 2nd innings, after 3 overs: the Target block turns into  NEED <runs> / from <balls> balls  (small) */
+  {const g5=$('oCl').parentElement.parentElement;let nm=false;
+   if(S.inn==1&&S.first){
+     const need=S.first.runs+1-S.runs,left=S.ov*6-S.balls,over=S.runs>S.first.runs||S.balls>=S.ov*6||S.w>=WK(S);
+     nm=!over&&(S.so||S.ov<=3||S.balls>=18);
+     if(nm){$('oCl').textContent=L('দরকার','NEED');$('oCr').textContent=need;$('oPs').textContent=L(left+' বল থেকে','from '+left+' balls')}
+   }
+   g5.classList.toggle('need',nm)}
   fit();
 }
 
