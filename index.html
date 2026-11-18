@@ -1727,7 +1727,7 @@ function fxUI(){
   const runHere=!!(S&&(S.tn||'')==tn&&!(ko&&S.ko&&S.ko.split(':')[0]==t.id));let h='';
   if(runHere)h+='<div class="fxr run"><div class="fxn"><small>'+(S.fin?'✔ '+L('শেষ','Finished'):'▶ '+L('চলমান','Running'))+'</small><b>'+esc(S.t[0])+'</b> vs <b>'+esc(S.t[1])+'</b> <span class="fxs">'+S.runs+'/'+S.w+'</span></div></div>';
   if(ko){
-    const id=esc(t.id),st=koStage(t),started=koStarted(t),gf=t.ko.find(m=>m.id=='GF');
+    const id=esc(t.id),st=koStage(t),started=koStarted(t),gf=t.ko.find(m=>m.id==(t.n==8?'A7':'GF'));
     h+='<div class="koh" style="margin:2px 0 4px">'+(koDayName(st)?'📅 '+koDayName(st)+' · ':'🏆 ')+koStageName(st)+'</div>';
     if(st.r==2)h+=koSfBlock(t,st.g);
     if(!started)h+='<button class="g" style="width:100%;margin-bottom:6px" onclick="koStart(\''+id+'\')">▶ '+L('এই টুর্নামেন্ট শুরু করুন','Start this tournament')+'</button><p class="dim" style="font-size:12px;margin:0 0 6px">'+L('শুরু না করলে ▶ কাজ করবে না।','▶ works after the tournament is started.')+'</p>';
@@ -1813,21 +1813,22 @@ function fxDel(id){FX=FX.filter(x=>x.id!=id);if(FXLOAD==id)FXLOAD=null;storeFX()
    Day 1 : 8 teams -> 4 QF -> 2 SF -> Day-1 final -> winner goes straight to the Grand Final
    Day 2 : other 8 teams -> same -> winner goes to the Grand Final
    Grand Final : Day-1 winner vs Day-2 winner. Stored inside TN[].ko so it also shows in the Tournament dropdown. */
-let KOF=[],KONAME='',KOOPEN={},KOFORM=false,KOLOAD=null,KOEDIT=null,KOEF=[],KOEN='';
+let KOF=[],KONAME='',KOOPEN={},KOFORM=false,KOLOAD=null,KOEDIT=null,KOEF=[],KOEN='',KOSZ=0;
 function koStarted(t){return !!(t.started||t.ko.some(m=>m.w))}
 /* Stage order: Day1 QF -> Day1 SF -> Day1 Final -> Day2 QF -> Day2 SF -> Day2 Final -> Grand Final.
    The "current stage" is the first one that still has an unplayed match (the Grand Final once everything is done). */
 function koStage(t){
-  const ord=[['A',1],['A',2],['A',3],['B',1],['B',2],['B',3],['F',4]];
-  for(const [g,r] of ord){const ms=t.ko.filter(m=>m.g==g&&m.r==r);if(g=='F'||ms.some(m=>!m.w))return{g:g,r:r,ms:ms}}
+  const e8=t.n==8,ord=e8?[['A',1],['A',2],['A',3]]:[['A',1],['A',2],['A',3],['B',1],['B',2],['B',3],['F',4]];
+  for(const [g,r] of ord){const ms=t.ko.filter(m=>m.g==g&&m.r==r);if((e8?r==3:g=='F')||ms.some(m=>!m.w))return{g:g,r:r,ms:ms,e8:e8}}
 }
 function koStageName(st){
   if(st.g=='F')return L('গ্র্যান্ড ফাইনাল','Grand Final');
+  if(st.e8&&st.r==3)return L('ফাইনাল','Final');
   if(st.r==1)return L('কোয়ার্টার ফাইনাল','Quarter-finals');
   if(st.r==2)return L('সেমি ফাইনাল','Semi-finals');
   return L('দিন ','Day ')+(st.g=='A'?1:2)+L(' ফাইনাল',' Final');
 }
-const koDayName=st=>st.g=='F'?'':L('দিন ','Day ')+(st.g=='A'?1:2);
+const koDayName=st=>st.g=='F'||st.e8?'':L('দিন ','Day ')+(st.g=='A'?1:2);
 /* ---- choose who plays whom in the semi-finals (per day) ---- */
 var KOSF=null;   /* {tid,g,s:[4 QF ids]} : s[0] v s[1] = Semi-final 1, s[2] v s[3] = Semi-final 2 */
 function koSfLbl(t,id){
@@ -1883,7 +1884,7 @@ function koFocus(){
 /* winners so far of the latest day that has any (a button press) */
 function koManual(k){
   const t=koFocus();if(!t)return null;
-  if(k=='ch'){const m=t.ko.find(x=>x.id=='GF');return m&&m.w?{k:'ch',t:t.name,d:0,a:m.w,b:m.w==m.a?m.b:m.a,n:[]}:null}
+  if(k=='ch'){const m=t.ko.find(x=>x.id==(t.n==8?'A7':'GF'));return m&&m.w?{k:'ch',t:t.name,d:0,a:m.w,b:m.w==m.a?m.b:m.a,n:[]}:null}
   const r={qf:1,sf:2,dw:3}[k],st=koStage(t);
   for(const g of (KOD=='A'||KOD=='B'?[KOD]:(st.g=='A'?['A']:['B','A']))){
     const ns=t.ko.filter(x=>x.g==g&&x.r==r).map(x=>x.w||'');if(!ns.some(Boolean))continue;
@@ -1898,6 +1899,7 @@ function koAuto(){
     if(!t.ko||!t.last)continue;
     const m=t.ko.find(x=>x.id==t.last);if(!m)continue;
     if(m.id=='GF'){if(m.w)return{k:'ch',t:t.name,d:0,a:m.w,b:m.w==m.a?m.b:m.a,n:[]};continue}
+    if(m.r==3&&m.e){if(m.w)return{k:'ch',t:t.name,d:0,a:m.w,b:m.w==m.a?m.b:m.a,n:[]};continue}
     if(m.r==3){if(m.w)return{k:'dw',t:t.name,d:m.g=='A'?1:2,a:m.w,b:'',n:[]};continue}
     const ms=t.ko.filter(x=>x.g==m.g&&x.r==m.r);
     if(ms.every(x=>x.w))return{k:m.r==1?'qf':'sf',t:t.name,d:m.g=='A'?1:2,a:'',b:'',n:ms.map(x=>x.w)};
@@ -1950,14 +1952,15 @@ function renderKO(){
   const w=$('bcw');if(w){if(on&&c.k=='ch')w.style.visibility='hidden';else if(!OVM)w.style.visibility=''}
 }
 function koBuild(d1,d2){
-  const m=[];
-  [['A',d1],['B',d2]].forEach(([g,tm])=>{
+  const m=[],e8=!d2,gs=[['A',d1]];if(d2)gs.push(['B',d2]);
+  gs.forEach(([g,tm])=>{
     for(let i=0;i<4;i++)m.push({id:g+(i+1),g:g,r:1,a:tm[2*i],b:tm[2*i+1],w:'',res:''});
     m.push({id:g+'5',g:g,r:2,a:'',b:'',w:'',res:'',fa:g+'1',fb:g+'2'});
     m.push({id:g+'6',g:g,r:2,a:'',b:'',w:'',res:'',fa:g+'3',fb:g+'4'});
     m.push({id:g+'7',g:g,r:3,a:'',b:'',w:'',res:'',fa:g+'5',fb:g+'6'});
   });
-  m.push({id:'GF',g:'F',r:4,a:'',b:'',w:'',res:'',fa:'A7',fb:'B7'});
+  if(d2)m.push({id:'GF',g:'F',r:4,a:'',b:'',w:'',res:'',fa:'A7',fb:'B7'});
+  if(e8)m.forEach(x=>x.e=1);
   return m;
 }
 /* fill later rounds from earlier winners; if a slot changed, the old result of that match is cleared */
@@ -1969,28 +1972,29 @@ function koSync(t){
 function koLabel(m){
   const n=+m.id.slice(1);
   if(m.id=='GF')return '🏆 '+L('গ্র্যান্ড ফাইনাল','GRAND FINAL');
+  if(m.e&&m.r==3)return '🏆 '+L('ফাইনাল','FINAL');
   if(m.r==1)return L('কোয়ার্টার ফাইনাল ','Quarter-final ')+n;
   if(m.r==2)return L('সেমি ফাইনাল ','Semi-final ')+(n-4);
   return L('দিন ','Day ')+(m.g=='A'?1:2)+L(' ফাইনাল',' Final');
 }
 /* 8 "A vs B" pair inputs per day. nm = global array name used by the inline oninput, ref = that array */
-function koPairs(nm,ref){
-  const day=(g,n)=>{let h='<div class="koh" style="margin-top:'+(g?14:0)+'px">📅 '+L('দিন '+n+' — ৪টি ম্যাচ','Day '+n+' — 4 matches')+'</div>';
+function koPairs(nm,ref,sz){
+  const day=(g,n)=>{let h='<div class="koh" style="margin-top:'+(g?14:0)+'px">📅 '+(sz==8?L('কোয়ার্টার ফাইনাল — ৪টি ম্যাচ','Quarter-finals — 4 matches'):L('দিন '+n+' — ৪টি ম্যাচ','Day '+n+' — 4 matches'))+'</div>';
     for(let i=0;i<4;i++){const k=g*8+i*2;
       h+='<div class="kom" style="padding:6px 0;border:0"><small>'+L('ম্যাচ ','Match ')+(i+1)+'</small><div class="kot">'
         +'<input value="'+esc(ref[k]||'')+'" oninput="'+nm+'['+k+']=this.value" placeholder="'+L('টিম ','Team ')+(k+1)+'"><i>vs</i>'
         +'<input value="'+esc(ref[k+1]||'')+'" oninput="'+nm+'['+(k+1)+']=this.value" placeholder="'+L('টিম ','Team ')+(k+2)+'"></div></div>'}
     return h};
-  return day(0,1)+day(1,2);
+  return sz==8?day(0,1):day(0,1)+day(1,2);
 }
 function koHTML(t){
   const M=t.ko,by={};M.forEach(m=>by[m.id]=m);
-  const done=M.filter(m=>m.w).length,gf=by.GF,st=koStarted(t),tid=esc(t.id);
-  const head='<details class="sec"'+(KOOPEN[t.id]?' open':'')+' ontoggle="KOOPEN[\''+tid+'\']=this.open" style="margin-top:8px"><summary><span>'+esc(t.name)+' <small class="dim">'+(st?done+'/15':L('ড্রাফট','Draft'))+'</small></span></summary><div class="sb">';
+  const done=M.filter(m=>m.w).length,gf=t.n==8?by.A7:by.GF,e8=t.n==8,st=koStarted(t),tid=esc(t.id);
+  const head='<details class="sec"'+(KOOPEN[t.id]?' open':'')+' ontoggle="KOOPEN[\''+tid+'\']=this.open" style="margin-top:8px"><summary><span>'+esc(t.name)+' <small class="dim">'+(st?done+'/'+(e8?7:15):L('ড্রাফট','Draft'))+'</small></span></summary><div class="sb">';
   if(KOEDIT==t.id){
     return head+'<div class="koh" style="margin-top:0">✏️ '+L('এডিট করুন','Edit tournament')+'</div>'
       +'<div class="row" style="margin-bottom:8px"><div><label>'+L('টুর্নামেন্টের নাম','Tournament name')+'</label><input value="'+esc(KOEN)+'" oninput="KOEN=this.value"></div></div>'
-      +koPairs('KOEF',KOEF)
+      +koPairs('KOEF',KOEF,e8?8:16)
       +'<div class="row" style="margin:12px 0 0"><button class="sm" style="flex:1" onclick="koEditCancel()">✖ '+L('বাতিল','Cancel')+'</button><button class="g" style="flex:2" onclick="koEditSave(\''+tid+'\')">💾 '+L('সেভ করুন','Save')+'</button></div></div></details>';
   }
   const row=m=>{
@@ -2003,40 +2007,43 @@ function koHTML(t){
            :(ready?'<button class="g sm kb" onclick="koGo(\''+tid+'\',\''+m.id+'\')">▶</button>':''))
       +'</div>'+(m.w&&m.res?'<div class="kor">'+esc(m.res)+'</div>':'')+'</div>';
   };
-  const day=(g,n)=>'<div class="koh">📅 '+L('দিন '+n+' (৮টি দল)','Day '+n+' (8 teams)')+'</div>'+M.filter(m=>m.g==g).map(m=>row(m)+(m.id==g+'6'?koSfBlock(t,g):'')).join('');
+  const day=(g,n)=>'<div class="koh">📅 '+(e8?L('৮টি দল','8 teams'):L('দিন '+n+' (৮টি দল)','Day '+n+' (8 teams)'))+'</div>'+M.filter(m=>m.g==g).map(m=>row(m)+(m.id==g+'6'?koSfBlock(t,g):'')).join('');
   return head
     +(gf.w?'<div class="kochamp">👑 '+L('চ্যাম্পিয়ন: ','Champion: ')+esc(gf.w)+'</div>':'')
     +(st?'':'<button class="g" style="width:100%;margin-bottom:4px" onclick="koStart(\''+tid+'\')">▶ '+L('এই টুর্নামেন্ট শুরু করুন','Start this tournament')+'</button><p class="dim" style="font-size:12px;margin:6px 0 0">'+L('শুরু করার আগে ✏️ এডিট করে টিম/জোড়া বদলানো যাবে।','You can still edit teams/pairs with ✏️ before starting.')+'</p>')
-    +day('A',1)+day('B',2)
-    +'<div class="koh">🏆 '+L('গ্র্যান্ড ফাইনাল','Grand Final')+'</div>'+row(gf)
+    +day('A',1)+(e8?'':day('B',2)+'<div class="koh">🏆 '+L('গ্র্যান্ড ফাইনাল','Grand Final')+'</div>'+row(gf))
     +(st?'<p class="dim" style="font-size:12px;margin:10px 0">'+L('▶ = স্কোরারে ম্যাচ লোড করুন (ম্যাচ শেষ হলে বিজয়ী নিজে নিজে পরের রাউন্ডে যাবে)। দলের নামে চাপ দিলে হাতে বিজয়ী ঠিক করা যায়। ↺ = রিসেট।','▶ loads the match into the scorer (the winner advances automatically when the match ends). Tap a team name to set the winner by hand. ↺ = reset.')+'</p>':'')
     +'<div class="row" style="margin:12px 0 0"><button class="sm" style="flex:1" onclick="koEdit(\''+tid+'\')">✏️ '+L('এডিট','Edit')+'</button><button class="w sm" style="flex:1" onclick="koDel(\''+tid+'\')">🗑 '+L('মুছুন','Delete')+'</button></div></div></details>';
 }
+function koSize(n){KOSZ=n==8?8:16;koUI(true)}
 function koUI(force){
   const b=$('kobox');if(!b)return;
   const ae=document.activeElement;
   if(!force&&ae&&b.contains(ae)&&/^(INPUT|TEXTAREA)$/.test(ae.tagName))return;
-  const ks=TN.filter(t=>t.ko);
-  const f='<div class="row" style="margin-bottom:8px"><div><label>'+L('টুর্নামেন্টের নাম','Tournament name')+'</label><input id="ko_n" value="'+esc(KONAME)+'" oninput="KONAME=this.value" placeholder="'+L('যেমন: ১৬ টিম কাপ','e.g. 16-Team Cup')+'"></div></div>'
-   +koPairs('KOF',KOF)
+  const ks=TN.filter(t=>t.ko),sz=KOSZ;
+  const pick='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">'+[8,16].map(n=>'<button class="'+(sz==n?'g':'')+'" style="padding:14px 6px;font-size:16px" onclick="koSize('+n+')">'+n+' '+L('টিম','Teams')+'</button>').join('')+'</div>';
+  const f=!sz?'<p class="dim" style="font-size:12px;margin:0">'+L('উপরে ৮ বা ১৬ টিম বেছে নিন।','Choose 8 or 16 teams above.')+'</p>'
+   :'<div class="row" style="margin-bottom:8px"><div><label>'+L('টুর্নামেন্টের নাম','Tournament name')+'</label><input id="ko_n" value="'+esc(KONAME)+'" oninput="KONAME=this.value" placeholder="'+L('যেমন: '+sz+' টিম কাপ','e.g. '+sz+'-Team Cup')+'"></div></div>'
+   +koPairs('KOF',KOF,sz)
    +'<div class="row" style="margin:12px 0 0"><button class="g" style="flex:1" onclick="koCreate()">✅ '+L('টুর্নামেন্ট তৈরি করুন','Create tournament')+'</button></div>'
-   +'<p class="dim" style="font-size:12px;margin-top:8px">'+L('দিন ১: ৪টি ম্যাচ → ২টি সেমি → ফাইনাল। দিন ২: একই। দুই দিনের বিজয়ী গ্র্যান্ড ফাইনালে।','Day 1: 4 matches → 2 semis → final. Day 2: same. The two day-winners meet in the Grand Final.')+'</p>';
-  b.innerHTML='<h3>🏆 '+L('নকআউট টুর্নামেন্ট (১৬ টিম)','Knockout Tournament (16 teams)')+'</h3>'
-   +'<details class="sec" id="koform"'+(KOFORM?' open':'')+' ontoggle="KOFORM=this.open"><summary>＋ '+L('নতুন ১৬ টিমের টুর্নামেন্ট','New 16-team tournament')+'</summary><div class="sb">'+f+'</div></details>'
+   +'<p class="dim" style="font-size:12px;margin-top:8px">'+(sz==8?L('৪টি ম্যাচ → ২টি সেমি → ফাইনাল। ফাইনালের বিজয়ী চ্যাম্পিয়ন।','4 matches → 2 semis → final. The final winner is the champion.'):L('দিন ১: ৪টি ম্যাচ → ২টি সেমি → ফাইনাল। দিন ২: একই। দুই দিনের বিজয়ী গ্র্যান্ড ফাইনালে।','Day 1: 4 matches → 2 semis → final. Day 2: same. The two day-winners meet in the Grand Final.'))+'</p>';
+  b.innerHTML='<h3>🏆 '+L('নকআউট টুর্নামেন্ট','Knockout Tournament')+'</h3>'
+   +'<details class="sec" id="koform"'+(KOFORM?' open':'')+' ontoggle="KOFORM=this.open"><summary>＋ '+L('টুর্নামেন্ট তৈরি করুন','Create tournament')+'</summary><div class="sb">'+pick+f+'</div></details>'
    +(ks.length?ks.map(koHTML).join(''):'<p class="dim" style="margin-top:8px">'+L('এখনো কোনো নকআউট টুর্নামেন্ট নেই','No knockout tournaments yet')+'</p>');
 }
 /* shared check for create + edit: returns {nm,tm} or null after showing the problem */
-async function koValidate(name,arr){
+async function koValidate(name,arr,sz){
   const nm=(name||'').trim().slice(0,60);
   if(!nm){await dlg('⚠️ '+L('টুর্নামেন্টের নাম দিন','Enter the tournament name'),{alert:1});return null}
-  const tm=[];for(let i=0;i<16;i++)tm.push(((arr[i]||'').trim()||(L('টিম ','Team ')+(i+1))).slice(0,40));
+  const tm=[];for(let i=0;i<sz;i++)tm.push(((arr[i]||'').trim()||(L('টিম ','Team ')+(i+1))).slice(0,40));
   const seen={};for(const x of tm){const k=x.toLowerCase();if(seen[k]){await dlg('⚠️ '+L('একই নামের দুটি টিম: ','Duplicate team name: ')+x,{alert:1});return null}seen[k]=1}
   return {nm,tm};
 }
 async function koCreate(){
-  const v=await koValidate(KONAME,KOF);if(!v)return;
-  const t={id:'t'+Date.now(),name:v.nm,teams:v.tm,started:false,ko:koBuild(v.tm.slice(0,8),v.tm.slice(8))};
-  TN.push(t);KOOPEN[t.id]=true;KOF=[];KONAME='';KOFORM=false;
+  const sz=KOSZ==8?8:16;
+  const v=await koValidate(KONAME,KOF,sz);if(!v)return;
+  const t={id:'t'+Date.now(),name:v.nm,n:sz,teams:v.tm,started:false,ko:koBuild(v.tm.slice(0,8),sz==16?v.tm.slice(8):null)};
+  TN.push(t);KOOPEN[t.id]=true;KOF=[];KONAME='';KOFORM=false;KOSZ=0;
   storeTN();toast('🏆 '+L('টুর্নামেন্ট তৈরি হয়েছে','Tournament created'));
 }
 function koEdit(tid){
@@ -2067,7 +2074,7 @@ function koRenameTeams(t,map){
 }
 async function koEditSave(tid){
   const t=TN.find(x=>x.id==tid);if(!t||!t.ko)return;
-  const v=await koValidate(KOEN,KOEF);if(!v)return;
+  const v=await koValidate(KOEN,KOEF,t.n==8?8:16);if(!v)return;
   const old=t.teams,changed=[];
   v.tm.forEach((x,i)=>{if(x!==old[i])changed.push(i)});
   if(changed.length){
@@ -2075,7 +2082,7 @@ async function koEditSave(tid){
     if(samePeople){
       /* same 16 teams, only moved to other slots = a re-draw of the pairs: results cannot be kept */
       if(t.ko.some(m=>m.w)&&!(await dlg(L('টিমগুলোর জায়গা/জোড়া বদলালে এখন পর্যন্ত সব ফলাফল মুছে যাবে। (শুধু নামের বানান ঠিক করলে ফলাফল থাকে।) চালিয়ে যাবেন?','Moving teams to different pairs clears all results so far. (Just fixing a name keeps every result.) Continue?'))))return;
-      t.teams=v.tm;t.ko=koBuild(v.tm.slice(0,8),v.tm.slice(8));t.last='';
+      t.teams=v.tm;t.ko=koBuild(v.tm.slice(0,8),t.n==8?null:v.tm.slice(8));t.last='';
     }else{
       /* name changes only: keep all results */
       const map={};changed.forEach(i=>{map[old[i]]=v.tm[i]});
