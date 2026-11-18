@@ -810,6 +810,12 @@ body.hl-on #ov:not(.inline) #lsc.on{bottom:calc(var(--bh,64px) + 14px + var(--u,
    <div class="row" style="margin:0 0 8px"><button class="g" style="flex:1;font-size:15px;padding:12px" onclick="signIn()">🔐 Firebase লগইন / Firebase Sign-in</button></div>
    <div class="row" style="margin:0"><button class="g" style="flex:1;font-size:15px;padding:12px" onclick="saveCfg()">💾 সেভ / Save</button><button style="flex:1;font-size:15px;padding:12px" onclick="copyLink()">📋 লিংক কপি / Copy Link</button></div>
    <div id="syn" style="font-size:12px;color:var(--mut);margin-top:8px"></div></div>
+  <div style="margin-top:14px"><h3>☁️ ক্লাউড ব্যাকআপ / Cloud backup</h3>
+   <div class="dim" style="font-size:12px;line-height:1.4;margin-bottom:8px">ম্যাচ ও সব ডেটা অটো Firebase-এ ব্যাকআপ হয়। নতুন ফোনে সেটআপ লিংক খুলে Firebase লগইন করলে ম্যাচ ফিরে আসবে। একসাথে দুই ফোনে স্কোর করবেন না / Your match and all data are backed up to Firebase automatically. On a new phone, open the setup link and sign in to get the match back. Do not score on two phones at the same time.</div>
+   <div class="row" style="margin:0 0 8px"><button class="g" style="flex:1;font-size:14px;padding:12px" onclick="bkNow(true)">☁️ এখনই ব্যাকআপ / Backup now</button><button style="flex:1;font-size:14px;padding:12px" onclick="bkRestore(true)">⬇️ ক্লাউড থেকে লোড / Load from cloud</button></div>
+   <div class="row" style="margin:0"><button style="flex:1;font-size:14px;padding:12px" onclick="bkLink()">📲 সেটআপ লিংক কপি / Copy setup link</button></div>
+   <div class="dim" style="font-size:12px;line-height:1.4;margin-top:8px">সেটআপ লিংকে পাসওয়ার্ড নেই, কিন্তু API key আছে — পাবলিকে শেয়ার করবেন না / The setup link has no password but includes your API key — do not share it publicly.</div>
+   <div id="bks" style="font-size:12px;color:var(--mut);margin-top:8px"></div></div>
   <button id="vbb" style="width:100%;font-size:15px;padding:12px;margin-top:10px" onclick="toggleVib()"></button>
   </div></details>
 </div>
@@ -1440,7 +1446,7 @@ async function signIn(){
     const d=await r.json();if(!r.ok)throw 0;
     AU={rt:d.refreshToken,it:d.idToken,exp:Date.now()+(N(d.expiresIn)-60)*1000};
     CFG.key=key;CFG.email=email;storeCfg();try{localStorage.setItem('au',JSON.stringify(AU))}catch(e){}
-    $('fp').value='';toast('🔐 '+L('লগইন হয়েছে','Signed in'));push();
+    $('fp').value='';toast('🔐 '+L('লগইন হয়েছে','Signed in'));push();bkCheck();
   }catch(e){toast('⚠️ '+L('লগইন হয়নি','Sign-in failed'))}
 }
 async function token(){
@@ -2200,7 +2206,7 @@ function syn(ok){
   const t=$('stsync');if(t){t.textContent=ok?L('সিঙ্ক হয়েছে','Synced'):L('সিঙ্ক হয়নি','Not synced');$('stdot').style.background=ok?'#22c55e':'#ef4444'}
 }
 function push(){
-  if(OVM||!CFG.db)return;clearTimeout(pt);
+  if(OVM||!CFG.db)return;bkSched();clearTimeout(pt);
   pt=setTimeout(async()=>{
     const t=await token();
     const au=t?'?auth='+encodeURIComponent(t):'';
@@ -2224,7 +2230,7 @@ function poll(){
 function storeCfg(){try{localStorage.setItem('cfg',JSON.stringify(CFG))}catch(e){}}
 function saveCfg(){
   CFG={db:$('fdb').value.trim().replace(/\/+$/,''),m:($('fm').value.trim().replace(/[^A-Za-z0-9_-]/g,''))||'match1',key:$('fk').value.trim(),email:$('fe').value.trim()};
-  storeCfg();$('fdb').value=CFG.db;$('fm').value=CFG.m;push();toast('💾 '+L('সেভ হয়েছে','Saved'));
+  storeCfg();$('fdb').value=CFG.db;$('fm').value=CFG.m;push();bkCheck();toast('💾 '+L('সেভ হয়েছে','Saved'));
 }
 function fbCopy(t){try{const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();const ok=document.execCommand('copy');a.remove();return ok}catch(e){return false}}
 function copyText(t){
@@ -2255,8 +2261,104 @@ function minus(k){
   save();render();
 }
 addEventListener('resize',fit);addEventListener('resize',()=>{['lsc','fxd'].forEach(id=>{const e=$(id);if(e)e._k=null});try{render()}catch(e){}});
+/* ===== cloud backup / restore (phone handoff) =====
+   Everything the app keeps in this phone's localStorage is copied to Firebase at /backup/<match code>/ (separate from /matches, so the overlay never downloads it).
+   A new phone: open the setup link -> Firebase sign-in -> "load from cloud". Raw strings are stored, so player names with . $ # etc. never break Firebase keys. */
+const BKK=['cs2','pl','tn','fx','hist','ml','pcx','cb','pc','hl','pz','ah','scm','kod','fxs','bar','lg','vib'];
+let DV='';try{DV=localStorage.getItem('dvid')||'';if(!DV){DV=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('dvid',DV)}}catch(e){DV='x'+Date.now()}
+let bkt=null,BKHOLD=false,BKCHK=false,BKBUSY=false,BKLAST={};
+const bkOn=()=>{try{return localStorage.getItem('bkon')==='1'}catch(e){return false}};
+const bkTs=()=>{try{return Number(localStorage.getItem('bkts'))||0}catch(e){return 0}};
+const bkUrl=p=>CFG.db+'/backup/'+CFG.m+(p||'')+'.json';
+const bkSt=m=>{const e=$('bks');if(e)e.textContent=m};
+async function bkAu(){const t=await token();return t?'?auth='+encodeURIComponent(t):''}
+function bkSched(){
+  if(OVM||!CFG.db||!bkOn()||BKHOLD)return;
+  clearTimeout(bkt);bkt=setTimeout(()=>bkNow(false),6000);
+}
+async function bkNow(man,force){
+  if(OVM||BKBUSY)return;
+  if(!CFG.db){if(man)toast('⚠️ '+L('আগে Firebase URL সেভ করুন','Save the Firebase URL first'));return}
+  BKBUSY=true;let redo=false;
+  try{
+    const au=await bkAu();
+    if(!force){
+      const r=await fetch(bkUrl('/meta')+au);if(!r.ok)throw 0;
+      const m=await r.json();
+      if(m&&m.dv&&m.dv!==DV&&N(m.ts)!==bkTs()){
+        BKHOLD=true;
+        if(await dlg(L('অন্য ফোন থেকে ক্লাউডে নতুন ব্যাকআপ হয়েছে।\nOK = এই ফোনের ডেটা দিয়ে ক্লাউড ওভাররাইট হবে।\nCancel = কিছু হবে না (সেটিংস থেকে "ক্লাউড থেকে লোড" করতে পারবেন)।','A newer backup was saved to the cloud from another phone.\nOK = overwrite the cloud with this phone’s data.\nCancel = do nothing (you can use "Load from cloud" in Settings).'))){BKHOLD=false;redo=true}
+        return;
+      }
+    }else BKLAST={};
+    const au2=await bkAu(),ch=[];
+    BKK.forEach(k=>{let v=null;try{v=localStorage.getItem(k)}catch(e){}if(BKLAST[k]!==v)ch.push([k,v])});
+    await Promise.all(ch.map(([k,v])=>fetch(bkUrl('/d/'+k)+au2,{method:'PUT',body:JSON.stringify(v)}).then(r=>{if(!r.ok)throw 0})));
+    const ts=Date.now();
+    const r2=await fetch(bkUrl('/meta')+au2,{method:'PUT',body:JSON.stringify({dv:DV,ts:ts})});if(!r2.ok)throw 0;
+    ch.forEach(([k,v])=>{BKLAST[k]=v});
+    try{localStorage.setItem('bkon','1');localStorage.setItem('bkts',String(ts))}catch(e){}
+    bkSt(L('☁️ ব্যাকআপ হয়েছে ','☁️ Backed up ')+new Date(ts).toLocaleTimeString());
+    if(man)toast('☁️ '+L('ব্যাকআপ হয়েছে','Backed up'));
+  }catch(e){
+    bkSt(L('⚠️ ব্যাকআপ হয়নি (লগইন, URL ও রুলস দেখুন)','⚠️ Backup failed (check sign-in, URL & rules)'));
+    if(man)toast('⚠️ '+L('ব্যাকআপ হয়নি','Backup failed'));
+  }finally{BKBUSY=false;if(redo)bkNow(man,true)}
+}
+async function bkRestore(man,skipAsk){
+  if(OVM)return;
+  if(!CFG.db){toast('⚠️ '+L('আগে Firebase URL সেভ করুন','Save the Firebase URL first'));return}
+  try{
+    const au=await bkAu();
+    const r=await fetch(bkUrl()+au);if(!r.ok)throw 0;
+    const o=await r.json();
+    if(!o||!o.d||typeof o.d!=='object'){toast('ℹ️ '+L('ক্লাউডে কোনো ব্যাকআপ নেই','No backup in the cloud'));return}
+    if(man&&!skipAsk&&!await dlg(L('ক্লাউড ব্যাকআপ লোড করলে এই ফোনের বর্তমান ম্যাচ ও ডেটা মুছে যাবে। চালিয়ে যাবেন?','Loading the cloud backup will replace this phone’s current match and data. Continue?')))return;
+    BKHOLD=true;clearTimeout(bkt);clearTimeout(pt);
+    BKK.forEach(k=>{try{const v=o.d[k];if(typeof v==='string'&&v.length<2e7)localStorage.setItem(k,v);else localStorage.removeItem(k)}catch(e){}});
+    try{localStorage.setItem('bkon','1');localStorage.setItem('bkts',String(N(o.meta&&o.meta.ts)))}catch(e){}
+    toast('✅ '+L('লোড হয়েছে','Restored'));
+    setTimeout(()=>location.reload(),700);
+  }catch(e){toast('⚠️ '+L('লোড হয়নি (লগইন, URL ও রুলস দেখুন)','Load failed (check sign-in, URL & rules)'))}
+}
+/* asks once per phone: if the cloud already holds a backup this phone has not synced with, offer to load it instead of silently overwriting it */
+async function bkCheck(){
+  if(OVM||!CFG.db||BKCHK||bkOn())return;
+  BKCHK=true;
+  try{
+    const au=await bkAu();
+    const r=await fetch(bkUrl('/meta')+au);if(!r.ok)throw 0;
+    const m=await r.json();
+    if(!m||!m.ts){try{localStorage.setItem('bkon','1')}catch(e){}bkSched();return}
+    const w=new Date(N(m.ts)).toLocaleString();
+    if(await dlg(L('ক্লাউডে ব্যাকআপ আছে ('+w+')।\nOK = সেটা এই ফোনে লোড হবে (এই ফোনের বর্তমান ডেটা মুছে যাবে)।\nCancel = ক্লাউড ব্যাকআপ লোড হবে না, এই ফোনের ডেটাই চলবে (পরের ব্যাকআপে ক্লাউডের পুরোনোটা বদলে যাবে)।','A cloud backup exists ('+w+').\nOK = load it on this phone (this phone’s current data will be replaced).\nCancel = do not load it and keep this phone’s data (the next backup will replace the cloud copy).')))await bkRestore(false,true);
+    else{try{localStorage.setItem('bkon','1')}catch(e){}bkSched()}
+  }catch(e){}
+  finally{BKCHK=false}
+}
+async function bkLink(){
+  if(!CFG.db){toast('⚠️ '+L('আগে Firebase URL সেভ করুন','Save the Firebase URL first'));return}
+  const p=JSON.stringify({db:CFG.db,m:CFG.m,key:CFG.key||'',email:CFG.email||''});
+  const s=btoa(String.fromCharCode(...new TextEncoder().encode(p))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  const u=location.href.split('#')[0].split('?')[0]+'?s='+s;
+  if(await copyText(u))toast('📋 '+L('সেটআপ লিংক কপি হয়েছে','Setup link copied'));
+  else dlg(L('কপি করুন','Copy:'),{input:1,def:u});
+}
+/* opening a setup link (?s=...) fills the Firebase URL, match code, API key and email; the password is never in the link */
+(function(){
+  if(OVM)return;const s=Q.get('s');if(!s)return;
+  try{
+    const b=s.replace(/-/g,'+').replace(/_/g,'/'),p=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(b+'='.repeat((4-b.length%4)%4)),c=>c.charCodeAt(0))));
+    const c={db:Sx(p.db).trim().replace(/\/+$/,''),m:Sx(p.m).replace(/[^A-Za-z0-9_-]/g,'').slice(0,40)||'match1',key:Sx(p.key).trim(),email:Sx(p.email).trim()};
+    if(!/^https:\/\/[A-Za-z0-9.-]+\.(firebaseio\.com|firebasedatabase\.app)$/.test(c.db)||!/^[A-Za-z0-9_-]{0,120}$/.test(c.key)||c.email.length>200)throw 0;
+    try{history.replaceState(null,'',location.pathname)}catch(e){}
+    const fill=()=>{CFG=Object.assign(CFG,c);storeCfg();$('fdb').value=CFG.db;$('fm').value=CFG.m;$('fk').value=CFG.key||'';$('fe').value=CFG.email||'';toast('✅ '+L('সেটআপ হয়েছে — এখন Firebase লগইন করুন','Setup applied — now sign in to Firebase'))};
+    if(!CFG.db)fill();
+    else if(CFG.db!==c.db)setTimeout(async()=>{if(await dlg(L('এই লিংক অন্য Firebase ডাটাবেস সেট করতে চাইছে:\n'+c.db+'\nবদলাবেন?','This link wants to switch to another Firebase database:\n'+c.db+'\nSwitch?')))fill()},500);
+  }catch(e){}
+})();
 if(OVM){$('lock').style.display='none';document.body.classList.add('ovm');document.body.appendChild($('ov'));$('ov').className='clear';poll();setInterval(poll,1500)}
-else{load();if(S)S.pa=null;rosUI();tnUI();koUI(true);setTab(S?'score':'setup');$('fdb').value=CFG.db;$('fm').value=CFG.m;$('fk').value=CFG.key||'';$('fe').value=CFG.email||'';render();push();if(needLock())showLock();else $('lock').style.display='none'}
+else{load();if(S)S.pa=null;rosUI();tnUI();koUI(true);setTab(S?'score':'setup');$('fdb').value=CFG.db;$('fm').value=CFG.m;$('fk').value=CFG.key||'';$('fe').value=CFG.email||'';render();push();bkCheck();if(needLock())showLock();else $('lock').style.display='none'}
 if('serviceWorker' in navigator&&location.protocol.indexOf('http')==0)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
