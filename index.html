@@ -53,7 +53,7 @@ body.ovm #setup,body.ovm #app,body.ovm #cbcard,body.ovm #pccard,body.ovm #livebo
 #bc.shake{animation:shk .6s}
 @keyframes shk{0%,100%{transform:none}20%{transform:translateX(-12px)}40%{transform:translateX(12px)}60%{transform:translateX(-7px)}80%{transform:translateX(7px)}}
 #ovlogo{display:none}
-#ov:not(.inline) #ovlogo.on{display:block;position:absolute;left:calc(var(--u,1px)*16);top:calc(var(--u,1px)*12);height:calc(var(--u,1px)*150*var(--lz,1));z-index:4;pointer-events:none;transform-origin:left top;filter:drop-shadow(0 2px 5px rgba(0,0,0,.55))}
+#ov:not(.inline) #ovlogo.on{display:block;position:absolute;left:calc(var(--u,1px)*var(--lx,44));top:calc(var(--u,1px)*var(--ly,36));height:calc(var(--u,1px)*150*var(--lz,1));z-index:4;pointer-events:none;transform-origin:left top;filter:drop-shadow(0 2px 5px rgba(0,0,0,.55))}
 #ovlogo img{display:block;height:100%;width:auto}
 #ovlogo .lgsh{display:none;position:absolute;inset:0;overflow:hidden;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
 #ovlogo .lgsh b{position:absolute;top:-10%;bottom:-10%;left:0;width:34%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.95),transparent);transform:translateX(-150%) skewX(-18deg)}
@@ -1617,7 +1617,7 @@ body[data-pre="1"] #pv-score .pnum,body[data-pre="1"] #pv-score .pchk,body[data-
 #pv-score .ph .pt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 <div id="adjpop_tl" class="adjpop hide"><div class="hlp-bd" onclick="adjPop('tl',false)"></div><div class="hlp-box"><div class="hlp-h">🏅 Tournament 4-6-W</div><div class="hlp-b"><div class="adjr"><label>Size: <b id="pzv_tl"></b></label><input type="range" id="pz_tl" min="30" max="100" step="5" value="100" style="padding:0" oninput="setPz('tl',this.value)"></div><div class="adjr"><label>Show time</label><select id="ah_tl" onchange="setAh('tl',this.value)"><option value="0">Auto (8 sec)</option><option value="3">3 sec</option><option value="5">5 sec</option><option value="10">10 sec</option><option value="15">15 sec</option></select></div></div><button class="hlp-ok" onclick="adjPop('tl',false)">Done</button></div></div>
-<div id="adjpop_lg" class="adjpop hide"><div class="hlp-bd" onclick="adjPop('lg',false)"></div><div class="hlp-box"><div class="hlp-h">🖼️ Logo</div><div class="hlp-b"><div class="adjr" style="display:flex;align-items:center;justify-content:space-between;gap:10px"><label style="margin:0;font-size:14px">Animation</label><label class="sw"><input type="checkbox" id="lga" onchange="toggleLgAn()"><span></span></label></div><div class="adjr"><label>Size: <b id="pzv_lg"></b></label><input type="range" id="pz_lg" min="30" max="100" step="5" value="100" style="padding:0" oninput="setPz('lg',this.value)"></div></div><button class="hlp-ok" onclick="adjPop('lg',false)">Done</button></div></div>
+<div id="adjpop_lg" class="adjpop hide"><div class="hlp-bd" onclick="adjPop('lg',false)"></div><div class="hlp-box"><div class="hlp-h">🖼️ Logo</div><div class="hlp-b"><div class="adjr" style="display:flex;align-items:center;justify-content:space-between;gap:10px"><label style="margin:0;font-size:14px">Animation</label><label class="sw"><input type="checkbox" id="lga" onchange="toggleLgAn()"><span></span></label></div><div class="adjr"><label>Size: <b id="pzv_lg"></b></label><input type="range" id="pz_lg" min="30" max="100" step="5" value="100" style="padding:0" oninput="setPz('lg',this.value)"></div><div class="adjr"><label>→ X: <b id="lgxv"></b></label><input type="range" id="lgx" min="0" max="800" step="2" value="44" style="padding:0" oninput="setLgPos('x',this.value)"></div><div class="adjr"><label>↓ Y: <b id="lgyv"></b></label><input type="range" id="lgy" min="0" max="450" step="2" value="36" style="padding:0" oninput="setLgPos('y',this.value)"></div><button class="sm" style="width:100%;padding:9px 0;font-size:13px" onclick="setLgPos('r',0)">↺ Reset position</button></div><button class="hlp-ok" onclick="adjPop('lg',false)">Done</button></div></div>
 <div id="hlpop" class="hide"><div class="hlp-bd" onclick="hlPop(false)"></div><div class="hlp-box">
  <div class="hlp-h">📰 Edit scrolling bar</div>
  <div class="hlp-b">
@@ -3359,6 +3359,8 @@ function swapTeams(){
 let SBAR=true,SBARd=true,HDL={on:false,t:'',lb:'শিরোনামঃ',lc:'#0b1230',lbg:'#ffffff',tc:'#ffffff',bg:'#0a2266',sp:2},HDLd=null;
 try{SBAR=localStorage.getItem('bar')!=='0'}catch(e){}
 let TLON=true,TLd=null,TLC={k:'',map:{}},msT=null;try{TLON=localStorage.getItem('tl')!=='0'}catch(e){}
+const cleanLGP=p=>{const f=(v,d,m)=>{v=Number(v);return isFinite(v)&&v>=0&&v<=m?v:d};return{x:f(p&&p.x,44,800),y:f(p&&p.y,36,450)}};
+let LGP=cleanLGP(null),LGPd=cleanLGP(null);try{LGP=cleanLGP(JSON.parse(localStorage.getItem('lgp')))}catch(e){}
 let LGON=true,LGOd=true,LGAN=true,LGAd=true;try{LGON=localStorage.getItem('lgo')!=='0';LGAN=localStorage.getItem('lga')!=='0'}catch(e){}
 let TINFO=true,TINFOd=true;try{TINFO=localStorage.getItem('ti')!=='0'}catch(e){}
 try{HDL=Object.assign(HDL,JSON.parse(localStorage.getItem('hl')))}catch(e){}
@@ -3453,6 +3455,7 @@ function renderTl(){
 function toggleTl(){TLON=!TLON;try{localStorage.setItem('tl',TLON?'1':'0')}catch(e){}renderHL();renderTl();hlSend();toast('🏅 '+L('টুর্নামেন্ট ৪-৬-W ','Tournament 4-6-W ')+(TLON?'ON':'OFF'))}
 function toggleTi(){TINFO=!TINFO;try{localStorage.setItem('ti',TINFO?'1':'0')}catch(e){}renderHL();hlSend();toast('🏆 '+L('টুর্নামেন্ট ও স্পনসর ','Tournament & sponsor ')+(TINFO?'ON':'OFF'))}
 function toggleLg(){LGON=!LGON;try{localStorage.setItem('lgo',LGON?'1':'0')}catch(e){}renderHL();hlSend();toast('🖼️ '+L('লোগো ','Logo ')+(LGON?'ON':'OFF'))}
+function setLgPos(a,v){if(a=='r')LGP={x:44,y:36};else LGP[a]=Math.max(0,Math.min(a=='x'?800:450,Number(v)||0));try{localStorage.setItem('lgp',JSON.stringify(LGP))}catch(e){}renderHL();hlSend()}
 function toggleLgAn(){LGAN=!LGAN;try{localStorage.setItem('lga',LGAN?'1':'0')}catch(e){}renderHL();hlSend();toast('✨ '+L('লোগো অ্যানিমেশন ','Logo animation ')+(LGAN?'ON':'OFF'))}
 function toggleBar(){SBAR=!SBAR;try{localStorage.setItem('bar',SBAR?'1':'0')}catch(e){}renderHL();hlSend();toast('📺 '+L('স্কোর বার ','Score bar ')+(SBAR?'ON':'OFF'))}
 function buildHL(c){
@@ -3470,7 +3473,7 @@ function renderHL(){
   const c=OVM?HDLd:hlp(),bar=OVM?SBARd:SBAR;
   document.body.classList.toggle('nobar',!bar);
   document.body.classList.toggle('noti',!(OVM?TINFOd:TINFO));
-  {const lg=$('ovlogo');if(lg){lg.classList.toggle('on',!!(OVM?LGOd:LGON));lg.classList.toggle('an',!!(OVM?LGAd:LGAN));lg.style.setProperty('--lz',String((PZ.lg||100)/100));const sh=lg.querySelector('.lgsh'),im=$('ovlogoi');if(sh&&im&&!sh._m){sh._m=1;const u='url("'+im.src+'")';sh.style.webkitMaskImage=u;sh.style.maskImage=u}}}
+  {const lg=$('ovlogo');if(lg){lg.classList.toggle('on',!!(OVM?LGOd:LGON));lg.classList.toggle('an',!!(OVM?LGAd:LGAN));lg.style.setProperty('--lz',String((PZ.lg||100)/100));{const p=OVM?LGPd:LGP;lg.style.setProperty('--lx',String(p.x));lg.style.setProperty('--ly',String(p.y))}const sh=lg.querySelector('.lgsh'),im=$('ovlogoi');if(sh&&im&&!sh._m){sh._m=1;const u='url("'+im.src+'")';sh.style.webkitMaskImage=u;sh.style.maskImage=u}}}
   document.body.classList.toggle('hl-on',!!c);
   if(c){d.style.setProperty('--hbg',c.bg);d.style.setProperty('--hlb',c.lbg);d.style.setProperty('--hlc',c.lc);d.style.setProperty('--htc',c.tc);$('hll').textContent=hlClock()}
   d.classList.toggle('on',!!c);
@@ -3478,7 +3481,7 @@ function renderHL(){
   if(c){const key=c.t+'|'+c.sp+'|'+c.lb+'|'+innerWidth+'|'+$('ov').classList.contains('inline');if(tr._k!==key){tr._k=key;buildHL(c)}}else tr._k=null;
   if(!OVM){const b=$('barb'),h=$('hlb'),ti=$('tib');
     if(ti){ti.textContent=(TINFO?'ON':'OFF');ti.classList.toggle('on',TINFO)}
-    {const lb=$('lgb');if(lb)lb.checked=LGON;const la=$('lga');if(la)la.checked=LGAN}
+    {const lb=$('lgb');if(lb)lb.checked=LGON;const la=$('lga');if(la)la.checked=LGAN;[['x','lgx','lgxv'],['y','lgy','lgyv']].forEach(([k,i,t])=>{const e=$(i);if(e&&document.activeElement!==e)e.value=LGP[k];const v=$(t);if(v)v.textContent=LGP[k]})}
     {const tl=$('tlt');if(tl){tl.textContent=(TLON?'ON':'OFF');tl.classList.toggle('on',TLON)}}
     if(b){b.textContent='📺 '+L('স্কোর বার','Score bar')+': '+(SBAR?'ON':'OFF');b.classList.toggle('on',SBAR)}
     if(h){h.textContent='📰 '+L('শিরোনাম বার','Headline bar')+': '+(HDL.on?'ON':'OFF');h.classList.toggle('on',HDL.on)}}
@@ -3490,7 +3493,7 @@ let CFG={db:'',m:'match1'};try{CFG=Object.assign(CFG,JSON.parse(localStorage.get
 const FB_DEFAULT={db:'https://cricket-scorer-8de5d-default-rtdb.firebaseio.com/',key:'AIzaSyBokY91EEekNtjEdyKoUfb7TNs1HBMuY74',m:'match1'};
 if(!CFG.db&&FB_DEFAULT.db){CFG.db=FB_DEFAULT.db;CFG.key=FB_DEFAULT.key||'';CFG.m=FB_DEFAULT.m||'match1';try{localStorage.setItem('cfg',JSON.stringify(CFG))}catch(e){}}
 let pt=null;
-function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,so:S.so||0,fin:S.fin?1:0,spl:S.spl||'',cb:cbp(),pc:pcp(),fx:fxp(),ko:kop(),hl:hlp(),bar:SBAR?1:0,ti:TINFO?1:0,lgo:LGON?1:0,lga:LGAN?1:0,ms:msp(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,pz:PZ,lang:LANG,tsb:tsbp(),ts:Date.now()}}
+function pack(){const b=B();return{t:S.t,ve:S.ve,tt:S.tt,sp:S.sp,ov:S.ov,inn:S.inn,runs:S.runs,w:S.w,balls:S.balls,tb:S.tb,fr:S.first?S.first.runs:-1,bat:S.bat,st:S.st,bn:S.bn,bs:b,fh:S.fh?1:0,so:S.so||0,fin:S.fin?1:0,spl:S.spl||'',cb:cbp(),pc:pcp(),fx:fxp(),ko:kop(),hl:hlp(),bar:SBAR?1:0,ti:TINFO?1:0,lgo:LGON?1:0,lga:LGAN?1:0,lgp:LGP,ms:msp(),pr:S.pr||0,pb:S.pb||0,sc:S.showSC?scPack():null,ev:S.ev||null,pz:PZ,lang:LANG,tsb:tsbp(),ts:Date.now()}}
 const N=v=>Number(v)||0,Sx=v=>String(v==null?'':v);
 function unpack(o){
   const bs=o.bs||{},t=o.t||[];
@@ -3514,7 +3517,7 @@ function push(){
     const t=await token();
     const au=t?'?auth='+encodeURIComponent(t):'';
     /* no running match on THIS device: only write the board keys one by one, so the live match data (team names, score) saved by the scorer's phone is never wiped */
-    const job=S?fetch(furl()+au,{method:'PUT',body:JSON.stringify(pack())}).then(r=>{if(!r.ok)throw 0}):Promise.all(Object.entries({lang:LANG,ts:Date.now(),pz:PZ,cb:cbp(),pc:pcp(),fx:fxp(),ko:kop(),hl:hlp(),bar:SBAR?1:0,ti:TINFO?1:0,lgo:LGON?1:0,lga:LGAN?1:0}).map(([k,v])=>fetch(CFG.db+'/matches/'+CFG.m+'/'+k+'.json'+au,{method:'PUT',body:JSON.stringify(v==null?null:v)}).then(r=>{if(!r.ok)throw 0})));
+    const job=S?fetch(furl()+au,{method:'PUT',body:JSON.stringify(pack())}).then(r=>{if(!r.ok)throw 0}):Promise.all(Object.entries({lang:LANG,ts:Date.now(),pz:PZ,cb:cbp(),pc:pcp(),fx:fxp(),ko:kop(),hl:hlp(),bar:SBAR?1:0,ti:TINFO?1:0,lgo:LGON?1:0,lga:LGAN?1:0,lgp:LGP}).map(([k,v])=>fetch(CFG.db+'/matches/'+CFG.m+'/'+k+'.json'+au,{method:'PUT',body:JSON.stringify(v==null?null:v)}).then(r=>{if(!r.ok)throw 0})));
     job.then(()=>syn(true)).catch(()=>syn(false))},300);
 }
 let lastEv=null;
@@ -3524,7 +3527,7 @@ function poll(){
     CBd=o&&o.cb?{t:Sx(o.cb.t).slice(0,80),x:Sx(o.cb.x).slice(0,1500),i:Sx(o.cb.i).slice(0,300),pv:N(o.cb.pv),p2v:N(o.cb.p2v)}:null;cbImgLoad(o&&o.cb);
     PCd=o&&o.pc?cleanPC(o.pc):null;
     FXd=o&&o.fx?cleanFX(o.fx):null;
-    KOd=o&&o.ko?cleanKO(o.ko):null;HDLd=o&&o.hl?cleanHL(o.hl):null;SBARd=!(o&&(o.bar===0||o.bar===false));TINFOd=!(o&&(o.ti===0||o.ti===false));LGOd=!(o&&(o.lgo===0||o.lgo===false));LGAd=!(o&&(o.lga===0||o.lga===false));TLd=cleanTL(o&&o.ms);
+    KOd=o&&o.ko?cleanKO(o.ko):null;HDLd=o&&o.hl?cleanHL(o.hl):null;SBARd=!(o&&(o.bar===0||o.bar===false));TINFOd=!(o&&(o.ti===0||o.ti===false));LGOd=!(o&&(o.lgo===0||o.lgo===false));LGAd=!(o&&(o.lga===0||o.lga===false));LGPd=cleanLGP(o&&o.lgp);TLd=cleanTL(o&&o.ms);
     $('bcw').style.visibility=(o&&o.t)?'visible':'hidden';
     if(!(o&&o.t)){setPanel($('lsc'),false);if(o&&o.lang)LANG=o.lang=='en'?'en':'bn';renderCB();renderPC();renderFx();renderKO();renderHL()}
     if(o&&o.t){LANG=o.lang=='en'?'en':'bn';S=unpack(o);SCL=o.sc?(o.sc.inns||[]).slice(0,2).map(c=>({team:Sx(c.team),runs:N(c.runs),w:N(c.w),balls:N(c.balls),outs:(c.outs||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),ord:N(x.ord),how:Sx(x.how),bw:Sx(x.bw)})),bat:(c.bat||[]).map(x=>({n:Sx(x.n),r:N(x.r),b:N(x.b),f:N(x.f),s:N(x.s),ord:N(x.ord)})),bw:(c.bws||[]).reduce((a,b)=>{a[Sx(b.n)]={r:N(b.r),w:N(b.w),b:N(b.b),m:N(b.m)};return a},{})})):[];SCRES=Sx(o.sc&&o.sc.res);render();
@@ -3567,7 +3570,7 @@ addEventListener('resize',fit);addEventListener('resize',()=>{['lsc','fxd'].forE
 /* ===== cloud backup / restore (phone handoff) =====
    Everything the app keeps in this phone's localStorage is copied to Firebase at /backup/<match code>/ (separate from /matches, so the overlay never downloads it).
    A new phone: open the setup link -> Firebase sign-in -> "load from cloud". Raw strings are stored, so player names with . $ # etc. never break Firebase keys. */
-const BKK=['cs2','pl','tn','fx','hist','ml','pcx','cb','pc','hl','pz','ah','scm','kod','fxs','bar','ti','tl','lgo','lga','lg','vib','prt','prs'];
+const BKK=['cs2','pl','tn','fx','hist','ml','pcx','cb','pc','hl','pz','ah','scm','kod','fxs','bar','ti','tl','lgo','lga','lgp','lg','vib','prt','prs'];
 let DV='';try{DV=localStorage.getItem('dvid')||'';if(!DV){DV=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('dvid',DV)}}catch(e){DV='x'+Date.now()}
 let bkt=null,BKHOLD=false,BKCHK=false,BKBUSY=false,BKLAST={};
 const bkOn=()=>{try{return localStorage.getItem('bkon')==='1'}catch(e){return false}};
@@ -3601,7 +3604,7 @@ function lsReload(){
   const a=J('ah',null);AHS=a?{fx:Number(a.fx)||0,pc:Number(a.pc)||0,cb:Number(a.cb)||0,tl:Number(a.tl)||0}:{fx:0,pc:0,cb:0,tl:0};
   CB=Object.assign(CB,J('cb',{}));PC=Object.assign(PC,J('pc',{}));ML=Object.assign(ML,J('ml',{}));PCX=Object.assign(PCX,J('pcx',{}));HDL=Object.assign(HDL,J('hl',{}));
   TN=J('tn',[]);if(!Array.isArray(TN))TN=[];FX=J('fx',[]);if(!Array.isArray(FX))FX=[];
-  FXSHOW=g('fxs')==='1';KOD=g('kod')||'';SBAR=g('bar')!=='0';TINFO=g('ti')!=='0';LGON=g('lgo')!=='0';LGAN=g('lga')!=='0';TLON=g('tl')!=='0';VIB=g('vib')!=='0';
+  FXSHOW=g('fxs')==='1';KOD=g('kod')||'';SBAR=g('bar')!=='0';TINFO=g('ti')!=='0';LGON=g('lgo')!=='0';LGAN=g('lga')!=='0';LGP=cleanLGP(J('lgp',null));TLON=g('tl')!=='0';VIB=g('vib')!=='0';
   S=null;H=[];load();if(S)S.pa=null;
 }
 function bkUIRefresh(had){
